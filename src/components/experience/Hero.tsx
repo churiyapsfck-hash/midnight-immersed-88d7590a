@@ -42,7 +42,7 @@ function MachinedTitle() {
         ))}
         {/* Version tag — blood red machined 3.0 */}
         <span
-          className="relative ml-4 inline-block italic md:ml-6"
+          className="relative ml-4 inline-block md:ml-6"
           style={{
             color: "transparent",
             background:
