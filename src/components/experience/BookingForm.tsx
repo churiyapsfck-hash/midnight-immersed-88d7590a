@@ -1,0 +1,130 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "@tanstack/react-router";
+import { supabase } from "@/lib/supabase";
+import type { Profile } from "@/hooks/useAuth";
+
+export function BookingForm({
+  passType,
+  userId,
+  profile,
+}: {
+  passType: "standard" | "vip";
+  userId: string;
+  profile: Profile;
+}) {
+  const navigate = useNavigate();
+  const [category, setCategory] = useState<"girls" | "boys" | "couples">("girls");
+  const [fullName, setFullName] = useState(profile.full_name);
+  const [phone, setPhone] = useState(profile.phone);
+  const [utr, setUtr] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!file) {
+      setErr("Please upload your payment screenshot.");
+      return;
+    }
+    setBusy(true);
+    setErr(null);
+    try {
+      const bookingId = crypto.randomUUID();
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${userId}/${bookingId}.${ext}`;
+      const up = await supabase.storage
+        .from("payment-screenshots")
+        .upload(path, file, { upsert: false, contentType: file.type });
+      if (up.error) throw up.error;
+      const { error: insErr } = await supabase.from("bookings").insert({
+        id: bookingId,
+        user_id: userId,
+        pass_type: passType,
+        category,
+        full_name: fullName,
+        phone,
+        utr,
+        screenshot_path: path,
+        status: "pending",
+      });
+      if (insErr) throw insErr;
+      navigate({ to: "/booking/thankyou" });
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Booking failed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <motion.form
+      onSubmit={submit}
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-lg rounded-3xl border border-white/10 bg-black/70 p-8 backdrop-blur-xl"
+      style={{ boxShadow: "0 30px 80px -30px oklch(0.4 0.24 25 / 0.55), inset 0 1px 0 rgba(255,255,255,0.05)" }}
+    >
+      <div className="font-mono text-[10px] tracking-[0.4em]" style={{ color: "oklch(0.7 0.22 25)" }}>
+        — RESERVE · {passType.toUpperCase()}
+      </div>
+      <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
+        Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span>
+      </h2>
+      <div className="mt-6 space-y-3">
+        <div className="grid grid-cols-3 gap-2">
+          {(["girls", "boys", "couples"] as const).map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategory(c)}
+              className={`rounded-full border px-3 py-2 font-mono text-[10px] tracking-[0.32em] uppercase transition-colors ${
+                category === c ? "text-white" : "border-white/15 text-white/60 hover:border-white/40"
+              }`}
+              style={category === c ? { backgroundColor: "oklch(0.55 0.24 25)", borderColor: "oklch(0.55 0.24 25)" } : undefined}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+        <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" required
+          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+        <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
+          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+        <div className="rounded-xl border border-white/10 bg-black/50 p-4 text-center">
+          <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">SCAN TO PAY</div>
+          <div className="mx-auto mt-3 flex h-40 w-40 items-center justify-center rounded-lg border border-dashed border-white/20 bg-black/40 font-mono text-[10px] tracking-[0.2em] text-white/30">
+            QR · UPLOAD LATER
+          </div>
+          <div className="mt-3 font-serif text-[12px] italic text-white/50">
+            Pay via the QR, then paste your UTR / transaction number below.
+          </div>
+        </div>
+        <input value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="UTR / Transaction number" required maxLength={64}
+          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-mono text-sm tracking-[0.15em] text-white placeholder:text-white/25 focus:outline-none" />
+        <label className="flex cursor-pointer flex-col rounded-xl border border-dashed border-white/20 bg-black/40 p-4 text-center">
+          <span className="font-mono text-[10px] tracking-[0.4em] text-white/50">
+            {file ? "SELECTED" : "UPLOAD PAYMENT SCREENSHOT"}
+          </span>
+          <span className="mt-1 font-serif text-[12px] italic text-white/50">
+            {file ? file.name : "PNG or JPG"}
+          </span>
+          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="hidden" />
+        </label>
+      </div>
+      {err && (
+        <div className="mt-4 rounded-lg px-3 py-2 font-mono text-[10px] tracking-[0.2em]"
+          style={{ borderColor: "oklch(0.55 0.24 25 / 0.4)", borderWidth: 1, color: "oklch(0.7 0.22 25)", background: "oklch(0.3 0.15 25 / 0.15)" }}>
+          {err}
+        </div>
+      )}
+      <button type="submit" disabled={busy}
+        className="mt-5 w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
+        style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>
+        {busy ? "SUBMITTING…" : "RESERVE →"}
+      </button>
+    </motion.form>
+  );
+}
