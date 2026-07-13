@@ -141,16 +141,14 @@ export function OpeningSequence() {
               style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.75) 100%)" }}
             />
 
-            {/* Illuminati sigil — rises, rotates, then retraces the same path back down.
-                Rotation mirrors (−180 → 0 → −180) so descent reverses ascent exactly. */}
             <motion.div
               className="pointer-events-none absolute left-1/2 top-[38%] -translate-x-1/2"
               initial={{ y: "60vh", rotate: -180, opacity: 0, scale: 0.6 }}
               animate={{
-                y: ["60vh", "0vh", "0vh", "60vh"],
-                rotate: [-180, 0, 0, -180],
+                y: ["60vh", "0vh", "0vh", "0vh"],
+                rotate: [-180, 0, 0, 0],
                 opacity: [0, 1, 1, 0],
-                scale: [0.6, 1, 1, 0.6],
+                scale: [0.6, 1, 1, 1],
               }}
               transition={{
                 delay: 1.0,
