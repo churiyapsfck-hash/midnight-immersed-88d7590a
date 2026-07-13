@@ -117,6 +117,24 @@ export function Hero() {
             <div className="font-mono text-sm tracking-[0.5em] text-[oklch(0.7_0.2_25)] md:text-base">
               AUG 3
             </div>
+            <div className="mt-6 flex flex-col items-center gap-1">
+              <div className="font-mono text-[10px] tracking-[0.5em] text-white/40">
+                powered by
+              </div>
+              <div
+                className="font-[Anton] leading-none tracking-[0.18em]"
+                style={{
+                  fontSize: "clamp(2rem, 5.5vw, 4rem)",
+                  color: "transparent",
+                  background:
+                    "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 45%, #6a6a70 75%, #cfcfd4 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                }}
+              >
+                IRONOAK
+              </div>
+            </div>
           </motion.div>
         </div>
 
