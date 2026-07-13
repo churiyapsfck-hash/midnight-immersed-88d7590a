@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ClientOnly } from "./ClientOnly";
 import { HeroScene } from "./HeroScene";
 import { Countdown } from "./Countdown";
@@ -63,15 +64,56 @@ function MachinedTitle() {
 
 export function Hero() {
   const target = new Date(Date.now() + 27 * 86400000 + 14 * 3600000 + 33 * 60000);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  // Beam intensifies briefly then dies as you leave the hero
+  const beamOpacity = useTransform(scrollYProgress, [0, 0.35, 1], [1, 1.35, 0]);
+  const beamScale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
+  const beamY = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
+  const vignetteOpacity = useTransform(scrollYProgress, [0, 1], [1, 1.8]);
+  const grainDrift = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
 
   return (
-    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden grain">
+    <section ref={sectionRef} id="top" className="relative min-h-[100svh] w-full overflow-hidden grain">
       {/* Deep atmospheric base */}
       <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, #120306 0%, #050405 55%, #020203 100%)" }} />
-      {/* Volumetric top beam */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[70%]" style={{ background: "radial-gradient(ellipse 40% 100% at 50% 0%, oklch(0.35 0.22 25 / 0.5), transparent 65%)" }} />
-      {/* Bottom vignette */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%]" style={{ background: "linear-gradient(180deg, transparent, #030203 85%)" }} />
+      {/* Volumetric top beam — scroll-linked intensity + drift */}
+      <motion.div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70%] will-change-transform"
+        style={{
+          background:
+            "radial-gradient(ellipse 40% 100% at 50% 0%, oklch(0.35 0.22 25 / 0.5), transparent 65%)",
+          opacity: beamOpacity,
+          scale: beamScale,
+          y: beamY,
+          transformOrigin: "50% 0%",
+        }}
+      />
+      {/* Bottom vignette — deepens as you scroll */}
+      <motion.div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%]"
+        style={{
+          background: "linear-gradient(180deg, transparent, #030203 85%)",
+          opacity: vignetteOpacity,
+        }}
+      />
+      {/* Drifting particle field — light and scroll-linked */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          y: grainDrift,
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), radial-gradient(rgba(220,20,40,0.25) 1px, transparent 1px)",
+          backgroundSize: "140px 140px, 220px 220px",
+          backgroundPosition: "0 0, 70px 90px",
+          maskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
+        }}
+      />
 
       {/* 3D monolith scene */}
       <div className="absolute inset-0">
@@ -123,13 +165,14 @@ export function Hero() {
               </div>
               <div
                 className="font-[Anton] leading-none tracking-[0.18em]"
-                style={{
+               style={{
                   fontSize: "clamp(2rem, 5.5vw, 4rem)",
                   color: "transparent",
                   background:
-                    "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 45%, #6a6a70 75%, #cfcfd4 100%)",
+                    "linear-gradient(180deg, #4a4a4e 0%, #2a2a2e 40%, #0f0f11 70%, #333338 100%)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
+                  textShadow: "0 1px 0 rgba(255,255,255,0.05)",
                 }}
               >
                 IRONOAK

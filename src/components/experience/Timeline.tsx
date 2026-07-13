@@ -1,13 +1,29 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 /**
  * Location display — replaces the ceremony timeline. Centered,
  * aesthetic reveal of the club location with MARQUEE in caps below.
  */
 export function Timeline() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.2, 1.4, 0.3]);
+  const glowScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1.15, 0.95]);
   return (
-    <section id="timeline" className="relative px-6 py-32 md:px-12 md:py-48">
-      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 40%, oklch(0.35 0.22 25 / 0.18), transparent 65%)" }} />
+    <section ref={sectionRef} id="timeline" className="relative px-6 py-32 md:px-12 md:py-48">
+      <motion.div
+        className="pointer-events-none absolute inset-0 will-change-transform"
+        style={{
+          background: "radial-gradient(ellipse at 50% 40%, oklch(0.4 0.24 25 / 0.28), transparent 65%)",
+          opacity: glowOpacity,
+          scale: glowScale,
+          transformOrigin: "50% 50%",
+        }}
+      />
       <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
