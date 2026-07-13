@@ -6,7 +6,7 @@ export function Nav() {
           <span className="absolute h-3 w-3 rotate-45 border border-black/60" />
           <span className="absolute h-1 w-1 rotate-45 bg-[oklch(0.55_0.24_25)] shadow-[0_0_10px_oklch(0.55_0.24_25)] animate-breathe" />
         </span>
-        <span className="font-mono text-xs tracking-[0.32em] text-black">MARQUEE</span>
+        <span className="font-mono text-xs tracking-[0.32em] text-black">ILLUMINATI 3.0</span>
       </a>
       <nav className="hidden gap-8 font-mono text-[11px] tracking-[0.28em] text-black/70 md:flex">
         <a href="#tickets" className="transition-colors hover:text-black">01 — ACCESS</a>

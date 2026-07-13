@@ -34,12 +34,27 @@ export function Timeline() {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 font-mono text-sm leading-loose tracking-[0.35em] text-white/85 md:text-base"
+          className="mt-8 font-mono text-xs leading-loose tracking-[0.3em] text-white/85 md:text-sm"
         >
-          <div>3<span className="text-[oklch(0.7_0.2_25)]">RD</span> FLOOR · OBSIDIAN WING</div>
-          <div className="mt-2">SECTOR 07 · NIGHT DISTRICT</div>
-          <div className="mt-2">— coordinates released to invited only —</div>
+          <div>4<span className="text-[oklch(0.7_0.2_25)]">TH</span> &amp; 5<span className="text-[oklch(0.7_0.2_25)]">TH</span> FLOOR · TIME SQUARE BUILDING</div>
+          <div className="mt-2">2-37/9 TO 11 &amp; 16 TO 18 · VINAYAK NAGAR</div>
+          <div className="mt-2">INDIRA NAGAR · GACHIBOWLI</div>
+          <div className="mt-2">HYDERABAD · TELANGANA 500032</div>
         </motion.div>
+
+        <motion.a
+          href="https://share.google/VTOBW8QuDIWATMYex"
+          target="_blank"
+          rel="noreferrer"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="mt-8 inline-flex items-center gap-3 rounded-full border border-white/20 px-5 py-2 font-mono text-[10px] tracking-[0.4em] text-white/70 transition-colors hover:border-[oklch(0.55_0.24_25)] hover:text-white"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.55_0.24_25)] shadow-[0_0_10px_oklch(0.55_0.24_25)]" />
+          OPEN IN MAPS →
+        </motion.a>
 
         {/* ornamental divider */}
         <div className="mt-14 flex w-full items-center justify-center gap-4">
