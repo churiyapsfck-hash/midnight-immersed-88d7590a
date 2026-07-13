@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VipRouteImport } from './routes/vip'
 import { Route as StandardRouteImport } from './routes/standard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 
 const VipRoute = VipRouteImport.update({
   id: '/vip',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingThankyouRoute = BookingThankyouRouteImport.update({
+  id: '/booking/thankyou',
+  path: '/booking/thankyou',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/standard' | '/vip'
+  fullPaths: '/' | '/standard' | '/vip' | '/booking/thankyou'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/standard' | '/vip'
-  id: '__root__' | '/' | '/standard' | '/vip'
+  to: '/' | '/standard' | '/vip' | '/booking/thankyou'
+  id: '__root__' | '/' | '/standard' | '/vip' | '/booking/thankyou'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StandardRoute: typeof StandardRoute
   VipRoute: typeof VipRoute
+  BookingThankyouRoute: typeof BookingThankyouRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking/thankyou': {
+      id: '/booking/thankyou'
+      path: '/booking/thankyou'
+      fullPath: '/booking/thankyou'
+      preLoaderRoute: typeof BookingThankyouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StandardRoute: StandardRoute,
   VipRoute: VipRoute,
+  BookingThankyouRoute: BookingThankyouRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
