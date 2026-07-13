@@ -75,7 +75,7 @@ export function OpeningSequence() {
       {!gone && (
         <motion.div
           key="opening"
-          className="fixed inset-0 z-[80] overflow-hidden"
+          className="fixed inset-0 z-[80] overflow-hidden cursor-none"
           style={{ background: "#000" }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, filter: "blur(6px)" }}
@@ -98,15 +98,20 @@ export function OpeningSequence() {
             animate={{ scale: 1.0 }}
             transition={{ duration: TOTAL, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Distant crimson glow — deep, low, off-center */}
+            {/* Distant crimson glow — synced to the sigil so it breathes in and out with it */}
             <motion.div
               className="absolute inset-0"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.55, 0.7] }}
-              transition={{ delay: 1.2, duration: 3.2, ease: "easeOut", times: [0, 0.6, 1] }}
+              animate={{ opacity: [0, 0.7, 0.7, 0] }}
+              transition={{
+                delay: 1.0,
+                duration: 5.0,
+                times: [0, 0.32, 0.68, 1],
+                ease: "easeInOut",
+              }}
               style={{
                 background:
-                  "radial-gradient(60% 45% at 50% 62%, rgba(180,20,40,0.55) 0%, rgba(120,10,25,0.28) 30%, rgba(20,3,6,0) 68%)",
+                  "radial-gradient(42% 32% at 50% 78%, rgba(180,20,40,0.6) 0%, rgba(120,10,25,0.3) 32%, rgba(20,3,6,0) 70%)",
                 filter: "blur(20px)",
                 mixBlendMode: "screen",
               }}
