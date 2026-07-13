@@ -7,7 +7,7 @@ export function CredentialsCard({
   onContinue,
 }: {
   userCode: string;
-  password: string;
+  password: string | null;
   onContinue: () => void;
 }) {
   const [copiedField, setCopiedField] = useState<"id" | "pw" | null>(null);
@@ -33,17 +33,19 @@ export function CredentialsCard({
         Save these <span style={{ color: "oklch(0.55 0.24 25)" }}>now.</span>
       </h2>
       <p className="mt-2 font-serif text-sm italic text-white/60">
-        The password is shown once — write it down.
+        {password ? "The password is shown once — write it down." : "This is your access ID for the circle."}
       </p>
 
       <div className="mt-6 space-y-3">
         <Field label="USER ID" value={userCode} copied={copiedField === "id"} onCopy={() => copy(userCode, "id")} />
-        <Field label="PASSWORD" value={password} copied={copiedField === "pw"} onCopy={() => copy(password, "pw")} mono />
+        {password && (
+          <Field label="PASSWORD" value={password} copied={copiedField === "pw"} onCopy={() => copy(password, "pw")} mono />
+        )}
       </div>
 
       <label className="mt-6 flex cursor-pointer items-start gap-3 font-serif text-[13px] text-white/70">
         <input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} className="mt-1 h-4 w-4" />
-        <span>I've saved my User ID and password.</span>
+        <span>{password ? "I've saved my User ID and password." : "I've saved my User ID."}</span>
       </label>
 
       <button
