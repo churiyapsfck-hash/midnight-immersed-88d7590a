@@ -111,7 +111,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 1 }}
+            transition={{ delay: 4.2, duration: 1.4, ease: "easeOut" }}
             className="font-mono text-[10px] leading-relaxed tracking-[0.3em] text-white/45"
           >
             <div>LAT 40.7128 N</div>
@@ -121,7 +121,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 1 }}
+            transition={{ delay: 4.4, duration: 1.4, ease: "easeOut" }}
             className="text-right font-mono text-[10px] tracking-[0.3em] text-white/45"
           >
             <div>PROTOCOL III</div>
@@ -140,7 +140,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.15, duration: 1.4 }}
+            transition={{ delay: 3.2, duration: 1.6, ease: "easeOut" }}
             className="mb-6 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-white/55"
           >
             <span className="h-px w-10 bg-white/30" />
@@ -151,9 +151,9 @@ export function Hero() {
           <MachinedTitle />
 
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.9, duration: 1.2 }}
+            transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-6 max-w-md text-sm text-white/55 md:text-base"
           >
             Awareness. Precision. Anticipation. A cinematic gathering machined from obsidian and blood — assembled once, then dismantled.
@@ -162,9 +162,9 @@ export function Hero() {
 
         {/* Countdown + scroll hint */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.2, duration: 1.4 }}
+          transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center gap-8"
         >
           <Countdown target={target} />
