@@ -13,23 +13,30 @@ function Unit({ value, label }: { value: number; label: string }) {
   const display = useMemo(() => value.toString().padStart(2, "0"), [value]);
   return (
     <div className="relative flex flex-col items-center">
-      <div className="relative h-[clamp(4.5rem,12vw,8.5rem)] overflow-hidden">
+      <div
+        className="relative h-[clamp(4.5rem,12vw,8.5rem)]"
+        style={{
+          maskImage:
+            "linear-gradient(180deg, transparent 0%, black 22%, black 78%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, transparent 0%, black 22%, black 78%, transparent 100%)",
+        }}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
             key={display}
-            initial={{ y: "60%", opacity: 0, filter: "blur(6px)" }}
-            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-            exit={{ y: "-60%", opacity: 0, filter: "blur(6px)" }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ y: "60%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "-60%", opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="font-[Anton] leading-none tracking-[-0.02em]"
             style={{
               fontSize: "clamp(4.2rem, 11vw, 8rem)",
               color: "transparent",
               background:
-                "linear-gradient(180deg, #ffffff 0%, #cfcfd4 35%, #7a7a80 65%, #ffffff 100%)",
+                "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 40%, #6a6a70 70%, #cfcfd4 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
-              textShadow: "0 0 32px rgba(220,20,40,0.22)",
             }}
           >
             {display}
