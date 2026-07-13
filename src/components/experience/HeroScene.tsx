@@ -232,7 +232,8 @@ export function HeroScene() {
       shadows
       style={{ background: "transparent" }}
     >
-      <color attach="background" args={["#040405"]} />
+      {/* No scene.background — canvas stays transparent so the CSS
+          atmospheric layers behind show through if GL context is lost. */}
       <fog attach="fog" args={["#040405", 4, 14]} />
       <ambientLight intensity={0.08} />
       {/* Key light — narrow blood-red beam from above */}
