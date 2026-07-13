@@ -43,9 +43,9 @@ function Unit({ value, label }: { value: number; label: string }) {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-4 flex items-center gap-2">
         <span className="h-1 w-1 rounded-full bg-[oklch(0.55_0.24_25)] shadow-[0_0_8px_oklch(0.55_0.24_25)]" />
-        <span className="font-mono text-[10px] tracking-[0.45em] text-white/55">{label}</span>
+        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.45em] text-white/80 md:text-xs">{label}</span>
       </div>
     </div>
   );
