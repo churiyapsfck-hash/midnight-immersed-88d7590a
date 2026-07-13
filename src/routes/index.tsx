@@ -1,24 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Nav } from "@/components/experience/Nav";
+import { Hero } from "@/components/experience/Hero";
+import { Tickets } from "@/components/experience/Tickets";
+import { Gallery } from "@/components/experience/Gallery";
+import { Timeline } from "@/components/experience/Timeline";
+import { Faq } from "@/components/experience/Faq";
+import { Ending } from "@/components/experience/Ending";
+import { CustomCursor } from "@/components/experience/CustomCursor";
+import { SmoothScroll } from "@/components/experience/SmoothScroll";
+import { ClientOnly } from "@/components/experience/ClientOnly";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="relative min-h-screen bg-background text-foreground">
+      <ClientOnly>
+        <SmoothScroll />
+        <CustomCursor />
+      </ClientOnly>
+      <Nav />
+      <Hero />
+      <Tickets />
+      <Gallery />
+      <Timeline />
+      <Faq />
+      <Ending />
+    </main>
   );
 }
