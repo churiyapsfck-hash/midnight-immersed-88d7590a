@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "OBSIDIAN — Underground Sessions Vol. IV" },
-      { name: "description", content: "An invitation-only cinematic night. Chrome, blood, bass. One night. One key." },
-      { name: "author", content: "OBSIDIAN" },
-      { property: "og:title", content: "OBSIDIAN — Underground Sessions Vol. IV" },
-      { property: "og:description", content: "Chrome, blood, bass. One night. One key." },
+      { title: "ILLUMINATI 3.0 — By Invitation" },
+      { name: "description", content: "An exclusive cinematic gathering. Obsidian, chrome, blood. Awareness. Precision. Anticipation." },
+      { name: "author", content: "ILLUMINATI 3.0" },
+      { property: "og:title", content: "ILLUMINATI 3.0 — By Invitation" },
+      { property: "og:description", content: "An exclusive cinematic gathering. Obsidian, chrome, blood." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@obsidian" },
+      { name: "twitter:site", content: "@illuminati3" },
     ],
     links: [
       {
@@ -102,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
