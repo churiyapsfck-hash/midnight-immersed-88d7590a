@@ -1,0 +1,192 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+type Pass = {
+  id: "standard" | "vip";
+  name: string;
+  code: string;
+  tagline: string;
+  pricing: { label: string; price: string }[];
+  perks: string[];
+  cta: string;
+};
+
+const PASSES: Pass[] = [
+  {
+    id: "standard",
+    name: "STANDARD",
+    code: "INVITATION · 01",
+    tagline: "The complete night. Nothing missing.",
+    pricing: [
+      { label: "Girls", price: "₹ 1,499" },
+      { label: "Boys", price: "₹ 1,999" },
+      { label: "Couples", price: "₹ 2,999" },
+    ],
+    perks: [
+      "Entry to the main floor",
+      "Full show & sound",
+      "Bar & lounge access",
+      "Welcome pour on arrival",
+    ],
+    cta: "Reserve Standard",
+  },
+  {
+    id: "vip",
+    name: "VIP",
+    code: "INVITATION · 02 · ÉLITE",
+    tagline: "Beyond the velvet rope.",
+    pricing: [
+      { label: "Girls", price: "₹ 3,499" },
+      { label: "Boys", price: "₹ 4,499" },
+      { label: "Couples", price: "₹ 6,499" },
+    ],
+    perks: [
+      "Priority entrance · no queue",
+      "VIP lounge & elevated deck",
+      "Reserved premium seating",
+      "Closer stage & booth access",
+    ],
+    cta: "Reserve VIP",
+  },
+];
+
+function PassCard({ p, i }: { p: Pass; i: number }) {
+  const isVip = p.id === "vip";
+
+  const surface = isVip
+    ? "linear-gradient(140deg, #4a0308 0%, #b1141f 22%, #f26770 42%, #7a0006 62%, #2a0002 85%, #b1141f 100%)"
+    : "linear-gradient(140deg, #b8bcc4 0%, #f4f5f7 20%, #7c8089 42%, #eef0f3 62%, #4a4d54 82%, #d8dade 100%)";
+
+  const accent = isVip ? "#f26770" : "#f4f5f7";
+  const ink = isVip ? "#fff5f5" : "#0a0a0c";
+  const sub = isVip ? "rgba(255,240,240,0.75)" : "rgba(15,15,20,0.7)";
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 60, rotate: isVip ? 2 : -2 }}
+      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      whileHover={{ y: -8, rotate: isVip ? 1 : -1 }}
+      transition={{ delay: i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full max-w-[360px] overflow-hidden rounded-[36px] p-7"
+      style={{
+        background: surface,
+        boxShadow: isVip
+          ? "0 30px 60px -20px rgba(180,20,32,0.55), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.35)"
+          : "0 30px 60px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(0,0,0,0.4)",
+        color: ink,
+      }}
+    >
+      {/* Glossy highlight */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-b-[80%]"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 60%, transparent 100%)",
+          mixBlendMode: "overlay",
+        }}
+      />
+      {/* Sheen sweep */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
+          mixBlendMode: "overlay",
+          opacity: 0.6,
+        }}
+      />
+
+      <header className="relative flex items-center justify-between font-mono text-[9px] tracking-[0.32em]" style={{ color: sub }}>
+        <span>{p.code}</span>
+        <span style={{ color: accent }}>◆</span>
+      </header>
+
+      <h3
+        className="relative mt-5 font-[Anton] leading-[0.9] tracking-tight"
+        style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.6rem)", color: ink }}
+      >
+        {p.name}
+        <span className="block text-[0.32em] tracking-[0.4em]" style={{ color: sub }}>PASS</span>
+      </h3>
+
+      <p className="relative mt-3 max-w-[24ch] font-serif text-sm italic" style={{ color: sub }}>
+        {p.tagline}
+      </p>
+
+      <div className="relative my-5 h-px" style={{ background: `linear-gradient(90deg, transparent, ${isVip ? "rgba(255,220,220,0.6)" : "rgba(0,0,0,0.35)"} 50%, transparent)` }} />
+
+      <div className="relative space-y-1.5">
+        {p.pricing.map((row) => (
+          <div key={row.label} className="flex items-baseline justify-between">
+            <span className="font-serif text-[13px]" style={{ color: sub }}>{row.label}</span>
+            <span className="font-[Anton] text-lg" style={{ color: ink }}>{row.price}</span>
+          </div>
+        ))}
+      </div>
+
+      <ul className="relative mt-5 space-y-1.5">
+        {p.perks.map((perk) => (
+          <li key={perk} className="flex items-center gap-2 font-serif text-[12px]" style={{ color: sub }}>
+            <span style={{ color: accent }}>◆</span>
+            <span>{perk}</span>
+          </li>
+        ))}
+      </ul>
+
+      <button
+        className="relative mt-6 w-full rounded-full py-3 font-mono text-[10px] tracking-[0.4em] transition-transform hover:scale-[1.02]"
+        style={{
+          background: isVip
+            ? "linear-gradient(180deg, #1a0002, #3a0006)"
+            : "linear-gradient(180deg, #0a0a0c, #1c1c22)",
+          color: "#fff",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px -8px rgba(0,0,0,0.7)",
+        }}
+      >
+        {p.cta.toUpperCase()} →
+      </button>
+    </motion.article>
+  );
+}
+
+export function Tickets() {
+  const [active, setActive] = useState<"standard" | "vip">("vip");
+  return (
+    <section id="tickets" className="relative px-6 py-32 md:px-12 md:py-48">
+      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at top, oklch(0.35 0.2 25 / 0.14), transparent 60%)" }} />
+      <div className="relative mx-auto max-w-5xl">
+        <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">— 01 / THE INVITATION</div>
+            <h2 className="mt-4 font-[Anton] text-6xl leading-[0.9] tracking-tight md:text-8xl">
+              <span className="text-chrome">Two invitations.</span>
+              <br />
+              <span className="text-blood">One night.</span>
+            </h2>
+          </div>
+          <p className="max-w-sm font-serif text-[15px] italic leading-relaxed text-white/55">
+            Hand-numbered. Non-transferable. No refunds. No exceptions.
+          </p>
+        </div>
+
+        <div
+          onMouseLeave={() => setActive("vip")}
+          className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12"
+        >
+          {PASSES.map((p, i) => (
+            <div
+              key={p.id}
+              onMouseEnter={() => setActive(p.id)}
+              className={active === p.id ? "opacity-100" : "opacity-70 transition-opacity duration-500"}
+            >
+              <PassCard p={p} i={i} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
