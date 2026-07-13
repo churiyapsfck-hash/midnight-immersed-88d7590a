@@ -8,6 +8,7 @@ import { Faq } from "@/components/experience/Faq";
 import { Ending } from "@/components/experience/Ending";
 import { CustomCursor } from "@/components/experience/CustomCursor";
 import { SmoothScroll } from "@/components/experience/SmoothScroll";
+import { OpeningSequence } from "@/components/experience/OpeningSequence";
 import { ClientOnly } from "@/components/experience/ClientOnly";
 
 export const Route = createFileRoute("/")({
@@ -20,6 +21,7 @@ function Index() {
       <ClientOnly>
         <SmoothScroll />
         <CustomCursor />
+        <OpeningSequence />
       </ClientOnly>
       <Nav />
       <Hero />
