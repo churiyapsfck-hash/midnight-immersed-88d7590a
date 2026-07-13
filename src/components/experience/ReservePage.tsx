@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export function ReservePage({ passType }: { passType: "standard" | "vip" }) {
   const { user, profile, loading, setProfile } = useAuth();
-  const [showCreds, setShowCreds] = useState<{ userCode: string; password: string } | null>(null);
+  const [showCreds, setShowCreds] = useState<{ userCode: string; password: string | null } | null>(null);
   const redirect = `/${passType}`;
   return (
     <main className="relative min-h-screen bg-black text-white">
@@ -39,7 +39,7 @@ export function ReservePage({ passType }: { passType: "standard" | "vip" }) {
                 userId={user.id}
                 onDone={({ userCode, password, fullName, phone }) => {
                   setProfile({ id: user.id, user_code: userCode, full_name: fullName, phone });
-                  if (password) setShowCreds({ userCode, password });
+                  setShowCreds({ userCode, password });
                 }}
               />
             ) : (

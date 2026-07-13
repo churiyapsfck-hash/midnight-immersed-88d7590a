@@ -7,13 +7,6 @@ function randomCode(len: number) {
   for (let i = 0; i < len; i++) out += alphabet[Math.floor(Math.random() * alphabet.length)];
   return out;
 }
-function randomPassword() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$";
-  let out = "";
-  for (let i = 0; i < 12; i++) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
-}
-
 export const completeSignup = createServerFn({ method: "POST" })
   .inputValidator((data: { userId: string; fullName: string; phone: string }) =>
     z
@@ -49,9 +42,6 @@ export const completeSignup = createServerFn({ method: "POST" })
       }
     }
     if (!userCode) throw new Error("Could not allocate a user code, try again.");
-    const password = randomPassword();
-    const { error: passErr } = await admin.auth.admin.updateUserById(data.userId, { password });
-    if (passErr) throw new Error(passErr.message);
     const { error: insErr } = await admin.from("profiles").insert({
       id: data.userId,
       user_code: userCode,
@@ -59,7 +49,7 @@ export const completeSignup = createServerFn({ method: "POST" })
       phone: data.phone,
     });
     if (insErr) throw new Error(insErr.message);
-    return { alreadyRegistered: false as const, userCode, password };
+    return { alreadyRegistered: false as const, userCode, password: null as string | null };
   });
 
 export const resolveEmailByUserCode = createServerFn({ method: "POST" })
