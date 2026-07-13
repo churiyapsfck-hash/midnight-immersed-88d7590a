@@ -193,7 +193,7 @@ export function Tickets() {
             <h2 className="mt-4 font-[Anton] text-6xl leading-[0.9] tracking-tight md:text-8xl">
               <span className="text-chrome">Two invitations.</span>
               <br />
-              <span className="text-blood">One night.</span>
+              <span className="text-blood">One BOOM.</span>
             </h2>
           </div>
           <p className="max-w-sm font-serif text-[15px] italic leading-relaxed text-white/55">
