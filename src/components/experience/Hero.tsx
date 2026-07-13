@@ -32,9 +32,9 @@ function MachinedTitle() {
                 "linear-gradient(180deg, #ffffff 0%, #d0d0d4 18%, #6a6a70 40%, #ececef 55%, #808086 78%, #2a2a2e 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
-              WebkitTextStroke: "1px rgba(255,255,255,0.06)",
+              WebkitTextStroke: "1px rgba(255,255,255,0.05)",
               textShadow:
-                "0 1px 0 #4a4a4e, 0 2px 0 #383838, 0 3px 0 #2a2a2a, 0 4px 0 #1c1c1c, 0 5px 0 #141414, 0 6px 0 #0a0a0a, 0 8px 12px rgba(0,0,0,0.9), 0 0 60px rgba(180,20,32,0.35)",
+                "0 1px 0 #2a2a2e, 0 2px 0 #1a1a1c, 0 4px 10px rgba(0,0,0,0.55), 0 0 40px rgba(180,20,32,0.18)",
             }}
           >
             {c}
@@ -50,7 +50,7 @@ function MachinedTitle() {
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             textShadow:
-              "0 1px 0 #6a0008, 0 2px 0 #4a0006, 0 3px 0 #300004, 0 4px 0 #200002, 0 0 60px rgba(220,20,40,0.45)",
+              "0 1px 0 #4a0006, 0 2px 0 #2a0004, 0 4px 10px rgba(0,0,0,0.55), 0 0 40px rgba(220,20,40,0.3)",
           }}
         >
           3.0
@@ -131,7 +131,7 @@ export function Hero() {
               MARQUEE CLUB AND KITCHEN
             </div>
             <div className="font-mono text-sm tracking-[0.5em] text-[oklch(0.7_0.2_25)] md:text-base">
-              AUG #
+              AUG 3
             </div>
           </motion.div>
         </div>
