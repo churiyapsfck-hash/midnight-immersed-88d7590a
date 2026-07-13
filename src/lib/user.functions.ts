@@ -37,9 +37,7 @@ export const completeSignup = createServerFn({ method: "POST" })
     }
     let userCode = "";
     for (let attempt = 0; attempt < 8; attempt++) {
-      const alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
       const candidate = "ILL-" + randomCode(6);
-      void alpha;
       const clash = await admin
         .from("profiles")
         .select("id")
