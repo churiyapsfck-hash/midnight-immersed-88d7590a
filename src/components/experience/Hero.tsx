@@ -10,18 +10,21 @@ import { Countdown } from "./Countdown";
  */
 function MachinedTitle() {
   const chars = "ILLUMINATI".split("");
-  // Opening sequence timing — title emerges as the spotlight sweeps across
-  // (no per-letter bounce, no stagger — polished metal catching light).
-  const REVEAL_START = 3.4;
+  // Reveal timing — title fades in as a single GPU-friendly transform,
+  // no per-letter blur filters (those cause layout thrash / lag).
+  const REVEAL_START = 7.6;
   return (
-    <div className="relative">
+    <motion.div
+      className="relative"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: REVEAL_START, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+      style={{ willChange: "transform, opacity" }}
+    >
       <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
         {chars.map((c, i) => (
-          <motion.span
+          <span
             key={i}
-            initial={{ opacity: 0, filter: "blur(14px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: REVEAL_START + i * 0.05, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative inline-block"
             style={{
               color: "transparent",
@@ -35,13 +38,10 @@ function MachinedTitle() {
             }}
           >
             {c}
-          </motion.span>
+          </span>
         ))}
         {/* Version tag — blood red machined 3.0 */}
-        <motion.span
-          initial={{ opacity: 0, filter: "blur(14px)" }}
-          animate={{ opacity: 1, filter: "blur(0px)" }}
-          transition={{ delay: REVEAL_START + 0.55, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+        <span
           className="relative ml-4 inline-block italic md:ml-6"
           style={{
             color: "transparent",
@@ -54,7 +54,7 @@ function MachinedTitle() {
           }}
         >
           3.0
-        </motion.span>
+        </span>
       </h1>
 
       {/* Horizontal light sweep across the letters — delayed so it does not
@@ -66,14 +66,14 @@ function MachinedTitle() {
           background:
             "linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%)",
           opacity: 0,
-          animation: "heroSweep 7s ease-in-out 6.6s infinite, heroSweepFade 0.8s ease-out 6.6s forwards",
+          animation: "heroSweep 7s ease-in-out 8.5s infinite, heroSweepFade 0.8s ease-out 8.5s forwards",
         }}
       />
       <style>{`
         @keyframes heroSweep { 0%,100% { transform: translateX(-30%);} 50% { transform: translateX(30%);} }
         @keyframes heroSweepFade { to { opacity: 1; } }
       `}</style>
-    </div>
+    </motion.div>
   );
 }
 
