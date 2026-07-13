@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
 
 type Pass = {
   id: "standard" | "vip";
@@ -52,6 +52,25 @@ const PASSES: Pass[] = [
 
 function PassCard({ p, i }: { p: Pass; i: number }) {
   const isVip = p.id === "vip";
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), { stiffness: 180, damping: 18 });
+  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-14, 14]), { stiffness: 180, damping: 18 });
+  const glareX = useTransform(mx, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(my, [-0.5, 0.5], ["0%", "100%"]);
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const handleLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
   const surface = isVip
     ? "linear-gradient(140deg, #4a0308 0%, #b1141f 22%, #f26770 42%, #7a0006 62%, #2a0002 85%, #b1141f 100%)"
@@ -62,11 +81,14 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
   const sub = isVip ? "rgba(255,240,240,0.75)" : "rgba(15,15,20,0.7)";
 
   return (
+    <div style={{ perspective: 1200 }}>
     <motion.article
-      initial={{ opacity: 0, y: 60, rotate: isVip ? 2 : -2 }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      whileHover={{ y: -8, rotate: isVip ? 1 : -1 }}
       transition={{ delay: i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="relative w-full max-w-[360px] overflow-hidden rounded-[36px] p-7"
       style={{
@@ -75,6 +97,9 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
           ? "0 30px 60px -20px rgba(180,20,32,0.55), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.35)"
           : "0 30px 60px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(0,0,0,0.4)",
         color: ink,
+        rotateX: rx,
+        rotateY: ry,
+        transformStyle: "preserve-3d",
       }}
     >
       {/* Glossy highlight */}
@@ -87,15 +112,18 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
           mixBlendMode: "overlay",
         }}
       />
-      {/* Sheen sweep */}
-      <span
+      {/* Cursor-tracked glare */}
+      <motion.span
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
+          background: useTransform(
+            [glareX, glareY] as any,
+            ([x, y]: any) =>
+              `radial-gradient(circle at ${x} ${y}, rgba(255,255,255,0.55), transparent 55%)`,
+          ),
           mixBlendMode: "overlay",
-          opacity: 0.6,
+          opacity: 0.85,
         }}
       />
 
@@ -149,6 +177,7 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
         {p.cta.toUpperCase()} →
       </button>
     </motion.article>
+    </div>
   );
 }
 
