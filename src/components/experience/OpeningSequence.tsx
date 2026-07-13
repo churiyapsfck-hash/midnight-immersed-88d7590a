@@ -11,7 +11,7 @@ import illuminatiEye from "@/assets/illuminati-eye-mono.png.asset.json";
  */
 
 // Total sequence duration, seconds
-const TOTAL = 6.4;
+const TOTAL = 8.0;
 
 function Dust() {
   const motes = useMemo(
@@ -78,8 +78,8 @@ export function OpeningSequence() {
           className="fixed inset-0 z-[80] overflow-hidden cursor-none"
           style={{ background: "#000" }}
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, filter: "blur(6px)" }}
-          transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 2.0, ease: [0.65, 0, 0.35, 1] }}
           aria-hidden
         >
           {/* Hide the custom cursor while the opening plays */}
@@ -104,16 +104,16 @@ export function OpeningSequence() {
             <motion.div
               className="absolute inset-0"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.7, 0.7, 0] }}
+              animate={{ opacity: [0, 0.45, 0.45, 0] }}
               transition={{
                 delay: 1.0,
-                duration: 5.0,
-                times: [0, 0.22, 0.86, 1],
+                duration: 6.5,
+                times: [0, 0.22, 0.74, 1],
                 ease: "easeInOut",
               }}
               style={{
                 background:
-                  "radial-gradient(42% 32% at 50% 78%, rgba(180,20,40,0.6) 0%, rgba(120,10,25,0.3) 32%, rgba(20,3,6,0) 70%)",
+                  "radial-gradient(38% 28% at 50% 78%, rgba(150,15,32,0.55) 0%, rgba(90,8,20,0.28) 32%, rgba(20,3,6,0) 70%)",
                 filter: "blur(20px)",
                 mixBlendMode: "screen",
               }}
@@ -159,8 +159,8 @@ export function OpeningSequence() {
               }}
               transition={{
                 delay: 1.0,
-                duration: 5.0,
-                times: [0, 0.32, 0.68, 1],
+                duration: 6.5,
+                times: [0, 0.28, 0.72, 1],
                 ease: [0.22, 1, 0.36, 1],
               }}
               style={{
@@ -172,11 +172,11 @@ export function OpeningSequence() {
               <motion.div
                 className="absolute inset-[-40%]"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.9, 0.9, 0] }}
+                animate={{ opacity: [0, 0.7, 0.7, 0] }}
                 transition={{
                   delay: 1.0,
-                  duration: 5.0,
-                  times: [0, 0.32, 0.68, 1],
+                  duration: 6.5,
+                  times: [0, 0.28, 0.72, 1],
                   ease: "easeInOut",
                 }}
                 style={{

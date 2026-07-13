@@ -7,7 +7,7 @@ export function CustomCursor() {
 
   useEffect(() => {
     // Wait for the opening sequence to finish before showing the custom cursor.
-    const t = window.setTimeout(() => setReady(true), 6800);
+    const t = window.setTimeout(() => setReady(true), 9800);
     return () => window.clearTimeout(t);
   }, []);
 
