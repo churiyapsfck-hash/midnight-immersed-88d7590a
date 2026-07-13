@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 type Pass = {
   id: "standard" | "vip";
@@ -164,8 +165,9 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
         ))}
       </ul>
 
-      <button
-        className="relative mt-6 w-full rounded-full py-3 font-mono text-[10px] tracking-[0.4em] transition-transform hover:scale-[1.02]"
+      <Link
+        to={isVip ? "/vip" : "/standard"}
+        className="relative mt-6 block w-full rounded-full py-3 text-center font-mono text-[10px] tracking-[0.4em] transition-transform hover:scale-[1.02]"
         style={{
           background: isVip
             ? "linear-gradient(180deg, #1a0002, #3a0006)"
@@ -175,7 +177,7 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
         }}
       >
         {p.cta.toUpperCase()} →
-      </button>
+      </Link>
     </motion.article>
     </div>
   );

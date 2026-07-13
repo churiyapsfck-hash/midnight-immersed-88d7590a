@@ -9,38 +9,128 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VipRouteImport } from './routes/vip'
+import { Route as StandardRouteImport } from './routes/standard'
+import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
+const VipRoute = VipRouteImport.update({
+  id: '/vip',
+  path: '/vip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandardRoute = StandardRouteImport.update({
+  id: '/standard',
+  path: '/standard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PurchasesRoute = PurchasesRouteImport.update({
+  id: '/purchases',
+  path: '/purchases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingThankyouRoute = BookingThankyouRouteImport.update({
+  id: '/booking/thankyou',
+  path: '/booking/thankyou',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/purchases': typeof PurchasesRoute
+  '/standard': typeof StandardRoute
+  '/vip': typeof VipRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/purchases': typeof PurchasesRoute
+  '/standard': typeof StandardRoute
+  '/vip': typeof VipRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/purchases': typeof PurchasesRoute
+  '/standard': typeof StandardRoute
+  '/vip': typeof VipRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking/thankyou': typeof BookingThankyouRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/purchases'
+    | '/standard'
+    | '/vip'
+    | '/auth/callback'
+    | '/booking/thankyou'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/purchases'
+    | '/standard'
+    | '/vip'
+    | '/auth/callback'
+    | '/booking/thankyou'
+  id:
+    | '__root__'
+    | '/'
+    | '/purchases'
+    | '/standard'
+    | '/vip'
+    | '/auth/callback'
+    | '/booking/thankyou'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PurchasesRoute: typeof PurchasesRoute
+  StandardRoute: typeof StandardRoute
+  VipRoute: typeof VipRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  BookingThankyouRoute: typeof BookingThankyouRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vip': {
+      id: '/vip'
+      path: '/vip'
+      fullPath: '/vip'
+      preLoaderRoute: typeof VipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/standard': {
+      id: '/standard'
+      path: '/standard'
+      fullPath: '/standard'
+      preLoaderRoute: typeof StandardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/purchases': {
+      id: '/purchases'
+      path: '/purchases'
+      fullPath: '/purchases'
+      preLoaderRoute: typeof PurchasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +138,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking/thankyou': {
+      id: '/booking/thankyou'
+      path: '/booking/thankyou'
+      fullPath: '/booking/thankyou'
+      preLoaderRoute: typeof BookingThankyouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PurchasesRoute: PurchasesRoute,
+  StandardRoute: StandardRoute,
+  VipRoute: VipRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  BookingThankyouRoute: BookingThankyouRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
