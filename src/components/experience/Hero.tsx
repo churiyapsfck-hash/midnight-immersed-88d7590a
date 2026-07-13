@@ -23,12 +23,12 @@ function MachinedTitle() {
             style={{
               color: "transparent",
               background:
-                "linear-gradient(180deg, #f4f4f6 0%, #a8a8ac 22%, #4a4a4e 42%, #d4d4d8 55%, #6a6a6e 78%, #26262a 100%)",
+                "linear-gradient(180deg, #ffffff 0%, #d0d0d4 18%, #6a6a70 40%, #ececef 55%, #808086 78%, #2a2a2e 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
+              WebkitTextStroke: "1px rgba(255,255,255,0.06)",
               textShadow:
-                "0 1px 0 #4a4a4e, 0 2px 0 #383838, 0 3px 0 #2a2a2a, 0 4px 0 #1c1c1c, 0 6px 1px rgba(0,0,0,0.5), 0 0 40px rgba(180,20,32,0.25)",
-              filter: "drop-shadow(0 12px 20px rgba(0,0,0,0.9))",
+                "0 1px 0 #4a4a4e, 0 2px 0 #383838, 0 3px 0 #2a2a2a, 0 4px 0 #1c1c1c, 0 5px 0 #141414, 0 6px 0 #0a0a0a, 0 8px 12px rgba(0,0,0,0.9), 0 0 60px rgba(180,20,32,0.35)",
             }}
           >
             {c}
@@ -127,7 +127,13 @@ export function Hero() {
         </div>
 
         {/* Title */}
-        <div className="mx-auto w-full max-w-7xl text-center">
+        <div className="relative mx-auto w-full max-w-7xl text-center">
+          {/* Soft dark halo behind title to lift it off the monolith */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 blur-2xl"
+            style={{ background: "radial-gradient(ellipse, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 75%)" }}
+          />
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

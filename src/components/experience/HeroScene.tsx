@@ -36,7 +36,7 @@ function Monolith() {
   });
 
   return (
-    <group ref={group}>
+    <group ref={group} scale={0.78} position={[0, -0.4, 0]}>
       {/* Obsidian slab (rounded tall monolith) */}
       <mesh castShadow receiveShadow>
         <boxGeometry args={[1.5, 3.4, 0.35]} />
