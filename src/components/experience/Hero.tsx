@@ -10,15 +10,18 @@ import { Countdown } from "./Countdown";
  */
 function MachinedTitle() {
   const chars = "ILLUMINATI".split("");
+  // Opening sequence timing — title emerges as the spotlight sweeps across
+  // (no per-letter bounce, no stagger — polished metal catching light).
+  const REVEAL_START = 3.4;
   return (
     <div className="relative">
-      <h1 className="relative flex flex-wrap justify-center overflow-hidden pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
+      <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
         {chars.map((c, i) => (
           <motion.span
             key={i}
-            initial={{ y: "110%", opacity: 0, filter: "blur(12px)" }}
-            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: 0.5 + i * 0.08, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, filter: "blur(14px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ delay: REVEAL_START + i * 0.05, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative inline-block"
             style={{
               color: "transparent",
@@ -36,9 +39,9 @@ function MachinedTitle() {
         ))}
         {/* Version tag — blood red machined 3.0 */}
         <motion.span
-          initial={{ y: "110%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, filter: "blur(14px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          transition={{ delay: REVEAL_START + 0.55, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
           className="relative ml-4 inline-block italic md:ml-6"
           style={{
             color: "transparent",
