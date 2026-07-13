@@ -527,6 +527,11 @@ function CameraRig() {
 }
 
 export function HeroScene() {
+  return <SceneCanvas />;
+}
+
+function SceneCanvas() {
+  const scroll = useScrollProgress();
   return (
     <Canvas
       camera={{ position: [0, 0.2, 6.4], fov: 36 }}
@@ -558,7 +563,7 @@ export function HeroScene() {
       <spotLight position={[3.5, 1.8, 4]} intensity={26} angle={0.6} penumbra={1} color="#ffffff" />
       <Environment preset="night" />
       <LightShafts />
-      <GlyphHalo scroll={0} />
+      <GlyphHalo scroll={scroll} />
       <Monolith />
       <Embers />
       <Dust />
