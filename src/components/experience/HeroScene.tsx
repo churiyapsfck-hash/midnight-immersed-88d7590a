@@ -247,9 +247,12 @@ function MechanicalIris({ scroll }: { scroll: number }) {
             <meshPhysicalMaterial
               color="#d0d0d4"
               metalness={1}
-              roughness={0.18}
+              roughness={0.14}
               clearcoat={1}
-              clearcoatRoughness={0.15}
+              clearcoatRoughness={0.1}
+              iridescence={0.55}
+              iridescenceIOR={1.6}
+              iridescenceThicknessRange={[120, 520]}
             />
           </mesh>
         ))}
@@ -272,9 +275,138 @@ function MechanicalIris({ scroll }: { scroll: number }) {
         />
       </mesh>
 
+      {/* Radial glow sprite behind the core — adds bloom without post-fx */}
+      <mesh position={[0, 0, -0.05]}>
+        <planeGeometry args={[2.2, 2.2]} />
+        <meshBasicMaterial
+          color="#ff1e2a"
+          transparent
+          opacity={0.35}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          map={useRadialGlowTexture()}
+        />
+      </mesh>
+
       {/* Core point light for volumetric feel */}
       <pointLight color="#ff1e2a" intensity={2.4} distance={4} position={[0, 0, 0.4]} />
     </group>
+  );
+}
+
+/** Procedural radial-gradient texture for additive glow sprites. */
+function useRadialGlowTexture() {
+  return useMemo(() => {
+    const size = 256;
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const ctx = c.getContext("2d")!;
+    const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    g.addColorStop(0, "rgba(255,90,100,1)");
+    g.addColorStop(0.25, "rgba(220,20,32,0.55)");
+    g.addColorStop(0.6, "rgba(90,4,10,0.12)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, size, size);
+    const tex = new THREE.CanvasTexture(c);
+    tex.needsUpdate = true;
+    return tex;
+  }, []);
+}
+
+/** Outer engraved halo ring — glyph ticks orbiting the monolith. */
+function GlyphHalo({ scroll }: { scroll: number }) {
+  const g = useRef<THREE.Group>(null);
+  const inner = useRef<THREE.Group>(null);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (g.current) g.current.rotation.z = t * 0.04 + scroll * 0.6;
+    if (inner.current) inner.current.rotation.z = -t * 0.07 - scroll * 0.4;
+  });
+  const count = 72;
+  return (
+    <group position={[0, 0, -0.3]}>
+      <group ref={g}>
+        {Array.from({ length: count }).map((_, i) => {
+          const a = (i / count) * Math.PI * 2;
+          const long = i % 9 === 0;
+          const r = 2.55;
+          return (
+            <mesh key={i} position={[Math.cos(a) * r, Math.sin(a) * r, 0]} rotation={[0, 0, a]}>
+              <boxGeometry args={[long ? 0.14 : 0.05, 0.006, 0.004]} />
+              <meshStandardMaterial
+                color={long ? "#ffd6d8" : "#8a8a8e"}
+                metalness={1}
+                roughness={0.2}
+                emissive={long ? "#c81018" : "#000000"}
+                emissiveIntensity={long ? 1.2 : 0}
+                toneMapped={false}
+              />
+            </mesh>
+          );
+        })}
+      </group>
+      <group ref={inner}>
+        {Array.from({ length: 36 }).map((_, i) => {
+          const a = (i / 36) * Math.PI * 2;
+          const r = 2.15;
+          return (
+            <mesh key={i} position={[Math.cos(a) * r, Math.sin(a) * r, 0]} rotation={[0, 0, a]}>
+              <boxGeometry args={[0.03, 0.004, 0.003]} />
+              <meshStandardMaterial color="#5a5a5e" metalness={1} roughness={0.3} />
+            </mesh>
+          );
+        })}
+      </group>
+    </group>
+  );
+}
+
+/** Rising ember particles — additive red sparks drifting upward. */
+function Embers({ count = 90 }: { count?: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const seeds = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    const speed = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 3.4;
+      arr[i * 3 + 1] = -2.4 + Math.random() * 5;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 1.6;
+      speed[i] = 0.15 + Math.random() * 0.35;
+    }
+    return { arr, speed };
+  }, [count]);
+  const tex = useRadialGlowTexture();
+
+  useFrame((state, delta) => {
+    if (!ref.current) return;
+    const pos = (ref.current.geometry as THREE.BufferGeometry).attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i < count; i++) {
+      let y = pos.getY(i) + seeds.speed[i] * delta;
+      const x = pos.getX(i) + Math.sin(state.clock.elapsedTime * 0.6 + i) * 0.002;
+      if (y > 2.6) y = -2.4;
+      pos.setY(i, y);
+      pos.setX(i, x);
+    }
+    pos.needsUpdate = true;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[seeds.arr, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.09}
+        map={tex}
+        color="#ff2a2a"
+        transparent
+        opacity={0.85}
+        sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
 }
 
@@ -399,6 +531,10 @@ export function HeroScene() {
       camera={{ position: [0, 0.2, 6.4], fov: 36 }}
       dpr={[1, 1.8]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      onCreated={({ gl }) => {
+        gl.toneMapping = THREE.ACESFilmicToneMapping;
+        gl.toneMappingExposure = 1.15;
+      }}
       shadows
       style={{ background: "transparent" }}
     >
@@ -421,7 +557,9 @@ export function HeroScene() {
       <spotLight position={[3.5, 1.8, 4]} intensity={26} angle={0.6} penumbra={1} color="#ffffff" />
       <Environment preset="night" />
       <LightShafts />
+      <GlyphHalo scroll={0} />
       <Monolith />
+      <Embers />
       <Dust />
       <ContactShadows position={[0, -2.4, 0]} opacity={0.75} scale={12} blur={3.2} far={4.5} color="#000000" />
       <CameraRig />
