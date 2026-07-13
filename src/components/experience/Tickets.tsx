@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 
 type Pass = {
@@ -183,9 +183,24 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
 
 export function Tickets() {
   const [active, setActive] = useState<"standard" | "vip">("vip");
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.2, 1.4, 0.3]);
+  const glowScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1.1, 0.95]);
   return (
-    <section id="tickets" className="relative px-6 py-32 md:px-12 md:py-48">
-      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at top, oklch(0.35 0.2 25 / 0.14), transparent 60%)" }} />
+    <section ref={sectionRef} id="tickets" className="relative px-6 py-32 md:px-12 md:py-48">
+      <motion.div
+        className="pointer-events-none absolute inset-0 will-change-transform"
+        style={{
+          background: "radial-gradient(ellipse at top, oklch(0.4 0.24 25 / 0.28), transparent 60%)",
+          opacity: glowOpacity,
+          scale: glowScale,
+          transformOrigin: "50% 20%",
+        }}
+      />
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
