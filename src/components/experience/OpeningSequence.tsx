@@ -135,47 +135,20 @@ export function OpeningSequence() {
               <Dust />
             </motion.div>
 
-            {/* Slow moving spotlight beam — cold cinema key light travelling L→R */}
-            <motion.div
-              className="absolute -inset-x-1/2 -top-[20%] bottom-0"
-              initial={{ x: "-30%", opacity: 0 }}
-              animate={{ x: ["-30%", "35%"], opacity: [0, 0.9, 0.4] }}
-              transition={{ delay: 1.8, duration: 3.0, ease: [0.22, 1, 0.36, 1], times: [0, 0.55, 1] }}
-              style={{
-                background:
-                  "conic-gradient(from 178deg at 50% -10%, transparent 0deg, transparent 168deg, rgba(255,240,220,0.14) 175deg, rgba(255,240,220,0.32) 180deg, rgba(255,240,220,0.14) 185deg, transparent 192deg, transparent 360deg)",
-                filter: "blur(14px)",
-                mixBlendMode: "screen",
-              }}
-            />
-
-            {/* Second, tighter spotlight — warm crimson kiss late in the sequence */}
-            <motion.div
-              className="absolute -inset-x-1/2 -top-[20%] bottom-0"
-              initial={{ x: "40%", opacity: 0 }}
-              animate={{ x: ["40%", "-10%"], opacity: [0, 0.5, 0] }}
-              transition={{ delay: 3.0, duration: 2.2, ease: [0.22, 1, 0.36, 1], times: [0, 0.5, 1] }}
-              style={{
-                background:
-                  "conic-gradient(from 178deg at 50% -10%, transparent 0deg, transparent 172deg, rgba(220,60,60,0.18) 180deg, transparent 188deg, transparent 360deg)",
-                filter: "blur(20px)",
-                mixBlendMode: "screen",
-              }}
-            />
-
             {/* Late vignette that eases back to match Hero base */}
             <div
               className="pointer-events-none absolute inset-0"
               style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.75) 100%)" }}
             />
 
-            {/* Illuminati sigil — rises above the crimson glow, rotates, then descends */}
+            {/* Illuminati sigil — rises, rotates, then retraces the same path back down.
+                Rotation mirrors (−180 → 0 → −180) so descent reverses ascent exactly. */}
             <motion.div
               className="pointer-events-none absolute left-1/2 top-[38%] -translate-x-1/2"
               initial={{ y: "60vh", rotate: -180, opacity: 0, scale: 0.6 }}
               animate={{
                 y: ["60vh", "0vh", "0vh", "60vh"],
-                rotate: [-180, 0, 360, 540],
+                rotate: [-180, 0, 0, -180],
                 opacity: [0, 1, 1, 0],
                 scale: [0.6, 1, 1, 0.6],
               }}
@@ -188,15 +161,36 @@ export function OpeningSequence() {
               style={{
                 width: "min(38vh, 34vw)",
                 aspectRatio: "1 / 1",
-                filter:
-                  "drop-shadow(0 0 30px rgba(220,40,50,0.55)) drop-shadow(0 0 60px rgba(140,10,20,0.35))",
               }}
             >
+              {/* Red aura pulsing behind the sigil */}
+              <motion.div
+                className="absolute inset-[-40%]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.9, 0.9, 0] }}
+                transition={{
+                  delay: 1.0,
+                  duration: 5.0,
+                  times: [0, 0.32, 0.68, 1],
+                  ease: "easeInOut",
+                }}
+                style={{
+                  background:
+                    "radial-gradient(closest-side, rgba(255,40,55,0.75) 0%, rgba(200,15,30,0.5) 28%, rgba(120,5,15,0.25) 55%, rgba(0,0,0,0) 78%)",
+                  filter: "blur(24px)",
+                  mixBlendMode: "screen",
+                }}
+              />
               <img
                 src={illuminatiEye.url}
                 alt=""
-                className="h-full w-full object-contain"
-                style={{ mixBlendMode: "screen", opacity: 0.95 }}
+                className="relative h-full w-full object-contain"
+                style={{
+                  mixBlendMode: "screen",
+                  opacity: 0.95,
+                  filter:
+                    "drop-shadow(0 0 18px rgba(255,60,70,0.7)) drop-shadow(0 0 42px rgba(180,15,30,0.55))",
+                }}
                 draggable={false}
               />
             </motion.div>
