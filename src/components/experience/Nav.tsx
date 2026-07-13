@@ -1,4 +1,8 @@
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "@tanstack/react-router";
+
 export function Nav() {
+  const { user } = useAuth();
   return (
     <header className="fixed left-0 right-0 top-0 z-40 flex items-center justify-between bg-white px-6 py-5 text-black md:px-12">
       <a href="#top" className="flex items-center gap-3">
@@ -14,13 +18,23 @@ export function Nav() {
         <a href="#timeline" className="transition-colors hover:text-black">03 — LOCATION</a>
         <a href="#faq" className="transition-colors hover:text-black">04 — DECODE</a>
       </nav>
-      <a
-        href="#tickets"
-        className="group relative overflow-hidden rounded-full border border-black/30 bg-black px-5 py-2 font-mono text-[11px] tracking-[0.28em] text-white transition-colors hover:border-[oklch(0.55_0.24_25)]"
-      >
-        <span className="relative z-10">REQUEST INVITE →</span>
-        <span className="absolute inset-0 -translate-x-full bg-[oklch(0.4_0.22_25)] transition-transform duration-500 group-hover:translate-x-0" />
-      </a>
+      {user ? (
+        <Link
+          to="/purchases"
+          className="group relative overflow-hidden rounded-full border border-black/30 bg-black px-5 py-2 font-mono text-[11px] tracking-[0.28em] text-white transition-colors hover:border-[oklch(0.55_0.24_25)]"
+        >
+          <span className="relative z-10">PASSES →</span>
+          <span className="absolute inset-0 -translate-x-full bg-[oklch(0.4_0.22_25)] transition-transform duration-500 group-hover:translate-x-0" />
+        </Link>
+      ) : (
+        <a
+          href="#tickets"
+          className="group relative overflow-hidden rounded-full border border-black/30 bg-black px-5 py-2 font-mono text-[11px] tracking-[0.28em] text-white transition-colors hover:border-[oklch(0.55_0.24_25)]"
+        >
+          <span className="relative z-10">REQUEST INVITE →</span>
+          <span className="absolute inset-0 -translate-x-full bg-[oklch(0.4_0.22_25)] transition-transform duration-500 group-hover:translate-x-0" />
+        </a>
+      )}
     </header>
   );
 }
