@@ -188,6 +188,7 @@ function MechanicalIris({ scroll }: { scroll: number }) {
   const core = useRef<THREE.Mesh>(null);
   const rim = useRef<THREE.Mesh>(null);
   const BLADE_COUNT = 8;
+  const glowTex = useRadialGlowTexture();
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
@@ -284,7 +285,7 @@ function MechanicalIris({ scroll }: { scroll: number }) {
           opacity={0.35}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
-          map={useRadialGlowTexture()}
+          map={glowTex}
         />
       </mesh>
 
