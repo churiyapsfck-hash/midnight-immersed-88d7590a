@@ -1,10 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Wait for the opening sequence to finish before showing the custom cursor.
+    const t = window.setTimeout(() => setReady(true), 6800);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const dot = dotRef.current!;
@@ -46,7 +54,9 @@ export function CustomCursor() {
       window.removeEventListener("mouseover", onOver);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [ready]);
+
+  if (!ready) return null;
 
   return (
     <>
