@@ -18,8 +18,8 @@ export function Gallery() {
       <div className="mx-auto mb-16 max-w-7xl px-6 md:px-12">
         <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">— 02 / VAULT</div>
         <h2 className="mt-4 font-[Anton] text-6xl leading-[0.9] tracking-tight md:text-8xl">
-          <span className="text-chrome">Recovered</span>{" "}
-          <span className="italic text-blood">frames.</span>
+          <span className="text-chrome">EDITION</span>{" "}
+          <span className="text-blood">2</span>
         </h2>
       </div>
 
