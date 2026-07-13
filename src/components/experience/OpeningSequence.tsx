@@ -82,6 +82,8 @@ export function OpeningSequence() {
           transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
           aria-hidden
         >
+          {/* Hide the custom cursor while the opening plays */}
+          <style>{`.lovable-cursor{display:none!important} html,body{cursor:none!important}`}</style>
           {/* Held pure black — no gradients for the first ~450ms */}
           <motion.div
             className="absolute inset-0"
@@ -106,7 +108,7 @@ export function OpeningSequence() {
               transition={{
                 delay: 1.0,
                 duration: 5.0,
-                times: [0, 0.32, 0.68, 1],
+                times: [0, 0.22, 0.86, 1],
                 ease: "easeInOut",
               }}
               style={{

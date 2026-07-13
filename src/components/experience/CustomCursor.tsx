@@ -53,13 +53,13 @@ export function CustomCursor() {
       <div
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-10 w-10 rounded-full border border-white/40 mix-blend-difference transition-[border-color,background-color] duration-200 data-[hover=true]:border-[oklch(0.6_0.22_25)] data-[hover=true]:bg-[oklch(0.6_0.22_25/0.15)]"
+        className="lovable-cursor pointer-events-none fixed left-0 top-0 z-[9999] h-10 w-10 rounded-full border border-white/40 mix-blend-difference transition-[border-color,background-color] duration-200 data-[hover=true]:border-[oklch(0.6_0.22_25)] data-[hover=true]:bg-[oklch(0.6_0.22_25/0.15)]"
         style={{ willChange: "transform" }}
       />
       <div
         ref={dotRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full bg-white mix-blend-difference"
+        className="lovable-cursor pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full bg-white mix-blend-difference"
         style={{ willChange: "transform" }}
       />
     </>

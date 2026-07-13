@@ -57,19 +57,6 @@ function MachinedTitle() {
         </motion.span>
       </h1>
 
-      {/* Horizontal light sweep across the letters */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 mix-blend-overlay"
-        style={{
-          background:
-            "linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%)",
-          WebkitMaskImage:
-            "linear-gradient(180deg, black, black)",
-          animation: "sweep 7s ease-in-out infinite",
-        }}
-      />
-      <style>{`@keyframes sweep { 0%,100% { transform: translateX(-30%);} 50% { transform: translateX(30%);} }`}</style>
     </div>
   );
 }
