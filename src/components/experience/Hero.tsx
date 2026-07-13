@@ -57,6 +57,22 @@ function MachinedTitle() {
         </motion.span>
       </h1>
 
+      {/* Horizontal light sweep across the letters — delayed so it does not
+          fire during the opening sequence. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 mix-blend-overlay"
+        style={{
+          background:
+            "linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%)",
+          opacity: 0,
+          animation: "heroSweep 7s ease-in-out 6.6s infinite, heroSweepFade 0.8s ease-out 6.6s forwards",
+        }}
+      />
+      <style>{`
+        @keyframes heroSweep { 0%,100% { transform: translateX(-30%);} 50% { transform: translateX(30%);} }
+        @keyframes heroSweepFade { to { opacity: 1; } }
+      `}</style>
     </div>
   );
 }
