@@ -4,24 +4,55 @@ import { supabase } from "@/lib/supabase";
 import { resolveEmailByUserCode } from "@/lib/user.functions";
 
 export function AuthPanel({ redirectTo }: { redirectTo: string }) {
-  const [mode, setMode] = useState<"signin" | "userid">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "userid">("signin");
+  const [email, setEmail] = useState("");
   const [userCode, setUserCode] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const signInGoogle = async () => {
+  const signInEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
     setBusy(true);
     setError(null);
-    const redirectUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`
-        : redirectTo;
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: redirectUrl },
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) setError(error.message);
+    else window.location.href = redirectTo;
+    setBusy(false);
+  };
+
+  const signUpEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      setBusy(false);
+      return;
+    }
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      setBusy(false);
+      return;
+    }
+    const emailRedirectTo =
+      typeof window !== "undefined" ? `${window.location.origin}${redirectTo}` : redirectTo;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo },
+    });
+    if (error) {
+      setError(error.message);
+    } else if (data.session) {
+      window.location.href = redirectTo;
+    } else {
+      setNotice("Check your email to confirm your account, then sign in.");
+      setMode("signin");
+    }
     setBusy(false);
   };
 
@@ -55,29 +86,65 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
     >
       <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">— ACCESS</div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
-        Enter the <span style={{ color: "oklch(0.55 0.24 25)" }}>circle.</span>
+        {mode === "signup" ? (
+          <>Join the <span style={{ color: "oklch(0.55 0.24 25)" }}>circle.</span></>
+        ) : (
+          <>Enter the <span style={{ color: "oklch(0.55 0.24 25)" }}>circle.</span></>
+        )}
       </h2>
       <p className="mt-2 font-serif text-sm italic text-white/50">
-        Sign in with Google, or use your User ID.
+        {mode === "signup"
+          ? "Create an account with your email."
+          : mode === "userid"
+          ? "Use your ILL User ID and password."
+          : "Sign in with your email and password."}
       </p>
 
-      {mode === "signin" ? (
-        <div className="mt-6 space-y-3">
-          <button
-            onClick={signInGoogle}
-            disabled={busy}
-            className="w-full rounded-full border border-white/15 bg-white px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-black transition-transform hover:scale-[1.01] disabled:opacity-50"
-          >
-            CONTINUE WITH GOOGLE →
+      {mode === "signin" && (
+        <form onSubmit={signInEmail} className="mt-6 space-y-3">
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required
+            className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required
+            className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-mono text-sm text-white placeholder:text-white/25 focus:outline-none" />
+          <button type="submit" disabled={busy}
+            className="w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
+            style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>
+            {busy ? "…" : "SIGN IN →"}
           </button>
-          <button
-            onClick={() => setMode("userid")}
-            className="w-full rounded-full border border-white/15 bg-transparent px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white/70 transition-colors hover:text-white"
-          >
-            I HAVE A USER ID
+          <div className="flex items-center justify-between pt-1">
+            <button type="button" onClick={() => { setMode("signup"); setError(null); }}
+              className="font-mono text-[10px] tracking-[0.32em] text-white/50 hover:text-white">
+              CREATE ACCOUNT
+            </button>
+            <button type="button" onClick={() => { setMode("userid"); setError(null); }}
+              className="font-mono text-[10px] tracking-[0.32em] text-white/50 hover:text-white">
+              USE USER ID
+            </button>
+          </div>
+        </form>
+      )}
+
+      {mode === "signup" && (
+        <form onSubmit={signUpEmail} className="mt-6 space-y-3">
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required
+            className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password (min 8 chars)" required minLength={8}
+            className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-mono text-sm text-white placeholder:text-white/25 focus:outline-none" />
+          <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirm password" required minLength={8}
+            className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-mono text-sm text-white placeholder:text-white/25 focus:outline-none" />
+          <button type="submit" disabled={busy}
+            className="w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
+            style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>
+            {busy ? "…" : "CREATE ACCOUNT →"}
           </button>
-        </div>
-      ) : (
+          <button type="button" onClick={() => { setMode("signin"); setError(null); }}
+            className="w-full font-mono text-[10px] tracking-[0.32em] text-white/40 hover:text-white/70">
+            ← ALREADY HAVE AN ACCOUNT
+          </button>
+        </form>
+      )}
+
+      {mode === "userid" && (
         <form onSubmit={signInWithUserCode} className="mt-6 space-y-3">
           <input
             value={userCode}
@@ -107,11 +174,16 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
             onClick={() => setMode("signin")}
             className="w-full font-mono text-[10px] tracking-[0.32em] text-white/40 hover:text-white/70"
           >
-            ← BACK TO GOOGLE
+            ← BACK TO EMAIL
           </button>
         </form>
       )}
 
+      {notice && (
+        <div className="mt-4 rounded-lg border border-white/15 bg-white/5 px-3 py-2 font-mono text-[10px] tracking-[0.2em] text-white/70">
+          {notice}
+        </div>
+      )}
       {error && (
         <div className="mt-4 rounded-lg px-3 py-2 font-mono text-[10px] tracking-[0.2em]" style={{ borderColor: "oklch(0.55 0.24 25 / 0.4)", borderWidth: 1, color: "oklch(0.7 0.22 25)", background: "oklch(0.3 0.15 25 / 0.15)" }}>
           {error}
