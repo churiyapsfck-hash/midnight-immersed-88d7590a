@@ -109,28 +109,7 @@ export function Hero() {
 
       {/* Foreground content */}
       <div className="relative z-10 flex min-h-[100svh] flex-col justify-between px-6 pb-14 pt-28 md:px-12 md:pt-32">
-        {/* Top rail */}
-        <div className="flex items-start justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 4.2, duration: 1.4, ease: "easeOut" }}
-            className="font-mono text-[10px] leading-relaxed tracking-[0.3em] text-white/45"
-          >
-            <div>LAT 40.7128 N</div>
-            <div>LON 74.0060 W</div>
-            <div className="mt-1 text-[oklch(0.7_0.2_25)]">// COORDINATES REDACTED</div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 4.4, duration: 1.4, ease: "easeOut" }}
-            className="text-right font-mono text-[10px] tracking-[0.3em] text-white/45"
-          >
-            <div>PROTOCOL III</div>
-            <div className="mt-1">MMXXVI</div>
-          </motion.div>
-        </div>
+        <div />
 
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
@@ -140,27 +119,21 @@ export function Hero() {
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 blur-2xl"
             style={{ background: "radial-gradient(ellipse, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 75%)" }}
           />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 3.2, duration: 1.6, ease: "easeOut" }}
-            className="mb-6 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-white/55"
-          >
-            <span className="h-px w-10 bg-white/30" />
-            <span>BY INVITATION ONLY</span>
-            <span className="h-px w-10 bg-white/30" />
-          </motion.div>
-
           <MachinedTitle />
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-6 max-w-md text-sm text-white/55 md:text-base"
+            className="mx-auto mt-8 flex flex-col items-center gap-2"
           >
-            Awareness. Precision. Anticipation. A cinematic gathering machined from obsidian and blood — assembled once, then dismantled.
-          </motion.p>
+            <div className="font-[Anton] text-2xl tracking-[0.28em] text-white/90 md:text-4xl">
+              MARQUEE CLUB AND KITCHEN
+            </div>
+            <div className="font-mono text-sm tracking-[0.5em] text-[oklch(0.7_0.2_25)] md:text-base">
+              AUG #
+            </div>
+          </motion.div>
         </div>
 
         {/* Countdown + scroll hint */}
