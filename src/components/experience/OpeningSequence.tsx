@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import illuminatiEye from "@/assets/illuminati-eye.png.asset.json";
+import illuminatiEye from "@/assets/illuminati-eye-mono.png.asset.json";
 
 /**
  * OPENING SEQUENCE
