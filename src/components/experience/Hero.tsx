@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ClientOnly } from "./ClientOnly";
 import { HeroScene } from "./HeroScene";
 import { Countdown } from "./Countdown";
@@ -123,13 +124,14 @@ export function Hero() {
               </div>
               <div
                 className="font-[Anton] leading-none tracking-[0.18em]"
-                style={{
+               style={{
                   fontSize: "clamp(2rem, 5.5vw, 4rem)",
                   color: "transparent",
                   background:
-                    "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 45%, #6a6a70 75%, #cfcfd4 100%)",
+                    "linear-gradient(180deg, #4a4a4e 0%, #2a2a2e 40%, #0f0f11 70%, #333338 100%)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
+                  textShadow: "0 1px 0 rgba(255,255,255,0.05)",
                 }}
               >
                 IRONOAK
