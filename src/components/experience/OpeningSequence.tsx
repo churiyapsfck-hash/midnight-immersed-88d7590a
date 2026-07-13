@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import illuminatiEye from "@/assets/illuminati-eye.png.asset.json";
 
 /**
  * OPENING SEQUENCE
@@ -10,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
  */
 
 // Total sequence duration, seconds
-const TOTAL = 5.2;
+const TOTAL = 6.4;
 
 function Dust() {
   const motes = useMemo(
@@ -167,6 +168,38 @@ export function OpeningSequence() {
               className="pointer-events-none absolute inset-0"
               style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.75) 100%)" }}
             />
+
+            {/* Illuminati sigil — rises above the crimson glow, rotates, then descends */}
+            <motion.div
+              className="pointer-events-none absolute left-1/2 top-[38%] -translate-x-1/2"
+              initial={{ y: "60vh", rotate: -180, opacity: 0, scale: 0.6 }}
+              animate={{
+                y: ["60vh", "0vh", "0vh", "60vh"],
+                rotate: [-180, 0, 360, 540],
+                opacity: [0, 1, 1, 0],
+                scale: [0.6, 1, 1, 0.6],
+              }}
+              transition={{
+                delay: 1.0,
+                duration: 5.0,
+                times: [0, 0.32, 0.68, 1],
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              style={{
+                width: "min(38vh, 34vw)",
+                aspectRatio: "1 / 1",
+                filter:
+                  "drop-shadow(0 0 30px rgba(220,40,50,0.55)) drop-shadow(0 0 60px rgba(140,10,20,0.35))",
+              }}
+            >
+              <img
+                src={illuminatiEye.url}
+                alt=""
+                className="h-full w-full object-contain"
+                style={{ mixBlendMode: "screen", opacity: 0.95 }}
+                draggable={false}
+              />
+            </motion.div>
           </motion.div>
 
           {/* Fine film grain */}
