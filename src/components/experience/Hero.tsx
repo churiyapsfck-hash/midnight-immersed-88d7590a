@@ -11,17 +11,11 @@ import { Countdown } from "./Countdown";
  */
 function MachinedTitle() {
   const chars = "ILLUMINATI".split("");
-  // Reveal timing — title fades in as a single GPU-friendly transform,
-  // no per-letter blur filters (those cause layout thrash / lag).
-  const REVEAL_START = 7.6;
+  // Title is visible from mount — the OpeningSequence overlay handles the
+  // intro reveal. (Long-delay framer-motion transitions don't reliably fire
+  // in framer-motion 12 + React 19 concurrent mode.)
   return (
-    <motion.div
-      className="relative"
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: REVEAL_START, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-      style={{ willChange: "transform, opacity" }}
-    >
+    <div className="relative">
       <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
         {chars.map((c, i) => (
           <span
@@ -58,7 +52,7 @@ function MachinedTitle() {
         </span>
       </h1>
 
-    </motion.div>
+    </div>
   );
 }
 
@@ -147,12 +141,7 @@ export function Hero() {
           />
           <MachinedTitle />
 
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-8 flex flex-col items-center gap-2"
-          >
+          <div className="mx-auto mt-8 flex flex-col items-center gap-2">
             <div className="font-[Anton] text-2xl tracking-[0.28em] text-white/90 md:text-4xl">
               MARQUEE CLUB AND KITCHEN
             </div>
@@ -178,23 +167,18 @@ export function Hero() {
                 IRONOAK
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Countdown + scroll hint */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center gap-8"
-        >
+        <div className="flex flex-col items-center gap-8">
           <Countdown target={target} />
           <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-white/40">
             <span className="inline-block h-px w-10 bg-white/40 animate-flicker" />
             <span>DESCEND</span>
             <span className="inline-block h-px w-10 bg-white/40 animate-flicker" />
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
