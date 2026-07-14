@@ -186,7 +186,7 @@ export function OpeningSequence() {
                 }}
               />
               <img
-                src={illuminatiEye.url}
+                src="/illuminati-eye-mono.png"
                 alt=""
                 className="relative h-full w-full object-contain"
                 style={{
