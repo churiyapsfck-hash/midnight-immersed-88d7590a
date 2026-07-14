@@ -30,7 +30,8 @@ create table if not exists public.bookings (
   phone text not null,
   utr text not null,
   screenshot_path text,
-  status text not null default 'pending' check (status in ('pending','verified','declined')),
+  purchase_id text unique,
+  status text not null default 'pending' check (status in ('pending','verified','declined','active')),
   created_at timestamptz not null default now()
 );
 grant select, insert on public.bookings to authenticated;
