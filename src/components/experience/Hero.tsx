@@ -76,36 +76,36 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} id="top" className="relative min-h-[100svh] w-full overflow-hidden grain">
-      {/* Deep atmospheric base */}
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, #120306 0%, #050405 55%, #020203 100%)" }} />
-      {/* Volumetric top beam — scroll-linked intensity + drift */}
+      {/* Matte paper base */}
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, #f6f4ef 0%, #ecebe6 60%, #e2e0da 100%)" }} />
+      {/* Soft crimson wash near the top — barely there */}
       <motion.div
         className="pointer-events-none absolute inset-x-0 top-0 h-[70%] will-change-transform"
         style={{
           background:
-            "radial-gradient(ellipse 40% 100% at 50% 0%, oklch(0.35 0.22 25 / 0.5), transparent 65%)",
+            "radial-gradient(ellipse 55% 90% at 50% 0%, oklch(0.65 0.22 25 / 0.14), transparent 70%)",
           opacity: beamOpacity,
           scale: beamScale,
           y: beamY,
           transformOrigin: "50% 0%",
         }}
       />
-      {/* Bottom vignette — deepens as you scroll */}
+      {/* Bottom fade to page bg */}
       <motion.div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%]"
         style={{
-          background: "linear-gradient(180deg, transparent, #030203 85%)",
+          background: "linear-gradient(180deg, transparent, #d9d7d1 90%)",
           opacity: vignetteOpacity,
         }}
       />
-      {/* Drifting particle field — light and scroll-linked */}
+      {/* Drifting particle field — subtle dark specks on the paper */}
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-40"
+        className="pointer-events-none absolute inset-0 opacity-25"
         style={{
           y: grainDrift,
           backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), radial-gradient(rgba(220,20,40,0.25) 1px, transparent 1px)",
+            "radial-gradient(rgba(30,20,25,0.28) 1px, transparent 1px), radial-gradient(rgba(160,20,35,0.22) 1px, transparent 1px)",
           backgroundSize: "140px 140px, 220px 220px",
           backgroundPosition: "0 0, 70px 90px",
           maskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
@@ -113,12 +113,12 @@ export function Hero() {
         }}
       />
 
-      {/* Slow scanline */}
+      {/* Slow scanline — dimmed on light bg */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-70">
         <div
           className="absolute inset-x-0 h-48"
           style={{
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.035) 50%, transparent)",
+            background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.03) 50%, transparent)",
             animation: "scanline 14s linear infinite",
           }}
         />
@@ -130,11 +130,11 @@ export function Hero() {
 
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
-          {/* Soft dark halo behind title to lift it off the monolith */}
+          {/* Soft warm halo behind title */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 blur-2xl"
-            style={{ background: "radial-gradient(ellipse, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 75%)" }}
+            style={{ background: "radial-gradient(ellipse, rgba(255,250,246,0.9) 0%, rgba(255,240,236,0.5) 45%, transparent 75%)" }}
           />
           <MachinedTitle />
 
