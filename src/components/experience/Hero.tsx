@@ -1,7 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ClientOnly } from "./ClientOnly";
-import { HeroScene } from "./HeroScene";
 import { Countdown } from "./Countdown";
 
 /**
@@ -114,13 +112,6 @@ export function Hero() {
           WebkitMaskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
         }}
       />
-
-      {/* 3D monolith scene */}
-      <div className="absolute inset-0">
-        <ClientOnly>
-          <HeroScene />
-        </ClientOnly>
-      </div>
 
       {/* Slow scanline */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-70">
