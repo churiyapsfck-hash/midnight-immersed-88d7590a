@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import illuminatiEye from "@/assets/illuminati-eye-mono.png.asset.json";
 
 /**
  * OPENING SEQUENCE
@@ -107,7 +108,7 @@ export function OpeningSequence() {
               transition={{
                 delay: 1.0,
                 duration: 6.5,
-                times: [0, 0.22, 0.89, 1],
+                times: [0, 0.22, 0.74, 1],
                 ease: "easeInOut",
               }}
               style={{
@@ -159,7 +160,7 @@ export function OpeningSequence() {
               transition={{
                 delay: 1.0,
                 duration: 6.5,
-                times: [0, 0.28, 0.87, 1],
+                times: [0, 0.28, 0.72, 1],
                 ease: [0.22, 1, 0.36, 1],
               }}
               style={{
@@ -175,7 +176,7 @@ export function OpeningSequence() {
                 transition={{
                   delay: 1.0,
                   duration: 6.5,
-                  times: [0, 0.28, 0.87, 1],
+                  times: [0, 0.28, 0.72, 1],
                   ease: "easeInOut",
                 }}
                 style={{
@@ -186,11 +187,12 @@ export function OpeningSequence() {
                 }}
               />
               <img
-                src="/illuminati-eye-mono.png"
+                src={illuminatiEye.url}
                 alt=""
                 className="relative h-full w-full object-contain"
                 style={{
-                  opacity: 1,
+                  mixBlendMode: "screen",
+                  opacity: 0.95,
                   filter:
                     "drop-shadow(0 0 18px rgba(255,60,70,0.7)) drop-shadow(0 0 42px rgba(180,15,30,0.55))",
                 }}
