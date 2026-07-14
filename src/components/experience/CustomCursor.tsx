@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-export function CustomCursor() {
+export function CustomCursor({ delay = 9800 }: { delay?: number } = {}) {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Wait for the opening sequence to finish before showing the custom cursor.
-    const t = window.setTimeout(() => setReady(true), 9800);
+    // Wait (by default for the opening sequence) before showing the custom cursor.
+    const t = window.setTimeout(() => setReady(true), delay);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [delay]);
 
   useEffect(() => {
     if (!ready) return;
