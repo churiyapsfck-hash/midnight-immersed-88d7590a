@@ -6,7 +6,6 @@ import { Gallery } from "@/components/experience/Gallery";
 import { Timeline } from "@/components/experience/Timeline";
 import { Faq } from "@/components/experience/Faq";
 import { Ending } from "@/components/experience/Ending";
-import { CustomCursor } from "@/components/experience/CustomCursor";
 import { SmoothScroll } from "@/components/experience/SmoothScroll";
 import { OpeningSequence } from "@/components/experience/OpeningSequence";
 import { ClientOnly } from "@/components/experience/ClientOnly";
@@ -20,7 +19,6 @@ function Index() {
     <main className="relative min-h-screen bg-background text-foreground">
       <ClientOnly>
         <SmoothScroll />
-        <CustomCursor />
         <OpeningSequence />
       </ClientOnly>
       <Nav />

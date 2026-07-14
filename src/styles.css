@@ -234,8 +234,3 @@
 @utility animate-breathe { animation: breathe 4s ease-in-out infinite; }
 @utility animate-flicker { animation: flicker 6s linear infinite; }
 @utility animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
-
-/* Custom cursor: hide default on desktop */
-@media (pointer: fine) {
-  html, body, * { cursor: none !important; }
-}
