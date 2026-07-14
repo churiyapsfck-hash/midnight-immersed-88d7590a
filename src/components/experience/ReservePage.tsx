@@ -5,7 +5,6 @@ import { AuthPanel } from "@/components/experience/AuthPanel";
 import { ProfileSetupForm } from "@/components/experience/ProfileSetupForm";
 import { CredentialsCard } from "@/components/experience/CredentialsCard";
 import { BookingForm } from "@/components/experience/BookingForm";
-import { CustomCursor } from "@/components/experience/CustomCursor";
 import { SmoothScroll } from "@/components/experience/SmoothScroll";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -25,7 +24,6 @@ export function ReservePage({ passType }: { passType: "standard" | "vip" }) {
       />
       <ClientOnly>
         <SmoothScroll />
-        <CustomCursor delay={1600} />
         <ReloadIntro>
           <div className="relative flex min-h-screen items-center justify-center px-6 py-24">
             {loading ? (
