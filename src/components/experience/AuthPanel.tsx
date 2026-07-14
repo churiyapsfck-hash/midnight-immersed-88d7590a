@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
-import { resolveEmailByUserCode } from "@/lib/user.functions";
 
 export function AuthPanel({ redirectTo }: { redirectTo: string }) {
-  const [mode, setMode] = useState<"signin" | "signup" | "userid">("signin");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
-  const [userCode, setUserCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
@@ -58,30 +56,11 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
     setBusy(false);
   };
 
-  const signInWithUserCode = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    setError(null);
-    try {
-      const { email } = await resolveEmailByUserCode({ data: { userCode } });
-      if (!email) throw new Error("No account found with that User ID.");
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      window.location.href = redirectTo;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Sign in failed.");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const title =
-    mode === "signup" ? "JOIN THE CIRCLE" : mode === "userid" ? "IDENTIFY YOURSELF" : "ENTER THE CIRCLE";
+    mode === "signup" ? "JOIN THE CIRCLE" : "ENTER THE CIRCLE";
   const subtitle =
     mode === "signup"
       ? "A new soul steps into the light."
-      : mode === "userid"
-      ? "Use your ILL User ID and password."
       : "Sign in with your email and password.";
 
   const inputCls =
@@ -90,7 +69,6 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
   const tabs: Array<{ id: typeof mode; label: string }> = [
     { id: "signin", label: "SIGN IN" },
     { id: "signup", label: "CREATE" },
-    { id: "userid", label: "USER ID" },
   ];
 
   return (
@@ -180,7 +158,7 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
           <p className="mt-2 font-serif text-sm italic text-white/50">{subtitle}</p>
 
           {/* Tabs */}
-          <div className="mt-7 grid grid-cols-3 gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
+          <div className="mt-7 grid grid-cols-2 gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1">
             {tabs.map((t) => {
               const active = mode === t.id;
               return (
@@ -260,25 +238,6 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
                 </motion.form>
               )}
 
-              {mode === "userid" && (
-                <motion.form
-                  key="userid"
-                  onSubmit={signInWithUserCode}
-                  initial={{ opacity: 0, x: 12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -12 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="space-y-5"
-                >
-                  <FieldLabel label="USER ID">
-                    <input value={userCode} onChange={(e) => setUserCode(e.target.value.toUpperCase())} placeholder="ILL-XXXXXX" className={`${inputCls} tracking-[0.24em]`} required />
-                  </FieldLabel>
-                  <FieldLabel label="PASSWORD">
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className={inputCls} required />
-                  </FieldLabel>
-                  <SubmitButton busy={busy} label="AUTHENTICATE" />
-                </motion.form>
-              )}
             </AnimatePresence>
           </div>
 
