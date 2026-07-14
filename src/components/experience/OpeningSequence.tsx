@@ -107,7 +107,7 @@ export function OpeningSequence() {
               transition={{
                 delay: 1.0,
                 duration: 6.5,
-                times: [0, 0.22, 0.74, 1],
+                times: [0, 0.22, 0.89, 1],
                 ease: "easeInOut",
               }}
               style={{
@@ -159,7 +159,7 @@ export function OpeningSequence() {
               transition={{
                 delay: 1.0,
                 duration: 6.5,
-                times: [0, 0.28, 0.72, 1],
+                times: [0, 0.28, 0.87, 1],
                 ease: [0.22, 1, 0.36, 1],
               }}
               style={{
@@ -175,7 +175,7 @@ export function OpeningSequence() {
                 transition={{
                   delay: 1.0,
                   duration: 6.5,
-                  times: [0, 0.28, 0.72, 1],
+                  times: [0, 0.28, 0.87, 1],
                   ease: "easeInOut",
                 }}
                 style={{
