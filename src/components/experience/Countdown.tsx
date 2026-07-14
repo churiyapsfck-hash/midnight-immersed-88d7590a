@@ -34,7 +34,7 @@ function Unit({ value, label }: { value: number; label: string }) {
               fontSize: "clamp(2.4rem, 9.5vw, 8rem)",
               color: "transparent",
               background:
-                "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 40%, #6a6a70 70%, #cfcfd4 100%)",
+                "linear-gradient(180deg, #4a4a4e 0%, #2a2a2e 40%, #0e0e10 70%, #2a2a2e 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
             }}
@@ -80,18 +80,18 @@ export function Countdown({ target }: { target: Date }) {
 
   return (
     <div className="mx-auto w-full max-w-4xl">
-      <div className="mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-white/45">
-        <span className="h-px w-8 bg-white/30" />
+      <div className="mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-neutral-500">
+        <span className="h-px w-8 bg-neutral-500/50" />
         <span>TIME UNTIL AWAKENING</span>
-        <span className="h-px w-8 bg-white/30" />
+        <span className="h-px w-8 bg-neutral-500/50" />
       </div>
       <div className="flex items-start justify-center gap-2 sm:gap-6 md:gap-12">
         <Unit value={d} label="DAYS" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-neutral-400/70 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={h} label="HOURS" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-neutral-400/70 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={m} label="MINUTES" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-neutral-400/70 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={s} label="SECONDS" />
       </div>
     </div>
