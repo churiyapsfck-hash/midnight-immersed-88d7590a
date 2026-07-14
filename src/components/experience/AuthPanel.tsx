@@ -39,7 +39,9 @@ export function AuthPanel({ redirectTo }: { redirectTo: string }) {
       return;
     }
     const emailRedirectTo =
-      typeof window !== "undefined" ? `${window.location.origin}${redirectTo}` : redirectTo;
+      typeof window !== "undefined"
+        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`
+        : `/auth/callback?next=${encodeURIComponent(redirectTo)}`;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
