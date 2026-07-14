@@ -191,8 +191,7 @@ export function OpeningSequence() {
                 alt=""
                 className="relative h-full w-full object-contain"
                 style={{
-                  mixBlendMode: "screen",
-                  opacity: 0.95,
+                  opacity: 1,
                   filter:
                     "drop-shadow(0 0 18px rgba(255,60,70,0.7)) drop-shadow(0 0 42px rgba(180,15,30,0.55))",
                 }}
