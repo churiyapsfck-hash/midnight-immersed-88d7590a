@@ -11,9 +11,10 @@ type Booking = {
   full_name: string;
   phone: string;
   utr: string;
-  status: "pending" | "verified" | "declined";
+  status: "pending" | "verified" | "declined" | "active";
   created_at: string;
   screenshot_path: string | null;
+  purchase_id: string | null;
 };
 
 export const Route = createFileRoute("/purchases")({
@@ -44,7 +45,7 @@ function PurchasesPage() {
       }
       const { data } = await supabase
         .from("bookings")
-        .select("id, pass_type, category, full_name, phone, utr, status, created_at, screenshot_path")
+        .select("id, pass_type, category, full_name, phone, utr, status, created_at, screenshot_path, purchase_id")
         .eq("user_id", sess.session.user.id)
         .order("created_at", { ascending: false });
       setState({ kind: "ready", rows: (data ?? []) as Booking[] });
@@ -93,7 +94,7 @@ function PurchasesPage() {
 
 function BookingRow({ b, i }: { b: Booking; i: number }) {
   const color =
-    b.status === "verified"
+    b.status === "verified" || b.status === "active"
       ? "oklch(0.7 0.18 145)"
       : b.status === "declined"
         ? "oklch(0.55 0.24 25)"
@@ -113,13 +114,19 @@ function BookingRow({ b, i }: { b: Booking; i: number }) {
         <div className="mt-1 font-serif text-[13px] italic text-white/50">
           {b.full_name} · UTR {b.utr.slice(0, 12)}{b.utr.length > 12 ? "…" : ""}
         </div>
+        {b.purchase_id && (
+          <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/50 px-2 py-1 font-mono text-[10px] tracking-[0.3em] text-white/70">
+            <span className="text-white/40">PURCHASE ID</span>
+            <span className="text-white">{b.purchase_id}</span>
+          </div>
+        )}
       </div>
       <div className="flex flex-col items-start gap-2 md:items-end">
         <span className="rounded-full border px-3 py-1 font-mono text-[9px] tracking-[0.4em]"
           style={{ borderColor: color, color }}>
           {b.status.toUpperCase()}
         </span>
-        {b.status === "verified" && (
+        {(b.status === "verified" || b.status === "active") && (
           <button onClick={() => alert("Pass download coming soon.")}
             className="rounded-full border border-white/15 px-3 py-1 font-mono text-[9px] tracking-[0.32em] text-white/70 hover:text-white">
             DOWNLOAD PASS
