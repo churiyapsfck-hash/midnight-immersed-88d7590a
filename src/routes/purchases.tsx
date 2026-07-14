@@ -114,12 +114,10 @@ function BookingRow({ b, i }: { b: Booking; i: number }) {
         <div className="mt-1 font-serif text-[13px] italic text-white/50">
           {b.full_name} · UTR {b.utr.slice(0, 12)}{b.utr.length > 12 ? "…" : ""}
         </div>
-        {b.purchase_id && (
-          <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/50 px-2 py-1 font-mono text-[10px] tracking-[0.3em] text-white/70">
-            <span className="text-white/40">PURCHASE ID</span>
-            <span className="text-white">{b.purchase_id}</span>
-          </div>
-        )}
+        <div className="mt-2 inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/50 px-2 py-1 font-mono text-[10px] tracking-[0.3em] text-white/70">
+          <span className="text-white/40">PURCHASE ID</span>
+          <span className="text-white">{b.id}</span>
+        </div>
       </div>
       <div className="flex flex-col items-start gap-2 md:items-end">
         <span className="rounded-full border px-3 py-1 font-mono text-[9px] tracking-[0.4em]"
