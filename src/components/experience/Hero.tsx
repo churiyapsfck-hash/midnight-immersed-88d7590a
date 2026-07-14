@@ -1,22 +1,23 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { ClientOnly } from "./ClientOnly";
-import { HeroScene } from "./HeroScene";
 import { Countdown } from "./Countdown";
 
 /**
- * Machined title — ILLUMINATI 3.0 rendered with layered text-shadow
- * extrusion + metallic gradient. Each letter animates from behind
- * the darkness, as if pushed up from an obsidian floor.
+ * White editorial hero — this is the post-reload page the project was using:
+ * clean white stage, compressed centered title, blurred shadow mass, and the
+ * countdown sitting directly beneath the venue lockup.
  */
 function MachinedTitle() {
   const chars = "ILLUMINATI".split("");
-  // Title is visible from mount — the OpeningSequence overlay handles the
-  // intro reveal. (Long-delay framer-motion transitions don't reliably fire
-  // in framer-motion 12 + React 19 concurrent mode.)
   return (
-    <div className="relative">
-      <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
+    <div className="relative mx-auto w-full max-w-[760px]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-[58%] h-24 w-[72%] -translate-x-1/2 rounded-[50%] blur-3xl md:h-32"
+        style={{
+          background:
+            "radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.22) 42%, rgba(0,0,0,0) 72%)",
+        }}
+      />
+      <h1 className="relative flex flex-wrap justify-center font-[Anton] text-[clamp(3.5rem,10.4vw,8.9rem)] leading-[0.78] tracking-normal">
         {chars.map((c, i) => (
           <span
             key={i}
@@ -24,12 +25,12 @@ function MachinedTitle() {
             style={{
               color: "transparent",
               background:
-                "linear-gradient(180deg, #ffffff 0%, #d0d0d4 18%, #6a6a70 40%, #ececef 55%, #808086 78%, #2a2a2e 100%)",
+                "linear-gradient(180deg, #202024 0%, #3b3b42 20%, #08080a 52%, #67676e 64%, #16161a 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
-              WebkitTextStroke: "1px rgba(255,255,255,0.05)",
+              WebkitTextStroke: "0.5px rgba(0,0,0,0.12)",
               textShadow:
-                "0 1px 0 #2a2a2e, 0 2px 0 #1a1a1c, 0 4px 10px rgba(0,0,0,0.55), 0 0 40px rgba(180,20,32,0.18)",
+                "0 1px 0 #111, 0 2px 0 #050505, 0 14px 24px rgba(0,0,0,0.28), 0 28px 38px rgba(0,0,0,0.18)",
             }}
           >
             {c}
@@ -37,15 +38,15 @@ function MachinedTitle() {
         ))}
         {/* Version tag — blood red machined 3.0 */}
         <span
-          className="relative ml-4 inline-block md:ml-6"
+          className="relative ml-2 inline-block md:ml-3"
           style={{
             color: "transparent",
             background:
-              "linear-gradient(180deg, #ffb0b6 0%, #d81a28 30%, #7a0006 55%, #b11226 80%, #400003 100%)",
+              "linear-gradient(180deg, #e7b7bb 0%, #a50710 28%, #540006 58%, #bd101d 76%, #210002 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             textShadow:
-              "0 1px 0 #4a0006, 0 2px 0 #2a0004, 0 4px 10px rgba(0,0,0,0.55), 0 0 40px rgba(220,20,40,0.3)",
+              "0 1px 0 #420006, 0 2px 0 #210003, 0 14px 24px rgba(0,0,0,0.24), 0 0 28px rgba(160,0,10,0.18)",
           }}
         >
           3.0
@@ -58,127 +59,56 @@ function MachinedTitle() {
 
 export function Hero() {
   const target = new Date(Date.now() + 27 * 86400000 + 14 * 3600000 + 33 * 60000);
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  // Beam intensifies briefly then dies as you leave the hero
-  const beamOpacity = useTransform(scrollYProgress, [0, 0.35, 1], [1, 1.35, 0]);
-  const beamScale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
-  const beamY = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
-  const vignetteOpacity = useTransform(scrollYProgress, [0, 1], [1, 1.8]);
-  const grainDrift = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
 
   return (
-    <section ref={sectionRef} id="top" className="relative min-h-[100svh] w-full overflow-hidden grain">
-      {/* Deep atmospheric base */}
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, #120306 0%, #050405 55%, #020203 100%)" }} />
-      {/* Volumetric top beam — scroll-linked intensity + drift */}
-      <motion.div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[70%] will-change-transform"
-        style={{
-          background:
-            "radial-gradient(ellipse 40% 100% at 50% 0%, oklch(0.35 0.22 25 / 0.5), transparent 65%)",
-          opacity: beamOpacity,
-          scale: beamScale,
-          y: beamY,
-          transformOrigin: "50% 0%",
-        }}
-      />
-      {/* Bottom vignette — deepens as you scroll */}
-      <motion.div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%]"
-        style={{
-          background: "linear-gradient(180deg, transparent, #030203 85%)",
-          opacity: vignetteOpacity,
-        }}
-      />
-      {/* Drifting particle field — light and scroll-linked */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          y: grainDrift,
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), radial-gradient(rgba(220,20,40,0.25) 1px, transparent 1px)",
-          backgroundSize: "140px 140px, 220px 220px",
-          backgroundPosition: "0 0, 70px 90px",
-          maskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
-          WebkitMaskImage: "radial-gradient(ellipse at 50% 40%, black, transparent 75%)",
-        }}
-      />
+    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden bg-white text-black">
+      <div className="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-px bg-black md:block" />
+      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col items-center px-6 pb-8 pt-24 text-center md:px-10 md:pt-28">
+        <div className="font-mono text-[8px] uppercase tracking-[0.48em] text-black/45 md:text-[9px]">
+          © ILLUMINATI 3.0
+        </div>
 
-      {/* 3D monolith scene */}
-      <div className="absolute inset-0">
-        <ClientOnly>
-          <HeroScene />
-        </ClientOnly>
-      </div>
-
-      {/* Slow scanline */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-70">
-        <div
-          className="absolute inset-x-0 h-48"
-          style={{
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.035) 50%, transparent)",
-            animation: "scanline 14s linear infinite",
-          }}
-        />
-      </div>
-
-      {/* Foreground content */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col justify-between px-6 pb-14 pt-28 md:px-12 md:pt-32">
-        <div />
-
-        {/* Title */}
-        <div className="relative mx-auto w-full max-w-7xl text-center">
-          {/* Soft dark halo behind title to lift it off the monolith */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 blur-2xl"
-            style={{ background: "radial-gradient(ellipse, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 45%, transparent 75%)" }}
-          />
+        <div className="flex flex-1 flex-col items-center justify-center py-8 md:py-10">
           <MachinedTitle />
 
-          <div className="mx-auto mt-8 flex flex-col items-center gap-2">
-            <div className="font-[Anton] text-2xl tracking-[0.28em] text-white/90 md:text-4xl">
+          <div className="mx-auto mt-5 flex flex-col items-center gap-2 md:mt-7">
+            <div className="font-[Anton] text-[clamp(1.35rem,3.2vw,2.55rem)] leading-none tracking-[0.24em] text-black md:tracking-[0.3em]">
               MARQUEE CLUB AND KITCHEN
             </div>
-            <div className="font-mono text-sm tracking-[0.5em] text-[oklch(0.7_0.2_25)] md:text-base">
+            <div className="font-mono text-[10px] uppercase tracking-[0.48em] text-black/45 md:text-xs">
               AUG 3
             </div>
-            <div className="mt-6 flex flex-col items-center gap-1">
-              <div className="font-mono text-[10px] tracking-[0.5em] text-white/40">
-                powered by
-              </div>
+            <div className="mt-4 flex flex-col items-center gap-1 md:mt-5">
               <div
                 className="font-[Anton] leading-none tracking-[0.18em]"
                style={{
-                  fontSize: "clamp(2rem, 5.5vw, 4rem)",
+                  fontSize: "clamp(1.2rem, 2.6vw, 2.05rem)",
                   color: "transparent",
                   background:
-                    "linear-gradient(180deg, #4a4a4e 0%, #2a2a2e 40%, #0f0f11 70%, #333338 100%)",
+                    "linear-gradient(180deg, #55555a 0%, #151518 54%, #4b4b50 100%)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
-                  textShadow: "0 1px 0 rgba(255,255,255,0.05)",
+                  textShadow: "0 10px 20px rgba(0,0,0,0.18)",
                 }}
               >
                 IRONOAK
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Countdown + scroll hint */}
-        <div className="flex flex-col items-center gap-8">
+          <div className="mt-8 w-full md:mt-10">
           <Countdown target={target} />
-          <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-white/40">
-            <span className="inline-block h-px w-10 bg-white/40 animate-flicker" />
-            <span>DESCEND</span>
-            <span className="inline-block h-px w-10 bg-white/40 animate-flicker" />
           </div>
         </div>
+
+        <a
+          href="#tickets"
+          className="group inline-flex items-center gap-3 rounded-full border border-black/15 bg-black px-4 py-2 font-mono text-[10px] uppercase tracking-[0.28em] text-white shadow-[0_18px_40px_rgba(0,0,0,0.18)] transition-transform duration-300 hover:-translate-y-0.5"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
+          <span>ENTER</span>
+          <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+        </a>
       </div>
     </section>
   );
