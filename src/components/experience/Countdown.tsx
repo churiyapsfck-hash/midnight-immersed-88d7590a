@@ -14,7 +14,7 @@ function Unit({ value, label }: { value: number; label: string }) {
   return (
     <div className="relative flex flex-col items-center">
       <div
-        className="relative h-[clamp(2rem,5vw,3.6rem)]"
+        className="relative h-[clamp(2.6rem,10vw,8.5rem)]"
         style={{
           maskImage:
             "linear-gradient(180deg, transparent 0%, black 22%, black 78%, transparent 100%)",
@@ -31,25 +31,25 @@ function Unit({ value, label }: { value: number; label: string }) {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="font-[Anton] leading-none tracking-[-0.02em]"
             style={{
-              fontSize: "clamp(1.9rem, 4.8vw, 3.4rem)",
+              fontSize: "clamp(2.4rem, 9.5vw, 8rem)",
               color: "transparent",
               background:
-                "linear-gradient(180deg, #242428 0%, #050506 48%, #66666d 62%, #151518 100%)",
+                "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 40%, #6a6a70 70%, #cfcfd4 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
-              textShadow: "0 8px 18px rgba(0,0,0,0.18)",
             }}
           >
             {display}
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="mt-1 flex items-center gap-1.5 md:mt-2 md:gap-2">
-        <span className="h-1 w-1 rounded-full bg-[#8b0000] shadow-[0_0_8px_rgba(139,0,0,0.35)]" />
+      <div className="mt-2 flex items-center gap-1.5 md:mt-4 md:gap-2">
+        <span className="h-1 w-1 rounded-full bg-[oklch(0.55_0.24_25)] shadow-[0_0_8px_oklch(0.55_0.24_25)]" />
         <span
-          className="font-mono text-[7px] font-semibold uppercase tracking-[0.28em] md:text-[9px] md:tracking-[0.38em]"
+          className="font-mono text-[8px] font-semibold uppercase tracking-[0.3em] md:text-xs md:tracking-[0.45em]"
           style={{
-            color: "rgba(0,0,0,0.48)",
+            color: "oklch(0.62 0.24 25)",
+            textShadow: "0 0 12px oklch(0.55 0.24 25 / 0.55)",
           }}
         >
           {label}
@@ -79,14 +79,19 @@ export function Countdown({ target }: { target: Date }) {
   const s = Math.floor((diff / 1000) % 60);
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
-      <div className="flex items-start justify-center gap-2 sm:gap-5 md:gap-8">
+    <div className="mx-auto w-full max-w-4xl">
+      <div className="mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-white/45">
+        <span className="h-px w-8 bg-white/30" />
+        <span>TIME UNTIL AWAKENING</span>
+        <span className="h-px w-8 bg-white/30" />
+      </div>
+      <div className="flex items-start justify-center gap-2 sm:gap-6 md:gap-12">
         <Unit value={d} label="DAYS" />
-        <span className="mt-0 font-[Anton] text-black/18 md:mt-1" style={{ fontSize: "clamp(1.4rem, 4vw, 2.8rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={h} label="HOURS" />
-        <span className="mt-0 font-[Anton] text-black/18 md:mt-1" style={{ fontSize: "clamp(1.4rem, 4vw, 2.8rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={m} label="MINUTES" />
-        <span className="mt-0 font-[Anton] text-black/18 md:mt-1" style={{ fontSize: "clamp(1.4rem, 4vw, 2.8rem)" }}>:</span>
+        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
         <Unit value={s} label="SECONDS" />
       </div>
     </div>
