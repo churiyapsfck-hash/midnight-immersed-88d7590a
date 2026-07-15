@@ -60,12 +60,12 @@ export function Hero() {
 
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
-      {/* Cream paper base with a warm blush at the top-center */}
+      {/* Light grey base */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 45% at 50% 12%, #f4dcd8 0%, #ede4dd 40%, #ede7df 70%, #e6ddd2 100%)",
+            "radial-gradient(ellipse 60% 45% at 50% 18%, #e8e8ea 0%, #dcdcde 40%, #d4d4d6 70%, #c9c9cc 100%)",
         }}
       />
       {/* Soft paper grain */}
@@ -80,7 +80,7 @@ export function Hero() {
       />
 
       {/* Foreground content */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start px-6 pb-10 pt-20 md:px-12 md:pt-24">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start px-6 pb-10 pt-36 md:px-12 md:pt-44">
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
           <MachinedTitle />
@@ -100,14 +100,17 @@ export function Hero() {
             >
               AUG 3
             </div>
-            <div className="mt-5 flex flex-col items-center gap-1">
-              <div className="font-mono text-[10px] tracking-[0.5em] text-black/45">
+            <div className="mt-6 flex flex-col items-center gap-1">
+              <div className="font-mono text-[11px] tracking-[0.5em] text-black/45">
                 powered by
               </div>
-              <div
-                className="font-[Anton] leading-none tracking-[0.18em]"
+              <a
+                href="https://ironoak.site"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-[Anton] leading-none tracking-[0.18em] transition-opacity hover:opacity-80"
                 style={{
-                  fontSize: "clamp(1.6rem, 4.2vw, 3rem)",
+                  fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
                   color: "transparent",
                   background:
                     "linear-gradient(180deg, #2a2a2e 0%, #0a0a0c 50%, #1c1c1e 100%)",
@@ -117,7 +120,7 @@ export function Hero() {
                 }}
               >
                 IRONOAK
-              </div>
+              </a>
             </div>
           </motion.div>
         </div>
