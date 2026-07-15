@@ -9,8 +9,12 @@ import { AnimatePresence, motion } from "framer-motion";
  * confident, and paced with the rest of the site's vibe.
  */
 
-function Unit({ value, label }: { value: number; label: string }) {
+function Unit({ value, label, variant }: { value: number; label: string; variant: "dark" | "light" }) {
   const display = useMemo(() => value.toString().padStart(2, "0"), [value]);
+  const digitGradient =
+    variant === "light"
+      ? "linear-gradient(180deg, #2a2a2e 0%, #0a0a0c 45%, #1a1a1c 70%, #4a4a4e 100%)"
+      : "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 40%, #6a6a70 70%, #cfcfd4 100%)";
   return (
     <div className="relative flex flex-col items-center">
       <div
@@ -33,8 +37,7 @@ function Unit({ value, label }: { value: number; label: string }) {
             style={{
               fontSize: "clamp(2.4rem, 9.5vw, 8rem)",
               color: "transparent",
-              background:
-                "linear-gradient(180deg, #f4f4f6 0%, #b8b8bc 40%, #6a6a70 70%, #cfcfd4 100%)",
+              background: digitGradient,
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
             }}
@@ -59,7 +62,7 @@ function Unit({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function Countdown({ target }: { target: Date }) {
+export function Countdown({ target, variant = "dark" }: { target: Date; variant?: "dark" | "light" }) {
   const [now, setNow] = useState(() => Date.now());
   const rafRef = useRef(0);
 
@@ -78,21 +81,24 @@ export function Countdown({ target }: { target: Date }) {
   const m = Math.floor((diff / 60000) % 60);
   const s = Math.floor((diff / 1000) % 60);
 
+  const chromeColor = variant === "light" ? "text-black/50" : "text-white/45";
+  const rulerBg = variant === "light" ? "bg-black/30" : "bg-white/30";
+  const colonColor = variant === "light" ? "text-black/25" : "text-white/20";
   return (
     <div className="mx-auto w-full max-w-4xl">
-      <div className="mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] text-white/45">
-        <span className="h-px w-8 bg-white/30" />
+      <div className={`mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] ${chromeColor}`}>
+        <span className={`h-px w-8 ${rulerBg}`} />
         <span>TIME UNTIL AWAKENING</span>
-        <span className="h-px w-8 bg-white/30" />
+        <span className={`h-px w-8 ${rulerBg}`} />
       </div>
       <div className="flex items-start justify-center gap-2 sm:gap-6 md:gap-12">
-        <Unit value={d} label="DAYS" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
-        <Unit value={h} label="HOURS" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
-        <Unit value={m} label="MINUTES" />
-        <span className="mt-1 font-[Anton] text-white/20 md:mt-4" style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
-        <Unit value={s} label="SECONDS" />
+        <Unit value={d} label="DAYS" variant={variant} />
+        <span className={`mt-1 font-[Anton] ${colonColor} md:mt-4`} style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <Unit value={h} label="HOURS" variant={variant} />
+        <span className={`mt-1 font-[Anton] ${colonColor} md:mt-4`} style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <Unit value={m} label="MINUTES" variant={variant} />
+        <span className={`mt-1 font-[Anton] ${colonColor} md:mt-4`} style={{ fontSize: "clamp(1.8rem, 7vw, 6rem)" }}>:</span>
+        <Unit value={s} label="SECONDS" variant={variant} />
       </div>
     </div>
   );
