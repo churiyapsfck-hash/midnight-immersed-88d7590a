@@ -60,24 +60,8 @@ export function Hero() {
 
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
-      {/* Light grey base */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 45% at 50% 18%, #e8e8ea 0%, #dcdcde 40%, #d4d4d6 70%, #c9c9cc 100%)",
-        }}
-      />
-      {/* Soft paper grain */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-multiply"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(0,0,0,0.6) 1px, transparent 1px)",
-          backgroundSize: "3px 3px",
-        }}
-      />
+      {/* Matte light grey base */}
+      <div className="absolute inset-0" style={{ background: "#d9d9dc" }} />
 
       {/* Foreground content */}
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start px-6 pb-10 pt-36 md:px-12 md:pt-44">
