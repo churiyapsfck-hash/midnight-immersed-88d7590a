@@ -86,7 +86,7 @@ export function Countdown({ target, variant = "dark" }: { target: Date; variant?
   const colonColor = variant === "light" ? "text-black/25" : "text-white/20";
   return (
     <div className="mx-auto w-full max-w-4xl">
-      <div className={`mb-8 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] ${chromeColor}`}>
+      <div className={`-mt-2 mb-4 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.5em] ${chromeColor}`}>
         <span className={`h-px w-8 ${rulerBg}`} />
         <span>TIME UNTIL AWAKENING</span>
         <span className={`h-px w-8 ${rulerBg}`} />
