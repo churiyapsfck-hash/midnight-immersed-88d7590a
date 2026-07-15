@@ -80,9 +80,7 @@ export function Hero() {
       />
 
       {/* Foreground content */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col justify-between px-6 pb-14 pt-28 md:px-12 md:pt-32">
-        <div />
-
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start px-6 pb-10 pt-20 md:px-12 md:pt-24">
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
           <MachinedTitle />
@@ -91,25 +89,25 @@ export function Hero() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-8 flex flex-col items-center gap-2"
+            className="mx-auto mt-4 flex flex-col items-center gap-1 md:mt-6"
           >
             <div className="font-[Anton] text-2xl tracking-[0.28em] text-black md:text-4xl">
               MARQUEE CLUB AND KITCHEN
             </div>
             <div
-              className="font-mono text-sm tracking-[0.5em] md:text-base"
+              className="mt-1 font-mono text-sm tracking-[0.5em] md:text-base"
               style={{ color: "oklch(0.5 0.24 25)" }}
             >
               AUG 3
             </div>
-            <div className="mt-6 flex flex-col items-center gap-1">
+            <div className="mt-5 flex flex-col items-center gap-1">
               <div className="font-mono text-[10px] tracking-[0.5em] text-black/45">
                 powered by
               </div>
               <div
                 className="font-[Anton] leading-none tracking-[0.18em]"
                 style={{
-                  fontSize: "clamp(2rem, 5.5vw, 4rem)",
+                  fontSize: "clamp(1.6rem, 4.2vw, 3rem)",
                   color: "transparent",
                   background:
                     "linear-gradient(180deg, #2a2a2e 0%, #0a0a0c 50%, #1c1c1e 100%)",
@@ -129,7 +127,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center gap-8"
+          className="mt-6 flex flex-col items-center gap-6 md:mt-8"
         >
           <Countdown target={target} variant="light" />
           <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-black/45">
