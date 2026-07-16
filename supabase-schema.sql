@@ -17,8 +17,7 @@ drop policy if exists "own profile read" on public.profiles;
 create policy "own profile read" on public.profiles
   for select to authenticated using (auth.uid() = id);
 drop policy if exists "own profile update" on public.profiles;
-create policy "own profile update" on public.profiles
-  for update to authenticated using (auth.uid() = id);
+-- Profiles are frozen after signup. Only service_role can edit.
 
 -- =========== BOOKINGS ===========
 create table if not exists public.bookings (
