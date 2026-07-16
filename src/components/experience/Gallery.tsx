@@ -1,11 +1,17 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import img1 from "@/assets/edition2/16.png.asset.json";
+import img2 from "@/assets/edition2/17.png.asset.json";
+import img3 from "@/assets/edition2/18.png.asset.json";
+import img4 from "@/assets/edition2/19.png.asset.json";
+import img5 from "@/assets/edition2/20.png.asset.json";
 
 const FRAMES = [
-  { title: "VOL. I · WAREHOUSE 07", tag: "ARCHIVE", tone: "oklch(0.4 0.22 25)" },
-  { title: "VOL. II · SUBTERRA", tag: "ARCHIVE", tone: "oklch(0.3 0.02 240)" },
-  { title: "VOL. III · CHROME ROOM", tag: "ARCHIVE", tone: "oklch(0.35 0.18 25)" },
-  { title: "VOL. IV · TBD", tag: "SEALED", tone: "oklch(0.5 0.24 25)" },
+  { title: "FLOOR · UNCHAINED", tag: "ARCHIVE", src: img1.url },
+  { title: "MEZZANINE · 02:14", tag: "ARCHIVE", src: img2.url },
+  { title: "THE WALL · LIT UP", tag: "ARCHIVE", src: img3.url },
+  { title: "HANDS UP · PEAK", tag: "ARCHIVE", src: img4.url },
+  { title: "AFTERGLOW", tag: "ARCHIVE", src: img5.url },
 ];
 
 export function Gallery() {
@@ -26,9 +32,9 @@ export function Gallery() {
       <motion.div style={{ x }} className="flex gap-6 pl-6 md:gap-10 md:pl-12">
         {FRAMES.map((f, i) => (
           <div key={i} className="relative flex h-[70vh] w-[62vw] shrink-0 flex-col justify-between overflow-hidden rounded-xl border border-white/10 md:w-[36vw]">
-            <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 30% 40%, ${f.tone}, transparent 70%), linear-gradient(180deg, oklch(0.15 0.005 20), oklch(0.05 0.005 20))` }} />
+            <img src={f.src} alt={f.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/60" />
             <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent 0 3px, oklch(1 0 0 / 0.12) 3px 4px)" }} />
-            <div className="pointer-events-none absolute inset-x-0 top-1/2 h-8 -translate-y-1/2 bg-[oklch(1_0_0/0.05)] blur-2xl" />
 
             <div className="relative flex items-start justify-between p-6 font-mono text-[10px] tracking-[0.28em] text-white/70 md:p-8">
               <span>NO. {String(i + 1).padStart(3, "0")}</span>
