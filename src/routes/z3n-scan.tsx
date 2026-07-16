@@ -236,7 +236,7 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
               className="font-mono text-[10px] tracking-[0.4em]"
               style={{ color: preview.already ? "oklch(0.72 0.15 85)" : "oklch(0.55 0.24 25)" }}
             >
-              {preview.already ? "⚠ ALREADY CHECKED IN" : "◇ CONFIRM CHECK IN"}
+              {preview.already ? "✕ DENIED · ALREADY CHECKED IN" : "◇ CONFIRM CHECK IN"}
             </div>
             <div className="mt-2 font-[Anton] text-3xl uppercase leading-tight">{preview.booking.full_name}</div>
             <div className="mt-1 font-mono text-[10px] tracking-[0.3em] text-white/60">
@@ -244,25 +244,32 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
               {preview.booking.pass_type.toUpperCase()} · {preview.booking.category.toUpperCase()}
             </div>
             {preview.already && preview.booking.checked_in_at && (
-              <div className="mt-2 font-mono text-[10px] tracking-[0.3em] text-white/50">
-                FIRST SCAN · {new Date(preview.booking.checked_in_at).toLocaleTimeString()}
-                {preview.byName ? ` · ${preview.byName}` : ""}
-              </div>
+              <>
+                <div className="mt-2 font-mono text-[10px] tracking-[0.3em] text-white/50">
+                  FIRST SCAN · {new Date(preview.booking.checked_in_at).toLocaleTimeString()}
+                  {preview.byName ? ` · ${preview.byName}` : ""}
+                </div>
+                <div className="mt-3 rounded-md border border-white/10 bg-white/5 px-3 py-2 font-mono text-[10px] leading-relaxed tracking-[0.2em] text-white/60">
+                  HOLD ASIDE — RESOLVE WITH ANOTHER GATE STAFF.
+                </div>
+              </>
             )}
             <div className="mt-4 flex gap-2">
-              <button
-                onClick={confirm}
-                disabled={busy || preview.already}
-                className="flex-1 rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white disabled:opacity-40"
-                style={{ backgroundColor: "oklch(0.55 0.24 25)" }}
-              >
-                {busy ? "CHECKING IN…" : preview.already ? "ALREADY IN" : "CHECK IN →"}
-              </button>
+              {!preview.already && (
+                <button
+                  onClick={confirm}
+                  disabled={busy}
+                  className="flex-1 rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white disabled:opacity-40"
+                  style={{ backgroundColor: "oklch(0.55 0.24 25)" }}
+                >
+                  {busy ? "CHECKING IN…" : "CHECK IN →"}
+                </button>
+              )}
               <button
                 onClick={reset}
-                className="rounded-full border border-white/15 px-4 py-3 font-mono text-[11px] tracking-[0.32em] text-white/60 hover:text-white"
+                className={`${preview.already ? "flex-1" : ""} rounded-full border border-white/15 px-4 py-3 font-mono text-[11px] tracking-[0.32em] text-white/60 hover:text-white`}
               >
-                CANCEL
+                {preview.already ? "NEXT SCAN →" : "CANCEL"}
               </button>
             </div>
           </motion.div>
