@@ -15,6 +15,7 @@ import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GateRouteImport } from './routes/gate'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
@@ -49,6 +50,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingThankyouRoute = BookingThankyouRouteImport.update({
   id: '/booking/thankyou',
   path: '/booking/thankyou',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   AdminStaffRoute: typeof AdminStaffRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BookingThankyouRoute: typeof BookingThankyouRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/booking/thankyou': {
       id: '/booking/thankyou'
       path: '/booking/thankyou'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminStaffRoute: AdminStaffRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BookingThankyouRoute: BookingThankyouRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
