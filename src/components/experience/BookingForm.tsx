@@ -14,7 +14,7 @@ export function BookingForm({
   profile: Profile;
 }) {
   const navigate = useNavigate();
-  const [category, setCategory] = useState<"girls" | "boys" | "couples">("girls");
+  const [category, setCategory] = useState<"single" | "couple">("single");
   const [fullName, setFullName] = useState(profile.full_name);
   const [phone, setPhone] = useState(profile.phone);
   const [utr, setUtr] = useState("");
@@ -74,8 +74,8 @@ export function BookingForm({
         Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span>
       </h2>
       <div className="mt-6 space-y-3">
-        <div className="grid grid-cols-3 gap-2">
-          {(["girls", "boys", "couples"] as const).map((c) => (
+        <div className="grid grid-cols-2 gap-2">
+          {(["single", "couple"] as const).map((c) => (
             <button
               key={c}
               type="button"
@@ -85,7 +85,7 @@ export function BookingForm({
               }`}
               style={category === c ? { backgroundColor: "oklch(0.55 0.24 25)", borderColor: "oklch(0.55 0.24 25)" } : undefined}
             >
-              {c}
+              {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,400" : "2,400"}`}
             </button>
           ))}
         </div>
