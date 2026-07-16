@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VipRouteImport } from './routes/vip'
 import { Route as StandardRouteImport } from './routes/standard'
 import { Route as PurchasesRouteImport } from './routes/purchases'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -29,6 +30,11 @@ const StandardRoute = StandardRouteImport.update({
 const PurchasesRoute = PurchasesRouteImport.update({
   id: '/purchases',
   path: '/purchases',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   StandardRoute: typeof StandardRoute
   VipRoute: typeof VipRoute
@@ -131,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PurchasesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   StandardRoute: StandardRoute,
   VipRoute: VipRoute,
