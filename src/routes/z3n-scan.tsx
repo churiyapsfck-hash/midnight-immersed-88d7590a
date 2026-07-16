@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import { ClientOnly } from "@/components/experience/ClientOnly";
-import { checkInByToken, checkInByBookingId, searchBookings, getMyRoles } from "@/lib/gate.functions";
+import { checkInByToken, checkInByBookingId, searchBookings, getMyRoles, lookupByToken } from "@/lib/gate.functions";
 
 export const Route = createFileRoute("/z3n-scan")({
   head: () => ({
@@ -23,6 +23,13 @@ type CheckInResult =
   | { result: "verified"; booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string } }
   | { result: "already"; booking: { full_name: string; pass_type: string; category: string; checked_in_at: string | null }; byName: string | null }
   | { result: "invalid"; booking?: { status: string } };
+
+type Preview = {
+  token: string;
+  booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string | null; status?: string };
+  already: boolean;
+  byName: string | null;
+};
 
 function GatePage() {
   const [ready, setReady] = useState<"loading" | "unauth" | "forbidden" | "ok">("loading");
@@ -119,8 +126,10 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
   const controlsRef = useRef<{ stop: () => void } | null>(null);
   const busyRef = useRef(false);
   const lastTokenRef = useRef<string>("");
+  const [preview, setPreview] = useState<Preview | null>(null);
   const [result, setResult] = useState<CheckInResult | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -139,16 +148,25 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
             lastTokenRef.current = token;
             busyRef.current = true;
             try {
-              const r = (await checkInByToken({ data: { accessToken, token } })) as CheckInResult;
-              setResult(r);
-              if ("vibrate" in navigator) navigator.vibrate?.(r.result === "verified" ? 80 : [40, 40, 40]);
+              const r = await lookupByToken({ data: { accessToken, token } });
+              setResult(null);
+              if (r.result === "invalid") {
+                setPreview(null);
+                setResult({ result: "invalid", booking: r.booking ? { status: r.booking.status } : undefined });
+                if ("vibrate" in navigator) navigator.vibrate?.([40, 40, 40]);
+              } else {
+                setPreview({
+                  token,
+                  booking: r.booking,
+                  already: r.result === "already",
+                  byName: r.byName,
+                });
+                if ("vibrate" in navigator) navigator.vibrate?.(30);
+              }
             } catch (e) {
               setErr(e instanceof Error ? e.message : "Scan failed");
             } finally {
-              setTimeout(() => {
-                busyRef.current = false;
-                lastTokenRef.current = "";
-              }, 2500);
+              busyRef.current = false;
             }
           },
         );
@@ -163,6 +181,33 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
     };
   }, [accessToken]);
 
+  const confirm = async () => {
+    if (!preview || preview.already || busy) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const r = (await checkInByToken({ data: { accessToken, token: preview.token } })) as CheckInResult;
+      setResult(r);
+      setPreview(null);
+      if ("vibrate" in navigator) navigator.vibrate?.(r.result === "verified" ? 80 : [40, 40, 40]);
+      setTimeout(() => {
+        setResult(null);
+        lastTokenRef.current = "";
+      }, 2500);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Check-in failed");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reset = () => {
+    setPreview(null);
+    setResult(null);
+    setErr(null);
+    lastTokenRef.current = "";
+  };
+
   return (
     <div>
       <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black">
@@ -174,6 +219,55 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
           {err}
         </div>
       )}
+      <AnimatePresence mode="wait">
+        {preview && (
+          <motion.div
+            key={preview.token}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-4 rounded-2xl border p-5"
+            style={{
+              borderColor: preview.already ? "oklch(0.72 0.15 85)" : "oklch(0.55 0.24 25)",
+              background: "rgba(0,0,0,0.6)",
+            }}
+          >
+            <div
+              className="font-mono text-[10px] tracking-[0.4em]"
+              style={{ color: preview.already ? "oklch(0.72 0.15 85)" : "oklch(0.55 0.24 25)" }}
+            >
+              {preview.already ? "⚠ ALREADY CHECKED IN" : "◇ CONFIRM CHECK IN"}
+            </div>
+            <div className="mt-2 font-[Anton] text-3xl uppercase leading-tight">{preview.booking.full_name}</div>
+            <div className="mt-1 font-mono text-[10px] tracking-[0.3em] text-white/60">
+              {preview.booking.user_code ? `${preview.booking.user_code} · ` : ""}
+              {preview.booking.pass_type.toUpperCase()} · {preview.booking.category.toUpperCase()}
+            </div>
+            {preview.already && preview.booking.checked_in_at && (
+              <div className="mt-2 font-mono text-[10px] tracking-[0.3em] text-white/50">
+                FIRST SCAN · {new Date(preview.booking.checked_in_at).toLocaleTimeString()}
+                {preview.byName ? ` · ${preview.byName}` : ""}
+              </div>
+            )}
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={confirm}
+                disabled={busy || preview.already}
+                className="flex-1 rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white disabled:opacity-40"
+                style={{ backgroundColor: "oklch(0.55 0.24 25)" }}
+              >
+                {busy ? "CHECKING IN…" : preview.already ? "ALREADY IN" : "CHECK IN →"}
+              </button>
+              <button
+                onClick={reset}
+                className="rounded-full border border-white/15 px-4 py-3 font-mono text-[11px] tracking-[0.32em] text-white/60 hover:text-white"
+              >
+                CANCEL
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence mode="wait">
         {result && <ResultCard key={JSON.stringify(result)} r={result} />}
       </AnimatePresence>
