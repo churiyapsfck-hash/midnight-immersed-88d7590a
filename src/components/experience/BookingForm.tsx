@@ -22,6 +22,8 @@ export function BookingForm({
   profile: Profile;
 }) {
   const navigate = useNavigate();
+  const [step, setStep] = useState<"details" | "pay">("details");
+  const [bookingId, setBookingId] = useState<string>("");
   const [category, setCategory] = useState<"single" | "couple">("single");
   const [fullName, setFullName] = useState(profile.full_name);
   const [phone, setPhone] = useState(profile.phone);
@@ -53,7 +55,36 @@ export function BookingForm({
     return () => { cancelled = true; };
   }, [upiLink]);
 
-  const submit = async (e: React.FormEvent) => {
+  const submitDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fullName.trim() || !phone.trim()) {
+      setErr("Name and phone are required.");
+      return;
+    }
+    setBusy(true);
+    setErr(null);
+    try {
+      const id = crypto.randomUUID();
+      const { error: insErr } = await supabase.from("bookings").insert({
+        id,
+        user_id: userId,
+        pass_type: passType,
+        category,
+        full_name: fullName.trim(),
+        phone: phone.trim(),
+        status: "pending",
+      });
+      if (insErr) throw insErr;
+      setBookingId(id);
+      setStep("pay");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Could not save your details.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const submitPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
       setErr("Please upload your payment screenshot.");
@@ -62,25 +93,18 @@ export function BookingForm({
     setBusy(true);
     setErr(null);
     try {
-      const bookingId = crypto.randomUUID();
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
       const path = `${userId}/${bookingId}.${ext}`;
       const up = await supabase.storage
         .from("payment-screenshots")
         .upload(path, file, { upsert: false, contentType: file.type });
       if (up.error) throw up.error;
-      const { error: insErr } = await supabase.from("bookings").insert({
-        id: bookingId,
-        user_id: userId,
-        pass_type: passType,
-        category,
-        full_name: fullName,
-        phone,
-        utr,
-        screenshot_path: path,
-        status: "pending",
-      });
-      if (insErr) throw insErr;
+      const { error: updErr } = await supabase
+        .from("bookings")
+        .update({ utr: utr.trim(), screenshot_path: path })
+        .eq("id", bookingId)
+        .eq("user_id", userId);
+      if (updErr) throw updErr;
       navigate({ to: "/booking/thankyou" });
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Booking failed.");
@@ -91,7 +115,7 @@ export function BookingForm({
 
   return (
     <motion.form
-      onSubmit={submit}
+      onSubmit={step === "details" ? submitDetails : submitPayment}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -99,11 +123,16 @@ export function BookingForm({
       style={{ boxShadow: "0 30px 80px -30px oklch(0.4 0.24 25 / 0.55), inset 0 1px 0 rgba(255,255,255,0.05)" }}
     >
       <div className="font-mono text-[10px] tracking-[0.4em]" style={{ color: "oklch(0.7 0.22 25)" }}>
-        — RESERVE · {passType.toUpperCase()}
+        — {step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}
       </div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
-        Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span>
+        {step === "details" ? (
+          <>Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span></>
+        ) : (
+          <>Pay & <span style={{ color: "oklch(0.55 0.24 25)" }}>confirm.</span></>
+        )}
       </h2>
+      {step === "details" ? (
       <div className="mt-6 space-y-3">
         <div className="grid grid-cols-2 gap-2">
           {(["single", "couple"] as const).map((c) => (
@@ -124,6 +153,18 @@ export function BookingForm({
           className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
         <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
           className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+      </div>
+      ) : (
+      <div className="mt-6 space-y-3">
+        <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-[10px] tracking-[0.3em] text-white/60">
+          <div className="flex items-center justify-between">
+            <span>{category.toUpperCase()} · {passType.toUpperCase()}</span>
+            <span className="text-white">₹{amount.toLocaleString("en-IN")}</span>
+          </div>
+          <div className="mt-1 font-serif text-[12px] italic normal-case tracking-normal text-white/50">
+            {fullName} · {phone}
+          </div>
+        </div>
         <div className="rounded-xl border border-white/10 bg-black/50 p-4 text-center">
           <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">
             SCAN TO PAY · ₹{amount.toLocaleString("en-IN")}
@@ -162,6 +203,7 @@ export function BookingForm({
           <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="hidden" />
         </label>
       </div>
+      )}
       {err && (
         <div className="mt-4 rounded-lg px-3 py-2 font-mono text-[10px] tracking-[0.2em]"
           style={{ borderColor: "oklch(0.55 0.24 25 / 0.4)", borderWidth: 1, color: "oklch(0.7 0.22 25)", background: "oklch(0.3 0.15 25 / 0.15)" }}>
@@ -171,7 +213,11 @@ export function BookingForm({
       <button type="submit" disabled={busy}
         className="mt-5 w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
         style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>
-        {busy ? "SUBMITTING…" : "RESERVE →"}
+        {busy
+          ? "SUBMITTING…"
+          : step === "details"
+            ? "CONTINUE TO PAYMENT →"
+            : "SUBMIT PAYMENT →"}
       </button>
     </motion.form>
   );

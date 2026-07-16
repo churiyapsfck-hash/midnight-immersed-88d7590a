@@ -33,7 +33,7 @@ create table if not exists public.bookings (
   status text not null default 'pending' check (status in ('pending','verified','declined','active')),
   created_at timestamptz not null default now()
 );
-grant select, insert on public.bookings to authenticated;
+grant select, insert, update on public.bookings to authenticated;
 grant all on public.bookings to service_role;
 alter table public.bookings enable row level security;
 drop policy if exists "own bookings read" on public.bookings;
@@ -42,6 +42,18 @@ create policy "own bookings read" on public.bookings
 drop policy if exists "own bookings insert" on public.bookings;
 create policy "own bookings insert" on public.bookings
   for insert to authenticated with check (auth.uid() = user_id);
+drop policy if exists "own pending bookings update" on public.bookings;
+create policy "own pending bookings update" on public.bookings
+  for update to authenticated
+  using (auth.uid() = user_id and status = 'pending')
+  with check (auth.uid() = user_id and status = 'pending');
+
+-- Two-step booking flow: row is inserted BEFORE payment (name/phone captured),
+-- then updated with utr + screenshot after the user pays.
+alter table public.bookings alter column utr drop not null;
+alter table public.bookings drop constraint if exists bookings_category_check;
+alter table public.bookings add constraint bookings_category_check
+  check (category in ('single','couple'));
 
 -- =========== GATE CHECK-IN COLUMNS ===========
 alter table public.bookings
