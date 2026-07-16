@@ -279,6 +279,24 @@ function BookingCard({
     return { c: BLOOD_GLOW, t: "PENDING" };
   })();
 
+  const waHref = (() => {
+    const digits = (row.phone || "").replace(/\D/g, "");
+    if (!digits) return null;
+    const phone = digits.length === 10 ? `91${digits}` : digits;
+    const isVerified = row.status === "verified" || row.status === "active";
+    const isDeclined = row.status === "declined";
+    if (!isVerified && !isDeclined) return null;
+    const passLine = `${row.pass_type.toUpperCase()} · ${row.category.toUpperCase()}`;
+    const idLine = row.user_code ? `Pass ID: ${row.user_code}` : "";
+    const tokenLine = isVerified && row.ticket_token ? `Ticket: ${row.ticket_token}` : "";
+    const utrLine = row.utr ? `UTR: ${row.utr}` : "";
+    const body = isVerified
+      ? `Hey ${row.full_name} 👋\n\nYour ILLUMINATI 3.0 pass has been *APPROVED*. ✅\n\nPass: ${passLine}\n${idLine}\n${tokenLine}\n${utrLine}\n\nShow this message at the gate. See you on the floor.`
+      : `Hey ${row.full_name} 👋\n\nUnfortunately your ILLUMINATI 3.0 booking couldn't be verified and has been *DECLINED*.\n\nPass: ${passLine}\n${idLine}\n${utrLine}\n\nIf you think this is a mistake, reply here with your payment proof and we'll take another look.`;
+    const clean = body.replace(/\n{3,}/g, "\n\n").replace(/^\s*\n/gm, "\n");
+    return `https://wa.me/${phone}?text=${encodeURIComponent(clean)}`;
+  })();
+
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 backdrop-blur transition-colors hover:border-[oklch(0.5_0.24_25)]/60">
       <div className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: statusStyle.c, boxShadow: `0 0 12px ${statusStyle.c}` }} />
@@ -332,10 +350,27 @@ function BookingCard({
             </>
           )}
           {(row.status === "verified" || row.status === "active" || row.status === "declined") && (
-            <button onClick={onReset} disabled={busy}
-              className="rounded-lg border border-white/15 px-4 py-2 font-mono text-[9px] tracking-[0.32em] text-white/60 hover:border-white/40 hover:text-white disabled:opacity-40">
-              RESET → PENDING
-            </button>
+            <>
+              {waHref && (
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white transition-all hover:brightness-125"
+                  style={{ backgroundColor: "oklch(0.55 0.18 145)", boxShadow: "0 0 16px oklch(0.4 0.18 145 / 0.5)" }}
+                  title={`Message ${row.full_name} on WhatsApp`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+                    <path d="M20.5 3.5A11 11 0 0 0 3.6 17.3L2 22l4.9-1.6A11 11 0 1 0 20.5 3.5Zm-8.5 18a9 9 0 0 1-4.6-1.3l-.3-.2-2.9.9.9-2.8-.2-.3A9 9 0 1 1 12 21.5Zm5-6.7c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6 0a7.4 7.4 0 0 1-2.2-1.4 8.3 8.3 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.4.3-.4c.1-.2 0-.3 0-.4l-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4a2.9 2.9 0 0 0-.9 2.2c0 1.3.9 2.5 1.1 2.7s1.9 2.9 4.6 4a15.4 15.4 0 0 0 1.5.6 3.7 3.7 0 0 0 1.7.1 2.7 2.7 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .1-1.2c-.1-.2-.3-.3-.6-.4Z"/>
+                  </svg>
+                  NOTIFY
+                </a>
+              )}
+              <button onClick={onReset} disabled={busy}
+                className="rounded-lg border border-white/15 px-4 py-2 font-mono text-[9px] tracking-[0.32em] text-white/60 hover:border-white/40 hover:text-white disabled:opacity-40">
+                RESET → PENDING
+              </button>
+            </>
           )}
         </div>
       </div>
