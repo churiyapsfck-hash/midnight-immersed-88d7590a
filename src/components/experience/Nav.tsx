@@ -20,12 +20,12 @@ export function Nav() {
         <a href="#timeline" className="transition-colors hover:text-black">03 — LOCATION</a>
         <a href="#faq" className="transition-colors hover:text-black">04 — DECODE</a>
         {user && isStaff && (
-          <Link to="/gate" className="transition-colors hover:text-black" style={{ color: "oklch(0.55 0.24 25)" }}>
+          <Link to="/z3n-scan" className="transition-colors hover:text-black" style={{ color: "oklch(0.55 0.24 25)" }}>
             ● GATE
           </Link>
         )}
         {user && isAdmin && (
-          <Link to="/admin" className="transition-colors hover:text-black" style={{ color: "oklch(0.5 0.24 25)" }}>
+          <Link to="/x7k9-ctrl" className="transition-colors hover:text-black" style={{ color: "oklch(0.5 0.24 25)" }}>
             ● ADMIN
           </Link>
         )}
