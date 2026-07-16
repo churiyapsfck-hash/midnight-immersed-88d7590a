@@ -7,9 +7,8 @@ const PASSES = [
     name: "STANDARD",
     tagline: "The complete night. Nothing missing.",
     pricing: [
-      { category: "Girls", price: "₹ 1,499" },
-      { category: "Boys", price: "₹ 1,999" },
-      { category: "Couples", price: "₹ 2,999" },
+      { category: "Single", price: "₹ 1,400" },
+      { category: "Couple", price: "₹ 2,400" },
     ],
     perks: [
       "Entry to the main floor",
@@ -23,9 +22,8 @@ const PASSES = [
     name: "VIP",
     tagline: "Beyond the velvet rope.",
     pricing: [
-      { category: "Girls", price: "₹ 3,499" },
-      { category: "Boys", price: "₹ 4,499" },
-      { category: "Couples", price: "₹ 6,499" },
+      { category: "Single", price: "₹ 2,200" },
+      { category: "Couple", price: "₹ 3,400" },
     ],
     perks: [
       "Priority entrance · no queue",
@@ -40,7 +38,7 @@ export default defineTool({
   name: "list_pass_types",
   title: "List pass types",
   description:
-    "List the public pass types for ILLUMINATI 3.0 (Standard and VIP) with pricing per category (Girls, Boys, Couples) and included perks.",
+    "List the public pass types for ILLUMINATI 3.0 (Standard and VIP) with pricing per category (Single, Couple) and included perks.",
   inputSchema: {
     id: z
       .enum(["standard", "vip"])
