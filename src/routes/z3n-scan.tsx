@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { ClientOnly } from "@/components/experience/ClientOnly";
 import { checkInByToken, checkInByBookingId, searchBookings, getMyRoles } from "@/lib/gate.functions";
 
-export const Route = createFileRoute("/gate")({
+export const Route = createFileRoute("/z3n-scan")({
   head: () => ({
     meta: [
       { title: "Gate — ILLUMINATI 3.0" },

@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { ClientOnly } from "@/components/experience/ClientOnly";
 import { listStaff, grantGateRole, revokeGateRole } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/admin/staff")({
+export const Route = createFileRoute("/x7k9-ctrl/roster")({
   head: () => ({
     meta: [
       { title: "Admin · Staff — ILLUMINATI 3.0" },

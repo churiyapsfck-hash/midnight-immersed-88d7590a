@@ -8,7 +8,7 @@ import {
   getBookingStats,
 } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/x7k9-ctrl/")({
   head: () => ({
     meta: [
       { title: "Admin — ILLUMINATI 3.0" },
@@ -145,10 +145,10 @@ function AdminPage() {
             </p>
           </div>
           <div className="hidden gap-2 md:flex">
-            <Link to="/admin/staff" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
+            <Link to="/x7k9-ctrl/roster" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
               STAFF →
             </Link>
-            <Link to="/gate" className="rounded-full px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white" style={{ backgroundColor: BLOOD }}>
+            <Link to="/z3n-scan" className="rounded-full px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white" style={{ backgroundColor: BLOOD }}>
               GATE →
             </Link>
           </div>
