@@ -27,13 +27,13 @@ export function Nav() {
           <span className="absolute inset-0 -translate-x-full bg-[oklch(0.4_0.22_25)] transition-transform duration-500 group-hover:translate-x-0" />
         </Link>
       ) : (
-        <a
-          href="#tickets"
+        <Link
+          to="/login"
           className="group relative overflow-hidden rounded-full border border-black/30 bg-black px-5 py-2 font-mono text-[11px] tracking-[0.28em] text-white transition-colors hover:border-[oklch(0.55_0.24_25)]"
         >
-          <span className="relative z-10">REQUEST INVITE →</span>
+          <span className="relative z-10">LOGIN →</span>
           <span className="absolute inset-0 -translate-x-full bg-[oklch(0.4_0.22_25)] transition-transform duration-500 group-hover:translate-x-0" />
-        </a>
+        </Link>
       )}
     </header>
   );
