@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 
 export function Nav() {
   const { user } = useAuth();
-  const { isStaff } = useRoles();
+  const { isStaff, isAdmin } = useRoles();
   return (
     <header className="fixed left-0 right-0 top-0 z-40 flex items-center justify-between bg-white px-6 py-5 text-black md:px-12">
       <a href="#top" className="flex items-center gap-3">
@@ -22,6 +22,11 @@ export function Nav() {
         {user && isStaff && (
           <Link to="/gate" className="transition-colors hover:text-black" style={{ color: "oklch(0.55 0.24 25)" }}>
             ● GATE
+          </Link>
+        )}
+        {user && isAdmin && (
+          <Link to="/admin" className="transition-colors hover:text-black" style={{ color: "oklch(0.5 0.24 25)" }}>
+            ● ADMIN
           </Link>
         )}
       </nav>
