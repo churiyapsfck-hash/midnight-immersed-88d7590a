@@ -19,9 +19,8 @@ const PASSES: Pass[] = [
     code: "INVITATION · 01",
     tagline: "The complete night. Nothing missing.",
     pricing: [
-      { label: "Girls", price: "₹ 1,499" },
-      { label: "Boys", price: "₹ 1,999" },
-      { label: "Couples", price: "₹ 2,999" },
+      { label: "Single", price: "₹ 1,400" },
+      { label: "Couple", price: "₹ 2,400" },
     ],
     perks: [
       "Entry to the main floor",
@@ -37,9 +36,8 @@ const PASSES: Pass[] = [
     code: "INVITATION · 02 · ÉLITE",
     tagline: "Beyond the velvet rope.",
     pricing: [
-      { label: "Girls", price: "₹ 3,499" },
-      { label: "Boys", price: "₹ 4,499" },
-      { label: "Couples", price: "₹ 6,499" },
+      { label: "Single", price: "₹ 2,200" },
+      { label: "Couple", price: "₹ 3,400" },
     ],
     perks: [
       "Priority entrance · no queue",
