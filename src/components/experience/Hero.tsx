@@ -56,7 +56,7 @@ function MachinedTitle() {
 }
 
 export function Hero() {
-  const target = new Date(Date.now() + 27 * 86400000 + 14 * 3600000 + 33 * 60000);
+  const target = new Date("2026-08-03T00:00:00+05:30");
 
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
@@ -64,7 +64,7 @@ export function Hero() {
       <div className="absolute inset-0" style={{ background: "#d9d9dc" }} />
 
       {/* Foreground content */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-start px-6 pb-10 pt-36 md:px-12 md:pt-44">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-between px-6 pb-16 pt-36 md:px-12 md:pt-44 md:pb-24">
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
           <MachinedTitle />
@@ -114,7 +114,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 flex flex-col items-center gap-6 md:mt-8"
+          className="mt-16 flex flex-col items-center gap-6 md:mt-24"
         >
           <Countdown target={target} variant="light" />
           <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-black/45">
@@ -122,85 +122,6 @@ export function Hero() {
             <span>DESCEND</span>
             <span className="inline-block h-px w-10 bg-black/40 animate-flicker" />
           </div>
-        </motion.div>
-
-        {/* Mobile-only closer — fills the void below the countdown */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 5.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 flex w-full max-w-sm flex-col items-stretch md:hidden"
-        >
-          <a
-            href="#tickets"
-            className="group relative block overflow-hidden border border-black/80 bg-black text-white"
-            style={{
-              boxShadow:
-                "0 18px 40px -14px rgba(120,0,12,0.65), 0 0 0 1px rgba(179,26,34,0.35), inset 0 0 0 1px rgba(255,255,255,0.04)",
-            }}
-          >
-            {/* blood scan bar */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 w-1"
-              style={{
-                background:
-                  "linear-gradient(180deg, #b31a22 0%, #7a0008 60%, #3a0003 100%)",
-                boxShadow: "0 0 18px 2px rgba(179,26,34,0.55)",
-              }}
-            />
-            {/* diagonal noise */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-screen"
-              style={{
-                background:
-                  "repeating-linear-gradient(135deg, transparent 0 6px, rgba(255,255,255,0.05) 6px 7px)",
-              }}
-            />
-            {/* corner ticks */}
-            <span aria-hidden className="pointer-events-none absolute left-1.5 top-1.5 h-2 w-2 border-l border-t border-white/40" />
-            <span aria-hidden className="pointer-events-none absolute right-1.5 top-1.5 h-2 w-2 border-r border-t border-white/40" />
-            <span aria-hidden className="pointer-events-none absolute left-1.5 bottom-1.5 h-2 w-2 border-l border-b border-white/40" />
-            <span aria-hidden className="pointer-events-none absolute right-1.5 bottom-1.5 h-2 w-2 border-r border-b border-white/40" />
-
-            <div className="relative flex items-center justify-between px-6 py-5 pl-8">
-              <div className="flex flex-col items-start gap-1">
-                <span
-                  className="font-mono text-[9px] tracking-[0.5em]"
-                  style={{ color: "#b31a22" }}
-                >
-                  ///  ACCESS
-                </span>
-                <span className="font-[Anton] text-2xl leading-none tracking-[0.14em] text-white">
-                  VIEW PASSES
-                </span>
-              </div>
-              <div className="flex flex-col items-end gap-1">
-                <span
-                  aria-hidden
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: "#b31a22",
-                    boxShadow: "0 0 10px 2px rgba(179,26,34,0.75)",
-                  }}
-                />
-                <span className="font-mono text-[9px] tracking-[0.4em] text-white/70">
-                  ENTER →
-                </span>
-              </div>
-            </div>
-
-            {/* bottom stripe */}
-            <span
-              aria-hidden
-              className="relative block h-[3px] w-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, #3a0003 0%, #b31a22 50%, #3a0003 100%)",
-              }}
-            />
-          </a>
         </motion.div>
       </div>
     </section>
