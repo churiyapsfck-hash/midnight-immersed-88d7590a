@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import { ClientOnly } from "@/components/experience/ClientOnly";
-import { checkInByToken, checkInByBookingId, searchBookings, getMyRoles } from "@/lib/gate.functions";
+import { checkInByToken, checkInByBookingId, searchBookings, getMyRoles, lookupByToken } from "@/lib/gate.functions";
 
 export const Route = createFileRoute("/z3n-scan")({
   head: () => ({
@@ -23,6 +23,13 @@ type CheckInResult =
   | { result: "verified"; booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string } }
   | { result: "already"; booking: { full_name: string; pass_type: string; category: string; checked_in_at: string | null }; byName: string | null }
   | { result: "invalid"; booking?: { status: string } };
+
+type Preview = {
+  token: string;
+  booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string | null; status?: string };
+  already: boolean;
+  byName: string | null;
+};
 
 function GatePage() {
   const [ready, setReady] = useState<"loading" | "unauth" | "forbidden" | "ok">("loading");
