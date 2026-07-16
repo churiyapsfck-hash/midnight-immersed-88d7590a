@@ -130,100 +130,28 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 flex w-full max-w-sm flex-col items-stretch gap-6 md:hidden"
+          className="mt-8 flex w-full max-w-sm flex-col items-stretch md:hidden"
         >
-          {/* CTAs */}
-          <div className="flex flex-col gap-2">
-            <Link
-              to="/standard"
-              className="group relative flex items-center justify-between overflow-hidden rounded-full px-6 py-4 font-mono text-[11px] tracking-[0.32em] text-white"
-              style={{
-                background:
-                  "linear-gradient(180deg, #b31a22 0%, #7a0008 60%, #4a0004 100%)",
-                boxShadow:
-                  "0 10px 24px -8px rgba(120,0,12,0.55), inset 0 1px 0 rgba(255,255,255,0.15)",
-              }}
-            >
-              <span>RESERVE PASS</span>
-              <span className="font-serif text-[13px] italic tracking-normal text-white/80">
-                from ₹1,400
-              </span>
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-full"
-                style={{ boxShadow: "inset 0 -6px 12px rgba(0,0,0,0.35)" }}
-              />
-            </Link>
-            <Link
-              to="/vip"
-              className="flex items-center justify-between rounded-full border border-black/30 bg-black/[0.03] px-6 py-3.5 font-mono text-[11px] tracking-[0.32em] text-black/80 hover:bg-black/5"
-            >
-              <span>VIP EXPERIENCE</span>
-              <span className="font-serif text-[13px] italic tracking-normal text-black/50">
-                ₹2,200+
-              </span>
-            </Link>
-          </div>
-
-          {/* Meta strip */}
-          <div className="grid grid-cols-3 divide-x divide-black/15 rounded-2xl border border-black/15 bg-black/[0.03] py-3">
-            {[
-              { k: "VENUE", v: "MARQUEE", s: "MUMBAI" },
-              { k: "DRESS", v: "STRICT", s: "ALL BLACK" },
-              { k: "AGE", v: "21+", s: "ID REQUIRED" },
-            ].map((m) => (
-              <div key={m.k} className="flex flex-col items-center gap-0.5 px-2 text-center">
-                <div className="font-mono text-[8px] tracking-[0.4em] text-black/40">{m.k}</div>
-                <div className="font-[Anton] text-base leading-none tracking-[0.05em] text-black">
-                  {m.v}
-                </div>
-                <div className="font-mono text-[8px] tracking-[0.32em] text-black/45">{m.s}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Rotating seal */}
-          <div className="relative mx-auto mt-2 h-32 w-32">
-            <motion.svg
-              viewBox="0 0 200 200"
-              className="absolute inset-0 h-full w-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 26, ease: "linear", repeat: Infinity }}
+          <Link
+            to="/invitations"
+            className="group relative flex items-center justify-between overflow-hidden rounded-full px-6 py-4 font-mono text-[11px] tracking-[0.32em] text-white"
+            style={{
+              background:
+                "linear-gradient(180deg, #b31a22 0%, #7a0008 60%, #4a0004 100%)",
+              boxShadow:
+                "0 10px 24px -8px rgba(120,0,12,0.55), inset 0 1px 0 rgba(255,255,255,0.15)",
+            }}
+          >
+            <span>VIEW PASSES</span>
+            <span className="font-serif text-[13px] italic tracking-normal text-white/80">
+              enter →
+            </span>
+            <span
               aria-hidden
-            >
-              <defs>
-                <path
-                  id="seal-arc"
-                  d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"
-                />
-              </defs>
-              <text
-                fill="oklch(0.5 0.24 25)"
-                style={{
-                  fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                  fontSize: "11px",
-                  letterSpacing: "0.52em",
-                }}
-              >
-                <textPath href="#seal-arc" startOffset="0">
-                  ILLUMINATI · EDITION III · MUMBAI · AUG 3 ·&nbsp;
-                </textPath>
-              </text>
-            </motion.svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-full font-[Anton] text-2xl leading-none text-white"
-                style={{
-                  background:
-                    "radial-gradient(circle at 30% 25%, #b31a22 0%, #7a0008 55%, #3a0003 100%)",
-                  boxShadow:
-                    "0 8px 22px -6px rgba(120,0,12,0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
-                }}
-              >
-                III
-              </div>
-            </div>
-          </div>
+              className="pointer-events-none absolute inset-0 rounded-full"
+              style={{ boxShadow: "inset 0 -6px 12px rgba(0,0,0,0.35)" }}
+            />
+          </Link>
         </motion.div>
       </div>
     </section>
