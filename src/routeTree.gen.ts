@@ -17,6 +17,7 @@ import { Route as GateRouteImport } from './routes/gate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 
 const VipRoute = VipRouteImport.update({
   id: '/vip',
@@ -58,6 +59,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminStaffRoute = AdminStaffRouteImport.update({
+  id: '/admin/staff',
+  path: '/admin/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/purchases'
     | '/standard'
     | '/vip'
+    | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/purchases'
     | '/standard'
     | '/vip'
+    | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/purchases'
     | '/standard'
     | '/vip'
+    | '/admin/staff'
     | '/auth/callback'
     | '/booking/thankyou'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   PurchasesRoute: typeof PurchasesRoute
   StandardRoute: typeof StandardRoute
   VipRoute: typeof VipRoute
+  AdminStaffRoute: typeof AdminStaffRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BookingThankyouRoute: typeof BookingThankyouRoute
 }
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/staff': {
+      id: '/admin/staff'
+      path: '/admin/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AdminStaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   PurchasesRoute: PurchasesRoute,
   StandardRoute: StandardRoute,
   VipRoute: VipRoute,
+  AdminStaffRoute: AdminStaffRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BookingThankyouRoute: BookingThankyouRoute,
 }
