@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
@@ -88,8 +88,32 @@ function PurchasesPage() {
             ))}
           </div>
         )}
+        {(state.kind === "ready") && (
+          <SignOutRow />
+        )}
       </div>
     </main>
+  );
+}
+
+function SignOutRow() {
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const onClick = async () => {
+    setBusy(true);
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
+  };
+  return (
+    <div className="mt-12 flex justify-center border-t border-white/5 pt-8">
+      <button
+        onClick={onClick}
+        disabled={busy}
+        className="rounded-full border border-white/15 px-6 py-2.5 font-mono text-[10px] tracking-[0.32em] text-white/60 transition-colors hover:border-[oklch(0.55_0.24_25)] hover:text-white disabled:opacity-50"
+      >
+        {busy ? "SIGNING OUT…" : "SIGN OUT →"}
+      </button>
+    </div>
   );
 }
 
