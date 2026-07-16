@@ -35,7 +35,7 @@ export const lookupByToken = createServerFn({ method: "POST" })
     const { admin } = await requireStaff(data.accessToken);
     const { data: found } = await admin
       .from("bookings")
-      .select("id, status, checked_in_at, checked_in_by, full_name, pass_type, category, user_id")
+      .select("id, status, checked_in_at, checked_in_by, full_name, phone, pass_type, category, user_id, purchase_id")
       .eq("ticket_token", data.token)
       .maybeSingle();
     if (!found) return { result: "invalid" as const };
@@ -71,7 +71,7 @@ export const checkInByToken = createServerFn({ method: "POST" })
 
     const { data: found } = await admin
       .from("bookings")
-      .select("id, status, checked_in_at, checked_in_by, full_name, pass_type, category, user_id")
+      .select("id, status, checked_in_at, checked_in_by, full_name, phone, pass_type, category, user_id, purchase_id")
       .eq("ticket_token", data.token)
       .maybeSingle();
 
@@ -94,14 +94,14 @@ export const checkInByToken = createServerFn({ method: "POST" })
       .update({ checked_in_at: new Date().toISOString(), checked_in_by: userId })
       .eq("id", found.id)
       .is("checked_in_at", null)
-      .select("id, checked_in_at, full_name, pass_type, category")
+      .select("id, checked_in_at, full_name, phone, pass_type, category, purchase_id")
       .maybeSingle();
 
     if (!updated) {
       // Someone else beat us to it — re-read and report already.
       const { data: reread } = await admin
         .from("bookings")
-        .select("id, status, checked_in_at, checked_in_by, full_name, pass_type, category, user_id")
+        .select("id, status, checked_in_at, checked_in_by, full_name, phone, pass_type, category, user_id, purchase_id")
         .eq("id", found.id)
         .maybeSingle();
       return { result: "already" as const, booking: reread ?? found, byName: null };
@@ -134,7 +134,7 @@ export const checkInByBookingId = createServerFn({ method: "POST" })
 
     const { data: found } = await admin
       .from("bookings")
-      .select("id, status, checked_in_at, checked_in_by, full_name, pass_type, category, user_id, ticket_token")
+      .select("id, status, checked_in_at, checked_in_by, full_name, phone, pass_type, category, user_id, ticket_token, purchase_id")
       .eq("id", data.bookingId)
       .maybeSingle();
 
@@ -151,7 +151,7 @@ export const checkInByBookingId = createServerFn({ method: "POST" })
       .update({ checked_in_at: new Date().toISOString(), checked_in_by: userId })
       .eq("id", found.id)
       .is("checked_in_at", null)
-      .select("id, checked_in_at, full_name, pass_type, category")
+      .select("id, checked_in_at, full_name, phone, pass_type, category, purchase_id")
       .maybeSingle();
 
     if (!updated) {
