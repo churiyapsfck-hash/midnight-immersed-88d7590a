@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 import { ClientOnly } from "@/components/experience/ClientOnly";
+import { getPassPdf } from "@/lib/pass.functions";
 
 type Booking = {
   id: string;
@@ -125,12 +126,49 @@ function BookingRow({ b, i }: { b: Booking; i: number }) {
           {b.status.toUpperCase()}
         </span>
         {(b.status === "verified" || b.status === "active") && (
-          <button onClick={() => alert("Pass download coming soon.")}
-            className="rounded-full border border-white/15 px-3 py-1 font-mono text-[9px] tracking-[0.32em] text-white/70 hover:text-white">
-            DOWNLOAD PASS
-          </button>
+          <DownloadPassButton bookingId={b.id} />
         )}
       </div>
     </motion.div>
+  );
+}
+
+function DownloadPassButton({ bookingId }: { bookingId: string }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const onClick = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      if (!sess.session) throw new Error("Sign in first.");
+      const res = await getPassPdf({ data: { accessToken: sess.session.access_token, bookingId } });
+      const bytes = Uint8Array.from(atob(res.base64), (c) => c.charCodeAt(0));
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = res.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Download failed");
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <button
+        onClick={onClick}
+        disabled={busy}
+        className="rounded-full border border-white/15 px-3 py-1 font-mono text-[9px] tracking-[0.32em] text-white/70 hover:text-white disabled:opacity-50"
+      >
+        {busy ? "PREPARING…" : "DOWNLOAD PASS"}
+      </button>
+      {err && <span className="font-mono text-[8px] tracking-[0.2em]" style={{ color: "oklch(0.7 0.22 25)" }}>{err}</span>}
+    </div>
   );
 }
