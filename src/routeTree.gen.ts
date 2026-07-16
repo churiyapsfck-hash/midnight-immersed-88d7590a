@@ -9,17 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Z3nScanRouteImport } from './routes/z3n-scan'
 import { Route as VipRouteImport } from './routes/vip'
 import { Route as StandardRouteImport } from './routes/standard'
 import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as GateRouteImport } from './routes/gate'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as X7k9CtrlIndexRouteImport } from './routes/x7k9-ctrl.index'
+import { Route as X7k9CtrlRosterRouteImport } from './routes/x7k9-ctrl.roster'
 import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 
+const Z3nScanRoute = Z3nScanRouteImport.update({
+  id: '/z3n-scan',
+  path: '/z3n-scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VipRoute = VipRouteImport.update({
   id: '/vip',
   path: '/vip',
@@ -40,19 +45,19 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GateRoute = GateRouteImport.update({
-  id: '/gate',
-  path: '/gate',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
+const X7k9CtrlIndexRoute = X7k9CtrlIndexRouteImport.update({
+  id: '/x7k9-ctrl/',
+  path: '/x7k9-ctrl/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const X7k9CtrlRosterRoute = X7k9CtrlRosterRouteImport.update({
+  id: '/x7k9-ctrl/roster',
+  path: '/x7k9-ctrl/roster',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingThankyouRoute = BookingThankyouRouteImport.update({
@@ -65,103 +70,105 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminStaffRoute = AdminStaffRouteImport.update({
-  id: '/admin/staff',
-  path: '/admin/staff',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/gate': typeof GateRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
-  '/admin/staff': typeof AdminStaffRoute
+  '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
-  '/admin/': typeof AdminIndexRoute
+  '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
+  '/x7k9-ctrl/': typeof X7k9CtrlIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/gate': typeof GateRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
-  '/admin/staff': typeof AdminStaffRoute
+  '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
-  '/admin': typeof AdminIndexRoute
+  '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
+  '/x7k9-ctrl': typeof X7k9CtrlIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/gate': typeof GateRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
   '/vip': typeof VipRoute
-  '/admin/staff': typeof AdminStaffRoute
+  '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
-  '/admin/': typeof AdminIndexRoute
+  '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
+  '/x7k9-ctrl/': typeof X7k9CtrlIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/gate'
     | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
-    | '/admin/staff'
+    | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
-    | '/admin/'
+    | '/x7k9-ctrl/roster'
+    | '/x7k9-ctrl/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/gate'
     | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
-    | '/admin/staff'
+    | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
-    | '/admin'
+    | '/x7k9-ctrl/roster'
+    | '/x7k9-ctrl'
   id:
     | '__root__'
     | '/'
-    | '/gate'
     | '/login'
     | '/purchases'
     | '/standard'
     | '/vip'
-    | '/admin/staff'
+    | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
-    | '/admin/'
+    | '/x7k9-ctrl/roster'
+    | '/x7k9-ctrl/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GateRoute: typeof GateRoute
   LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   StandardRoute: typeof StandardRoute
   VipRoute: typeof VipRoute
-  AdminStaffRoute: typeof AdminStaffRoute
+  Z3nScanRoute: typeof Z3nScanRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BookingThankyouRoute: typeof BookingThankyouRoute
-  AdminIndexRoute: typeof AdminIndexRoute
+  X7k9CtrlRosterRoute: typeof X7k9CtrlRosterRoute
+  X7k9CtrlIndexRoute: typeof X7k9CtrlIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/z3n-scan': {
+      id: '/z3n-scan'
+      path: '/z3n-scan'
+      fullPath: '/z3n-scan'
+      preLoaderRoute: typeof Z3nScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vip': {
       id: '/vip'
       path: '/vip'
@@ -190,13 +197,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/gate': {
-      id: '/gate'
-      path: '/gate'
-      fullPath: '/gate'
-      preLoaderRoute: typeof GateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -204,11 +204,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
+    '/x7k9-ctrl/': {
+      id: '/x7k9-ctrl/'
+      path: '/x7k9-ctrl'
+      fullPath: '/x7k9-ctrl/'
+      preLoaderRoute: typeof X7k9CtrlIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/x7k9-ctrl/roster': {
+      id: '/x7k9-ctrl/roster'
+      path: '/x7k9-ctrl/roster'
+      fullPath: '/x7k9-ctrl/roster'
+      preLoaderRoute: typeof X7k9CtrlRosterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/booking/thankyou': {
@@ -225,27 +232,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/staff': {
-      id: '/admin/staff'
-      path: '/admin/staff'
-      fullPath: '/admin/staff'
-      preLoaderRoute: typeof AdminStaffRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GateRoute: GateRoute,
   LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   StandardRoute: StandardRoute,
   VipRoute: VipRoute,
-  AdminStaffRoute: AdminStaffRoute,
+  Z3nScanRoute: Z3nScanRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BookingThankyouRoute: BookingThankyouRoute,
-  AdminIndexRoute: AdminIndexRoute,
+  X7k9CtrlRosterRoute: X7k9CtrlRosterRoute,
+  X7k9CtrlIndexRoute: X7k9CtrlIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

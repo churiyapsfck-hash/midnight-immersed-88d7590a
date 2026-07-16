@@ -8,7 +8,7 @@ import {
   getBookingStats,
 } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/admin/")({
+export const Route = createFileRoute("/x7k9-ctrl/")({
   head: () => ({
     meta: [
       { title: "Admin — ILLUMINATI 3.0" },
