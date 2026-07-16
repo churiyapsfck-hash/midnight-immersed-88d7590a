@@ -129,26 +129,76 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 flex w-full max-w-sm flex-col items-stretch md:hidden"
+          className="mt-10 flex w-full max-w-sm flex-col items-stretch md:hidden"
         >
           <a
             href="#tickets"
-            className="group relative flex items-center justify-between overflow-hidden rounded-full px-6 py-4 font-mono text-[11px] tracking-[0.32em] text-white"
+            className="group relative block overflow-hidden border border-black/80 bg-black text-white"
             style={{
-              background:
-                "linear-gradient(180deg, #b31a22 0%, #7a0008 60%, #4a0004 100%)",
               boxShadow:
-                "0 10px 24px -8px rgba(120,0,12,0.55), inset 0 1px 0 rgba(255,255,255,0.15)",
+                "0 18px 40px -14px rgba(120,0,12,0.65), 0 0 0 1px rgba(179,26,34,0.35), inset 0 0 0 1px rgba(255,255,255,0.04)",
             }}
           >
-            <span>VIEW PASSES</span>
-            <span className="font-serif text-[13px] italic tracking-normal text-white/80">
-              enter →
-            </span>
+            {/* blood scan bar */}
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-full"
-              style={{ boxShadow: "inset 0 -6px 12px rgba(0,0,0,0.35)" }}
+              className="pointer-events-none absolute inset-y-0 left-0 w-1"
+              style={{
+                background:
+                  "linear-gradient(180deg, #b31a22 0%, #7a0008 60%, #3a0003 100%)",
+                boxShadow: "0 0 18px 2px rgba(179,26,34,0.55)",
+              }}
+            />
+            {/* diagonal noise */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-screen"
+              style={{
+                background:
+                  "repeating-linear-gradient(135deg, transparent 0 6px, rgba(255,255,255,0.05) 6px 7px)",
+              }}
+            />
+            {/* corner ticks */}
+            <span aria-hidden className="pointer-events-none absolute left-1.5 top-1.5 h-2 w-2 border-l border-t border-white/40" />
+            <span aria-hidden className="pointer-events-none absolute right-1.5 top-1.5 h-2 w-2 border-r border-t border-white/40" />
+            <span aria-hidden className="pointer-events-none absolute left-1.5 bottom-1.5 h-2 w-2 border-l border-b border-white/40" />
+            <span aria-hidden className="pointer-events-none absolute right-1.5 bottom-1.5 h-2 w-2 border-r border-b border-white/40" />
+
+            <div className="relative flex items-center justify-between px-6 py-5 pl-8">
+              <div className="flex flex-col items-start gap-1">
+                <span
+                  className="font-mono text-[9px] tracking-[0.5em]"
+                  style={{ color: "#b31a22" }}
+                >
+                  ///  ACCESS
+                </span>
+                <span className="font-[Anton] text-2xl leading-none tracking-[0.14em] text-white">
+                  VIEW PASSES
+                </span>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span
+                  aria-hidden
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background: "#b31a22",
+                    boxShadow: "0 0 10px 2px rgba(179,26,34,0.75)",
+                  }}
+                />
+                <span className="font-mono text-[9px] tracking-[0.4em] text-white/70">
+                  ENTER →
+                </span>
+              </div>
+            </div>
+
+            {/* bottom stripe */}
+            <span
+              aria-hidden
+              className="relative block h-[3px] w-full"
+              style={{
+                background:
+                  "linear-gradient(90deg, #3a0003 0%, #b31a22 50%, #3a0003 100%)",
+              }}
             />
           </a>
         </motion.div>
