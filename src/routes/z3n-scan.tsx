@@ -20,13 +20,13 @@ export const Route = createFileRoute("/z3n-scan")({
 });
 
 type CheckInResult =
-  | { result: "verified"; booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string } }
-  | { result: "already"; booking: { full_name: string; pass_type: string; category: string; checked_in_at: string | null }; byName: string | null }
+  | { result: "verified"; booking: { id: string; full_name: string; phone?: string; pass_type: string; category: string; user_code: string | null; purchase_id?: string | null; checked_in_at: string } }
+  | { result: "already"; booking: { id: string; full_name: string; phone?: string; pass_type: string; category: string; purchase_id?: string | null; checked_in_at: string | null }; byName: string | null }
   | { result: "invalid"; booking?: { status: string } };
 
 type Preview = {
   token: string;
-  booking: { full_name: string; pass_type: string; category: string; user_code: string | null; checked_in_at: string | null; status?: string };
+  booking: { id: string; full_name: string; phone?: string; pass_type: string; category: string; user_code: string | null; purchase_id?: string | null; checked_in_at: string | null; status?: string };
   already: boolean;
   byName: string | null;
 };
@@ -243,6 +243,12 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
               {preview.booking.user_code ? `${preview.booking.user_code} · ` : ""}
               {preview.booking.pass_type.toUpperCase()} · {preview.booking.category.toUpperCase()}
             </div>
+            <div className="mt-3 space-y-1 rounded-md border border-white/10 bg-white/5 px-3 py-2 font-mono text-[10px] leading-relaxed tracking-[0.24em] text-white/70">
+              {preview.booking.phone && (
+                <div>PHONE · <span className="text-white/90">{preview.booking.phone}</span></div>
+              )}
+              <div>PURCHASE · <span className="break-all text-white/90">{preview.booking.purchase_id ?? preview.booking.id}</span></div>
+            </div>
             {preview.already && preview.booking.checked_in_at && (
               <>
                 <div className="mt-2 font-mono text-[10px] tracking-[0.3em] text-white/50">
@@ -393,6 +399,12 @@ function ResultCard({ r }: { r: CheckInResult }) {
           <div className="mt-1 font-mono text-[10px] tracking-[0.3em] text-white/60">
             {"user_code" in r.booking && r.booking.user_code ? `${r.booking.user_code} · ` : ""}
             {r.booking.pass_type.toUpperCase()} · {r.booking.category.toUpperCase()}
+          </div>
+          <div className="mt-3 space-y-1 rounded-md border border-white/10 bg-white/5 px-3 py-2 font-mono text-[10px] leading-relaxed tracking-[0.24em] text-white/70">
+            {r.booking.phone && (
+              <div>PHONE · <span className="text-white/90">{r.booking.phone}</span></div>
+            )}
+            <div>PURCHASE · <span className="break-all text-white/90">{r.booking.purchase_id ?? r.booking.id}</span></div>
           </div>
           {r.result === "verified" && (
             <div className="mt-2 font-mono text-[10px] tracking-[0.3em] text-white/50">
