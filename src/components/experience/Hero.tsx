@@ -132,8 +132,8 @@ export function Hero() {
           transition={{ delay: 5.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
           className="mt-8 flex w-full max-w-sm flex-col items-stretch md:hidden"
         >
-          <Link
-            to="/invitations"
+          <a
+            href="#tickets"
             className="group relative flex items-center justify-between overflow-hidden rounded-full px-6 py-4 font-mono text-[11px] tracking-[0.32em] text-white"
             style={{
               background:
@@ -151,7 +151,7 @@ export function Hero() {
               className="pointer-events-none absolute inset-0 rounded-full"
               style={{ boxShadow: "inset 0 -6px 12px rgba(0,0,0,0.35)" }}
             />
-          </Link>
+          </a>
         </motion.div>
       </div>
     </section>
