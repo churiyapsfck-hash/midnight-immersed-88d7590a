@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "@tanstack/react-router";
+import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/hooks/useAuth";
+
+const UPI_ID = "6300703253@ybl";
+const UPI_PAYEE = "Z3N";
+const PRICES = {
+  standard: { single: 1400, couple: 2400 },
+  vip: { single: 2200, couple: 3400 },
+} as const;
 
 export function BookingForm({
   passType,
@@ -21,6 +29,29 @@ export function BookingForm({
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  const amount = PRICES[passType][category];
+  const upiLink = useMemo(() => {
+    const params = new URLSearchParams({
+      pa: UPI_ID,
+      pn: UPI_PAYEE,
+      am: String(amount),
+      cu: "INR",
+      tn: `Z3N-${passType.toUpperCase()}-${category.toUpperCase()}`,
+    });
+    return `upi://pay?${params.toString()}`;
+  }, [amount, passType, category]);
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    QRCode.toDataURL(upiLink, {
+      errorCorrectionLevel: "M",
+      margin: 1,
+      width: 320,
+      color: { dark: "#000000", light: "#ffffff" },
+    }).then((url) => { if (!cancelled) setQrDataUrl(url); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [upiLink]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,12 +125,29 @@ export function BookingForm({
         <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
           className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
         <div className="rounded-xl border border-white/10 bg-black/50 p-4 text-center">
-          <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">SCAN TO PAY</div>
-          <div className="mx-auto mt-3 flex h-40 w-40 items-center justify-center rounded-lg border border-dashed border-white/20 bg-black/40 font-mono text-[10px] tracking-[0.2em] text-white/30">
-            QR · UPLOAD LATER
+          <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">
+            SCAN TO PAY · ₹{amount.toLocaleString("en-IN")}
           </div>
+          <div className="mx-auto mt-3 h-44 w-44 overflow-hidden rounded-lg bg-white p-2">
+            {qrDataUrl ? (
+              <img src={qrDataUrl} alt={`UPI QR for ₹${amount}`} className="h-full w-full" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center font-mono text-[10px] tracking-[0.2em] text-black/40">
+                LOADING…
+              </div>
+            )}
+          </div>
+          <div className="mt-3 font-mono text-[10px] tracking-[0.3em] text-white/50">
+            {UPI_ID}
+          </div>
+          <a
+            href={upiLink}
+            className="mt-2 inline-block font-mono text-[10px] tracking-[0.3em] text-white/70 underline decoration-white/30 underline-offset-4 md:hidden"
+          >
+            OPEN IN UPI APP →
+          </a>
           <div className="mt-3 font-serif text-[12px] italic text-white/50">
-            Pay via the QR, then paste your UTR / transaction number below.
+            Amount is locked to ₹{amount.toLocaleString("en-IN")} — don't edit it. Paste your UTR below after paying.
           </div>
         </div>
         <input value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="UTR / Transaction number" required maxLength={64}
