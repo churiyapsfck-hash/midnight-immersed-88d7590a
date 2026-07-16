@@ -22,6 +22,43 @@ async function requireStaff(accessToken: string) {
 
 // ------------ checkInByToken ------------
 
+// ------------ lookupByToken (preview only, no check-in) ------------
+
+export const lookupByToken = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; token: string }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      token: z.string().trim().min(4).max(64),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireStaff(data.accessToken);
+    const { data: found } = await admin
+      .from("bookings")
+      .select("id, status, checked_in_at, checked_in_by, full_name, pass_type, category, user_id")
+      .eq("ticket_token", data.token)
+      .maybeSingle();
+    if (!found) return { result: "invalid" as const };
+    if (found.status !== "verified" && found.status !== "active") {
+      return { result: "invalid" as const, booking: found };
+    }
+    const { data: prof } = await admin
+      .from("profiles")
+      .select("user_code")
+      .eq("id", found.user_id)
+      .maybeSingle();
+    let byName: string | null = null;
+    if (found.checked_in_at && found.checked_in_by) {
+      const { data: staff } = await admin.auth.admin.getUserById(found.checked_in_by);
+      byName = staff.user?.email ?? null;
+    }
+    return {
+      result: (found.checked_in_at ? "already" : "pending") as "already" | "pending",
+      booking: { ...found, user_code: prof?.user_code ?? null },
+      byName,
+    };
+  });
+
 export const checkInByToken = createServerFn({ method: "POST" })
   .inputValidator((data: { accessToken: string; token: string }) =>
     z.object({
