@@ -16,6 +16,112 @@ async function requireAdmin(accessToken: string) {
   return { admin, userId: u.user.id };
 }
 
+// ------------ bookings admin ------------
+
+export const listBookings = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; status?: string; q?: string }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      status: z.enum(["all", "pending", "verified", "declined", "active", "checked_in"]).optional(),
+      q: z.string().trim().max(64).optional(),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    let query = admin
+      .from("bookings")
+      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    if (data.status && data.status !== "all") {
+      if (data.status === "checked_in") {
+        query = query.not("checked_in_at", "is", null);
+      } else {
+        query = query.eq("status", data.status);
+      }
+    }
+    if (data.q && data.q.length >= 2) {
+      const q = data.q;
+      query = query.or(`full_name.ilike.%${q}%,phone.ilike.%${q}%,utr.ilike.%${q}%,purchase_id.ilike.%${q}%`);
+    }
+
+    const { data: rows, error } = await query;
+    if (error) throw new Error(error.message);
+
+    // Attach user_code + email
+    const uids = [...new Set((rows ?? []).map((r) => r.user_id as string))];
+    const codeMap = new Map<string, string>();
+    if (uids.length) {
+      const { data: profs } = await admin.from("profiles").select("id, user_code").in("id", uids);
+      for (const p of profs ?? []) codeMap.set(p.id as string, p.user_code as string);
+    }
+
+    // Sign screenshots
+    const withUrls = await Promise.all(
+      (rows ?? []).map(async (r) => {
+        let screenshot_url: string | null = null;
+        if (r.screenshot_path) {
+          const { data: signed } = await admin.storage
+            .from("payment-screenshots")
+            .createSignedUrl(r.screenshot_path as string, 60 * 30);
+          screenshot_url = signed?.signedUrl ?? null;
+        }
+        return { ...r, user_code: codeMap.get(r.user_id as string) ?? null, screenshot_url };
+      }),
+    );
+
+    return { rows: withUrls };
+  });
+
+export const setBookingStatus = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; bookingId: string; status: string }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      bookingId: z.string().uuid(),
+      status: z.enum(["pending", "verified", "declined", "active"]),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const { error } = await admin
+      .from("bookings")
+      .update({ status: data.status })
+      .eq("id", data.bookingId);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+export const getBookingStats = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string }) =>
+    z.object({ accessToken: z.string().min(10) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const { data: rows } = await admin
+      .from("bookings")
+      .select("status, checked_in_at, pass_type");
+    const stats = {
+      total: 0,
+      pending: 0,
+      verified: 0,
+      declined: 0,
+      checked_in: 0,
+      vip: 0,
+      standard: 0,
+    };
+    for (const r of rows ?? []) {
+      stats.total++;
+      if (r.status === "pending") stats.pending++;
+      else if (r.status === "verified" || r.status === "active") stats.verified++;
+      else if (r.status === "declined") stats.declined++;
+      if (r.checked_in_at) stats.checked_in++;
+      if (r.pass_type === "vip") stats.vip++;
+      else if (r.pass_type === "standard") stats.standard++;
+    }
+    return stats;
+  });
+
 export const listStaff = createServerFn({ method: "POST" })
   .inputValidator((data: { accessToken: string }) =>
     z.object({ accessToken: z.string().min(10) }).parse(data),
