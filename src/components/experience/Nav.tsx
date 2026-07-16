@@ -1,8 +1,10 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useRoles } from "@/hooks/useRoles";
 import { Link } from "@tanstack/react-router";
 
 export function Nav() {
   const { user } = useAuth();
+  const { isStaff } = useRoles();
   return (
     <header className="fixed left-0 right-0 top-0 z-40 flex items-center justify-between bg-white px-6 py-5 text-black md:px-12">
       <a href="#top" className="flex items-center gap-3">
@@ -17,6 +19,11 @@ export function Nav() {
         <a href="#gallery" className="transition-colors hover:text-black">02 — EDITION</a>
         <a href="#timeline" className="transition-colors hover:text-black">03 — LOCATION</a>
         <a href="#faq" className="transition-colors hover:text-black">04 — DECODE</a>
+        {user && isStaff && (
+          <Link to="/gate" className="transition-colors hover:text-black" style={{ color: "oklch(0.55 0.24 25)" }}>
+            ● GATE
+          </Link>
+        )}
       </nav>
       {user ? (
         <Link
