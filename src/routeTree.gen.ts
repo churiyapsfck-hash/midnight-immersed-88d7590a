@@ -14,6 +14,7 @@ import { Route as VipRouteImport } from './routes/vip'
 import { Route as StandardRouteImport } from './routes/standard'
 import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as HostRouteImport } from './routes/host'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as X7k9CtrlIndexRouteImport } from './routes/x7k9-ctrl.index'
 import { Route as X7k9CtrlRosterRouteImport } from './routes/x7k9-ctrl.roster'
@@ -45,6 +46,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HostRoute = HostRouteImport.update({
+  id: '/host',
+  path: '/host',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -73,6 +79,7 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/host': typeof HostRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/host': typeof HostRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/host': typeof HostRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/standard': typeof StandardRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/host'
     | '/login'
     | '/purchases'
     | '/standard'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/host'
     | '/login'
     | '/purchases'
     | '/standard'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/host'
     | '/login'
     | '/purchases'
     | '/standard'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HostRoute: typeof HostRoute
   LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   StandardRoute: typeof StandardRoute
@@ -197,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/host': {
+      id: '/host'
+      path: '/host'
+      fullPath: '/host'
+      preLoaderRoute: typeof HostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -237,6 +257,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HostRoute: HostRoute,
   LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   StandardRoute: StandardRoute,

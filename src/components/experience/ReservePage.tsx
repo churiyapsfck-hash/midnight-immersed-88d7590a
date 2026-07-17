@@ -8,7 +8,7 @@ import { BookingForm } from "@/components/experience/BookingForm";
 import { SmoothScroll } from "@/components/experience/SmoothScroll";
 import { useAuth } from "@/hooks/useAuth";
 
-export function ReservePage({ passType }: { passType: "standard" | "vip" }) {
+export function ReservePage({ passType }: { passType: "standard" | "vip" | "host" }) {
   const { user, profile, loading, setProfile } = useAuth();
   const [showCreds, setShowCreds] = useState<{ userCode: string; password: string | null } | null>(null);
   const redirect = `/${passType}`;
