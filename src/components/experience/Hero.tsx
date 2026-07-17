@@ -57,10 +57,6 @@ function MachinedTitle() {
 
 export function Hero() {
   const target = new Date("2026-08-03T00:00:00+05:30");
-  const isMobile = useIsMobile();
-
-  // Sequence AFTER the ILLUMINATI title reveal on mobile.
-  const BASE = 5.2;
 
   const marquee = (
     <div className="font-[Anton] text-5xl tracking-[0.28em] text-black md:text-4xl">
