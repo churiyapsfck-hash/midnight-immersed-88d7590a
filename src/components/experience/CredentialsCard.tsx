@@ -22,15 +22,14 @@ export function CredentialsCard({
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-md rounded-3xl border bg-black/80 p-8 backdrop-blur-xl"
+      className="w-full max-w-md rounded-3xl border border-white/15 bg-black p-8"
       style={{
-        borderColor: "oklch(0.55 0.24 25 / 0.4)",
-        boxShadow: "0 30px 80px -20px oklch(0.4 0.24 25 / 0.7), inset 0 1px 0 rgba(255,255,255,0.06)",
+        boxShadow: "0 30px 80px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06)",
       }}
     >
-      <div className="font-mono text-[10px] tracking-[0.4em]" style={{ color: "oklch(0.7 0.22 25)" }}>— YOUR CREDENTIALS</div>
+      <div className="font-mono text-[10px] tracking-[0.4em] text-white/60">— YOUR CREDENTIALS</div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
-        Save these <span style={{ color: "oklch(0.55 0.24 25)" }}>now.</span>
+        Save these <span className="text-white/50">now.</span>
       </h2>
       <p className="mt-2 font-serif text-sm italic text-white/60">
         {password ? "The password is shown once — write it down." : "This is your access ID for the circle."}
@@ -51,8 +50,7 @@ export function CredentialsCard({
       <button
         onClick={onContinue}
         disabled={!ack}
-        className="mt-5 w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ backgroundColor: "oklch(0.55 0.24 25)" }}
+        className="mt-5 w-full rounded-full border border-white bg-white px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-black transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
       >
         CONTINUE →
       </button>
@@ -62,7 +60,7 @@ export function CredentialsCard({
 
 function Field({ label, value, copied, onCopy, mono }: { label: string; value: string; copied: boolean; onCopy: () => void; mono?: boolean }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/60 p-4">
+    <div className="rounded-xl border border-white/10 bg-black p-4">
       <div className="font-mono text-[9px] tracking-[0.4em] text-white/40">{label}</div>
       <div className="mt-2 flex items-center justify-between gap-3">
         <div className={mono ? "font-mono text-lg text-white break-all" : "font-[Anton] text-2xl tracking-wider text-white"}>{value}</div>

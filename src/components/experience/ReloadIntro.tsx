@@ -27,14 +27,20 @@ export function ReloadIntro({ children }: { children: React.ReactNode }) {
               className="flex flex-col items-center gap-6"
               style={{ willChange: "opacity" }}
             >
-              <img
-                src={assetUrl(eyeAsset)}
-                alt=""
-                className="h-28 w-28 object-contain md:h-36 md:w-36"
-                style={{ filter: "invert(1)" }}
-                loading="eager"
-                decoding="async"
-              />
+              <div
+                className="relative flex h-32 w-32 items-center justify-center rounded-full md:h-40 md:w-40"
+                style={{
+                  background: "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 55%, rgba(255,255,255,0) 75%)",
+                }}
+              >
+                <img
+                  src={assetUrl(eyeAsset)}
+                  alt=""
+                  className="relative h-24 w-24 object-contain md:h-32 md:w-32"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
               <div className="font-[Anton] text-5xl tracking-tight text-white md:text-6xl">
                 ILLUMINATI <span style={{ color: "oklch(0.55 0.24 25)" }}>3.0</span>
               </div>
@@ -44,7 +50,7 @@ export function ReloadIntro({ children }: { children: React.ReactNode }) {
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(circle at 50% 50%, oklch(0.4 0.24 25 / 0.28), transparent 60%)",
+                  "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), transparent 60%)",
               }}
             />
           </motion.div>
