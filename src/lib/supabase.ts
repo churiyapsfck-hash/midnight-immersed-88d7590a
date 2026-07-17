@@ -1,9 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Public values — safe to ship to the browser. RLS enforces access.
-const SUPABASE_URL = "https://royldphvtrbrwmvxahyf.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJveWxkcGh2dHJicndtdnhhaHlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjA2MTcsImV4cCI6MjA5OTUzNjYxN30.xPkBfdFrPRGYVuTorC8k4HLuvgpYeZV5yIv9_yWQQNg";
+// Public values — pulled from build-time env (VITE_*). RLS enforces access.
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  // Fail loud in dev — in prod Vercel envs must be set.
+  console.error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY");
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
