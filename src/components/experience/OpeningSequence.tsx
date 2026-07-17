@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import illuminatiEye from "@/assets/illuminati-eye-mono.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 /**
  * OPENING SEQUENCE
@@ -187,7 +188,7 @@ export function OpeningSequence() {
                 }}
               />
               <img
-                src={illuminatiEye.url}
+                src={assetUrl(illuminatiEye)}
                 alt=""
                 className="relative h-full w-full object-contain"
                 style={{

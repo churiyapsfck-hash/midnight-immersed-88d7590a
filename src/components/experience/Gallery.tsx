@@ -5,8 +5,9 @@ import img2 from "@/assets/edition2/17.png.asset.json";
 import img3 from "@/assets/edition2/18.png.asset.json";
 import img4 from "@/assets/edition2/19.png.asset.json";
 import img5 from "@/assets/edition2/20.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
-const FRAMES = [img1.url, img2.url, img3.url, img4.url, img5.url];
+const FRAMES = [img1, img2, img3, img4, img5].map(assetUrl);
 
 export function Gallery() {
   const ref = useRef<HTMLDivElement>(null);
