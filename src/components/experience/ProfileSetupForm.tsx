@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { completeSignup } from "@/lib/user.functions";
+import { supabase } from "@/lib/supabase";
 
 export function ProfileSetupForm({
   userId,
@@ -19,7 +20,10 @@ export function ProfileSetupForm({
     setBusy(true);
     setErr(null);
     try {
-      const res = await completeSignup({ data: { userId, fullName, phone } });
+      const { data: userData } = await supabase.auth.getUser();
+      const email = userData.user?.email ?? "";
+      if (!email) throw new Error("Session expired. Please sign in again.");
+      const res = await completeSignup({ data: { userId, fullName, phone, email } });
       if (res.alreadyRegistered) {
         onDone({ userCode: res.userCode, password: null, fullName, phone });
       } else {

@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/hooks/useAuth";
+import { validateIndianPhone } from "@/lib/user.functions";
 
 const UPI_ID = "6300703253@ybl";
 const UPI_PAYEE = "Z3N";
@@ -61,6 +62,11 @@ export function BookingForm({
       setErr("Name and phone are required.");
       return;
     }
+    const check = validateIndianPhone(phone);
+    if (!check.ok) {
+      setErr(check.reason);
+      return;
+    }
     setBusy(true);
     setErr(null);
     try {
@@ -71,7 +77,7 @@ export function BookingForm({
         pass_type: passType,
         category,
         full_name: fullName.trim(),
-        phone: phone.trim(),
+        phone: check.normalized,
         status: "pending",
       });
       if (insErr) throw insErr;
