@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ILLUMINATI" },
+      { title: "ILLUMINATI 3.0" },
       { name: "description", content: "An exclusive cinematic gathering. Obsidian, chrome, blood. Awareness. Precision. Anticipation." },
       { name: "author", content: "ILLUMINATI 3.0" },
-      { property: "og:title", content: "ILLUMINATI" },
+      { property: "og:title", content: "ILLUMINATI 3.0" },
       { property: "og:description", content: "An exclusive cinematic gathering. Obsidian, chrome, blood." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
