@@ -55,7 +55,6 @@ function Dust() {
             duration: m.duration,
             delay: 0.6 + m.delay,
             ease: "linear",
-            repeat: Infinity,
           }}
         />
       ))}
@@ -64,12 +63,20 @@ function Dust() {
 }
 
 export function OpeningSequence() {
-  const [gone, setGone] = useState(false);
+  // Skip entirely on touch devices / reduced motion — the heavy filters,
+  // mix-blend-modes and drop-shadows tank mobile FPS.
+  const [gone, setGone] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+    if (window.matchMedia("(pointer: coarse)").matches) return true;
+    return false;
+  });
 
   useEffect(() => {
+    if (gone) return;
     const t = window.setTimeout(() => setGone(true), TOTAL * 1000);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [gone]);
 
   return (
     <AnimatePresence>
