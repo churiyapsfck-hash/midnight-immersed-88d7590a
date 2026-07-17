@@ -202,7 +202,7 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
 }
 
 export function Tickets() {
-  const [active, setActive] = useState<"standard" | "vip">("vip");
+  const [active, setActive] = useState<"standard" | "vip" | "host">("vip");
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
