@@ -170,30 +170,16 @@ export function Hero() {
         <div className="relative mx-auto w-full max-w-7xl text-center">
           <MachinedTitle />
 
-          {isMobile ? (
-            <div className="mx-auto mt-10 flex flex-col items-center gap-1">
-              <PanelReveal delay={BASE} className="px-2 py-1">
-                {marquee}
-              </PanelReveal>
-              <PanelReveal delay={BASE + 0.45} className="mt-4 px-2 py-1">
-                {aug3}
-              </PanelReveal>
-              <PanelReveal delay={BASE + 0.95} className="mt-6 px-2 py-1">
-                {ironoakBlock}
-              </PanelReveal>
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-              className="mx-auto mt-16 flex flex-col items-center gap-1"
-            >
-              {marquee}
-              <div className="mt-2">{aug3}</div>
-              <div className="mt-10">{ironoakBlock}</div>
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-10 flex flex-col items-center gap-1 md:mt-16"
+          >
+            {marquee}
+            <div className="mt-4 md:mt-2">{aug3}</div>
+            <div className="mt-6 md:mt-10">{ironoakBlock}</div>
+          </motion.div>
         </div>
 
         {/* Countdown + scroll hint */}
