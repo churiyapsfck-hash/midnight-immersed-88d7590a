@@ -19,7 +19,7 @@ export function ReservePage({ passType }: { passType: "standard" | "vip" | "host
         className="pointer-events-none fixed inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at top, oklch(0.35 0.22 25 / 0.35), transparent 60%), radial-gradient(ellipse at bottom, oklch(0.2 0.15 25 / 0.25), transparent 55%)",
+            "radial-gradient(ellipse at top, rgba(255,255,255,0.05), transparent 60%), radial-gradient(ellipse at bottom, rgba(255,255,255,0.03), transparent 55%)",
         }}
       />
       <ClientOnly>
