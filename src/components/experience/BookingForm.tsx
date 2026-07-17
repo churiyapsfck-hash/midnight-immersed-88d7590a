@@ -6,6 +6,14 @@ import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/hooks/useAuth";
 import { validateIndianPhone } from "@/lib/user.functions";
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error) return error.message;
+  if (error && typeof error === "object" && "message" in error) {
+    return String((error as { message: unknown }).message);
+  }
+  return fallback;
+};
+
 const UPI_ID = "6300703253@ybl";
 const UPI_PAYEE = "Z3N";
 const PRICES = {
@@ -88,7 +96,7 @@ export function BookingForm({
       setBookingId(id);
       setStep("pay");
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Could not save your details.");
+      setErr(getErrorMessage(e, "Could not save your details."));
     } finally {
       setBusy(false);
     }
@@ -117,7 +125,7 @@ export function BookingForm({
       if (updErr) throw updErr;
       navigate({ to: "/booking/thankyou" });
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Booking failed.");
+      setErr(getErrorMessage(e, "Booking failed."));
     } finally {
       setBusy(false);
     }
