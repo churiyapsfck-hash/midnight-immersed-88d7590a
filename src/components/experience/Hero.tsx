@@ -115,7 +115,7 @@ export function Hero() {
           >
             {marquee}
             <div className="mt-4 md:mt-2">{aug3}</div>
-            <div className="mt-6 md:mt-6">{ironoakBlock}</div>
+            <div className="mt-6 md:mt-10">{ironoakBlock}</div>
           </motion.div>
         </div>
 
