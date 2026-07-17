@@ -28,6 +28,16 @@ function Index() {
       <Timeline />
       <Faq />
       <Ending />
+      <footer className="w-full border-t border-black/10 bg-white py-6 text-center">
+        <a
+          href="https://likith.online"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-[10px] tracking-[0.4em] text-black/50 transition-colors hover:text-[oklch(0.55_0.24_25)]"
+        >
+          DESIGNED BY LIKITH
+        </a>
+      </footer>
     </main>
   );
 }
