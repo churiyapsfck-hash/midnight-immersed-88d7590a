@@ -16,7 +16,7 @@ function MachinedTitle() {
       transition={{ delay: REVEAL_START, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
       style={{ willChange: "transform, opacity" }}
     >
-      <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,15.5vw,13.5rem)] leading-[0.82] tracking-[-0.02em]">
+      <h1 className="relative flex flex-wrap justify-center pb-4 font-[Anton] text-[clamp(3.4rem,11vw,9rem)] leading-[0.82] tracking-[-0.02em]">
         {chars.map((c, i) => (
           <span
             key={i}
@@ -102,7 +102,7 @@ export function Hero() {
       <div className="absolute inset-0" style={{ background: "#d9d9dc" }} />
 
       {/* Foreground content */}
-      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-between px-6 pb-16 pt-36 md:px-12 md:pt-44 md:pb-24">
+      <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-between px-6 pb-16 pt-36 md:px-12 md:pt-28 md:pb-16">
         {/* Title */}
         <div className="relative mx-auto w-full max-w-7xl text-center">
           <MachinedTitle />
@@ -111,11 +111,11 @@ export function Hero() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-10 flex flex-col items-center gap-1 md:mt-16"
+            className="mx-auto mt-10 flex flex-col items-center gap-1 md:mt-10"
           >
             {marquee}
             <div className="mt-4 md:mt-2">{aug3}</div>
-            <div className="mt-6 md:mt-10">{ironoakBlock}</div>
+            <div className="mt-6 md:mt-6">{ironoakBlock}</div>
           </motion.div>
         </div>
 
@@ -124,7 +124,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 flex flex-col items-center gap-6 md:mt-24"
+          className="mt-6 flex flex-col items-center gap-6 md:mt-12"
         >
           <Countdown target={target} variant="light" />
           <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-black/45">
