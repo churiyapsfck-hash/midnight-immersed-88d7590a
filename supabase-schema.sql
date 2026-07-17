@@ -8,14 +8,19 @@ create table if not exists public.profiles (
   user_code text unique not null,
   full_name text not null,
   phone text not null,
+  email text,
   created_at timestamptz not null default now()
 );
+alter table public.profiles add column if not exists email text;
 grant select, insert, update on public.profiles to authenticated;
 grant all on public.profiles to service_role;
 alter table public.profiles enable row level security;
 drop policy if exists "own profile read" on public.profiles;
 create policy "own profile read" on public.profiles
   for select to authenticated using (auth.uid() = id);
+drop policy if exists "own profile insert" on public.profiles;
+create policy "own profile insert" on public.profiles
+  for insert to authenticated with check (auth.uid() = id);
 drop policy if exists "own profile update" on public.profiles;
 -- Profiles are frozen after signup. Only service_role can edit.
 
@@ -23,7 +28,7 @@ drop policy if exists "own profile update" on public.profiles;
 create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
-  pass_type text not null check (pass_type in ('standard','vip')),
+  pass_type text not null check (pass_type in ('standard','vip','host')),
   category text not null check (category in ('girls','boys','couples')),
   full_name text not null,
   phone text not null,
@@ -51,6 +56,9 @@ create policy "own pending bookings update" on public.bookings
 -- Two-step booking flow: row is inserted BEFORE payment (name/phone captured),
 -- then updated with utr + screenshot after the user pays.
 alter table public.bookings alter column utr drop not null;
+alter table public.bookings drop constraint if exists bookings_pass_type_check;
+alter table public.bookings add constraint bookings_pass_type_check
+  check (pass_type in ('standard','vip','host'));
 alter table public.bookings drop constraint if exists bookings_category_check;
 alter table public.bookings add constraint bookings_category_check
   check (category in ('single','couple'));
