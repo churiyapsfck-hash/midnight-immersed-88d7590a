@@ -75,16 +75,16 @@ export function Hero() {
             transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-10 flex flex-col items-center gap-1 md:mt-16"
           >
-            <div className="font-[Anton] text-3xl tracking-[0.28em] text-black md:text-6xl">
+            <div className="font-[Anton] text-5xl tracking-[0.28em] text-black md:text-4xl">
               MARQUEE CLUB AND KITCHEN
             </div>
             <div
-              className="mt-2 font-mono text-base tracking-[0.5em] md:mt-3 md:text-xl"
+              className="mt-4 font-mono text-xl tracking-[0.5em] md:mt-2 md:text-sm"
               style={{ color: "oklch(0.5 0.24 25)" }}
             >
               AUG 3
             </div>
-            <div className="mt-10 flex flex-col items-center gap-1 md:mt-14">
+            <div className="mt-16 flex flex-col items-center gap-1 md:mt-10">
               <div className="font-mono text-[11px] tracking-[0.5em] text-black/45">
                 powered by
               </div>
@@ -94,7 +94,7 @@ export function Hero() {
                 rel="noopener noreferrer"
                 className="font-[Anton] leading-none tracking-[0.18em] transition-opacity hover:opacity-80"
                 style={{
-                  fontSize: "clamp(3.8rem, 10vw, 7.5rem)",
+                  fontSize: "clamp(4.5rem, 14vw, 5rem)",
                   color: "transparent",
                   background:
                     "linear-gradient(180deg, #2a2a2e 0%, #0a0a0c 50%, #1c1c1e 100%)",
