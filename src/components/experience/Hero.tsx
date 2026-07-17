@@ -178,7 +178,7 @@ export function Hero() {
               <PanelReveal delay={BASE + 0.45} className="mt-4 px-2 py-1">
                 {aug3}
               </PanelReveal>
-              <PanelReveal delay={BASE + 0.95} className="mt-16 px-2 py-1">
+              <PanelReveal delay={BASE + 0.95} className="mt-6 px-2 py-1">
                 {ironoakBlock}
               </PanelReveal>
             </div>
@@ -201,7 +201,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 5.4, duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-16 flex flex-col items-center gap-6 md:mt-24"
+          className="mt-6 flex flex-col items-center gap-6 md:mt-24"
         >
           <Countdown target={target} variant="light" />
           <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-black/45">
