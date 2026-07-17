@@ -11,10 +11,9 @@ const PASSES = [
       { category: "Couple", price: "₹ 2,400" },
     ],
     perks: [
-      "Entry to the main floor",
-      "Full show & sound",
-      "Bar & lounge access",
-      "Welcome pour on arrival",
+      "Unlimited food",
+      "Unlimited drinks",
+      "Live DJ all night",
     ],
   },
   {
@@ -26,10 +25,11 @@ const PASSES = [
       { category: "Couple", price: "₹ 3,400" },
     ],
     perks: [
-      "Priority entrance · no queue",
-      "VIP lounge & elevated deck",
-      "Reserved premium seating",
-      "Closer stage & booth access",
+      "Separate top-floor lounge",
+      "Table service",
+      "Complimentary pack of cigarettes",
+      "Personal bouncer",
+      "Suggest your playlist to our DJ",
     ],
   },
 ] as const;
