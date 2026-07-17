@@ -11,7 +11,7 @@ const UPI_PAYEE = "Z3N";
 const PRICES = {
   standard: { single: 1400, couple: 2400 },
   vip: { single: 2200, couple: 3400 },
-  host: { single: 0, couple: 0 },
+  host: { single: 6.7, couple: 6.7 },
 } as const;
 
 export function BookingForm({
@@ -28,6 +28,8 @@ export function BookingForm({
   const [step, setStep] = useState<"details" | "pay">("details");
   const [bookingId, setBookingId] = useState<string>("");
   const [category, setCategory] = useState<"single" | "couple">("single");
+  const displayAmount = (n: number) =>
+    Number.isInteger(n) ? n.toLocaleString("en-IN") : n.toFixed(2);
   const [fullName, setFullName] = useState(profile.full_name);
   const [phone, setPhone] = useState(profile.phone);
   const [utr, setUtr] = useState("");
@@ -84,10 +86,6 @@ export function BookingForm({
       });
       if (insErr) throw insErr;
       setBookingId(id);
-      if (isHost) {
-        navigate({ to: "/booking/thankyou" });
-        return;
-      }
       setStep("pay");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Could not save your details.");
@@ -131,21 +129,21 @@ export function BookingForm({
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-lg rounded-3xl border border-white/10 bg-black/70 p-8 backdrop-blur-xl"
-      style={{ boxShadow: "0 30px 80px -30px oklch(0.4 0.24 25 / 0.55), inset 0 1px 0 rgba(255,255,255,0.05)" }}
+      className="w-full max-w-lg rounded-3xl border border-white/10 bg-black p-8"
+      style={{ boxShadow: "0 30px 80px -30px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04)" }}
     >
-      <div className="font-mono text-[10px] tracking-[0.4em]" style={{ color: "oklch(0.7 0.22 25)" }}>
-        — {isHost ? "HOSTS ONLY · APPROVAL REQUIRED" : step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}
+      <div className="font-mono text-[10px] tracking-[0.4em] text-white/50">
+        — {step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}{isHost ? " · HOSTS ONLY" : ""}
       </div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
         {step === "details" ? (
           isHost ? (
-            <>Request <span style={{ color: "oklch(0.55 0.24 25)" }}>host access.</span></>
+            <>Request <span className="text-white/50">host access.</span></>
           ) : (
-            <>Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span></>
+            <>Book your <span className="text-white/50">pass.</span></>
           )
         ) : (
-          <>Pay & <span style={{ color: "oklch(0.55 0.24 25)" }}>confirm.</span></>
+          <>Pay & <span className="text-white/50">confirm.</span></>
         )}
       </h2>
       {step === "details" ? (
@@ -157,38 +155,37 @@ export function BookingForm({
               type="button"
               onClick={() => setCategory(c)}
               className={`rounded-full border px-3 py-2 font-mono text-[10px] tracking-[0.32em] uppercase transition-colors ${
-                category === c ? "text-white" : "border-white/15 text-white/60 hover:border-white/40"
+                category === c ? "border-white bg-white text-black" : "border-white/15 text-white/60 hover:border-white/40"
               }`}
-              style={category === c ? { backgroundColor: "oklch(0.55 0.24 25)", borderColor: "oklch(0.55 0.24 25)" } : undefined}
             >
               {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,400" : "2,400"}`}
             </button>
           ))}
         </div>}
         {isHost && (
-          <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-serif text-[12px] italic text-white/60">
-            Hosts don't pay. Our team reviews every request — not everyone will be approved. You'll be notified once your access is confirmed.
+          <div className="rounded-xl border border-white/10 bg-black px-4 py-3 font-serif text-[12px] italic text-white/60">
+            Hosts only — ₹6.70 to submit your request. Our team reviews every application; not everyone will be approved. You'll be notified once your access is confirmed.
           </div>
         )}
         <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" required
-          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+          className="w-full rounded-xl border border-white/15 bg-black px-4 py-3 font-serif text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none" />
         <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
-          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
+          className="w-full rounded-xl border border-white/15 bg-black px-4 py-3 font-serif text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none" />
       </div>
       ) : (
       <div className="mt-6 space-y-3">
-        <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-[10px] tracking-[0.3em] text-white/60">
+        <div className="rounded-xl border border-white/10 bg-black px-4 py-3 font-mono text-[10px] tracking-[0.3em] text-white/60">
           <div className="flex items-center justify-between">
             <span>{category.toUpperCase()} · {passType.toUpperCase()}</span>
-            <span className="text-white">₹{amount.toLocaleString("en-IN")}</span>
+            <span className="text-white">₹{displayAmount(amount)}</span>
           </div>
           <div className="mt-1 font-serif text-[12px] italic normal-case tracking-normal text-white/50">
             {fullName} · {phone}
           </div>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/50 p-4 text-center">
+        <div className="rounded-xl border border-white/10 bg-black p-4 text-center">
           <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">
-            SCAN TO PAY · ₹{amount.toLocaleString("en-IN")}
+            SCAN TO PAY · ₹{displayAmount(amount)}
           </div>
           <div className="mx-auto mt-3 h-44 w-44 overflow-hidden rounded-lg bg-white p-2">
             {qrDataUrl ? (
@@ -209,12 +206,12 @@ export function BookingForm({
             OPEN IN UPI APP →
           </a>
           <div className="mt-3 font-serif text-[12px] italic text-white/50">
-            Amount is locked to ₹{amount.toLocaleString("en-IN")} — don't edit it. Paste your UTR below after paying.
+            Amount is locked to ₹{displayAmount(amount)} — don't edit it. Paste your UTR below after paying.
           </div>
         </div>
         <input value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="UTR / Transaction number" required maxLength={64}
-          className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-mono text-sm tracking-[0.15em] text-white placeholder:text-white/25 focus:outline-none" />
-        <label className="flex cursor-pointer flex-col rounded-xl border border-dashed border-white/20 bg-black/40 p-4 text-center">
+          className="w-full rounded-xl border border-white/15 bg-black px-4 py-3 font-mono text-sm tracking-[0.15em] text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none" />
+        <label className="flex cursor-pointer flex-col rounded-xl border border-dashed border-white/20 bg-black p-4 text-center">
           <span className="font-mono text-[10px] tracking-[0.4em] text-white/50">
             {file ? "SELECTED" : "UPLOAD PAYMENT SCREENSHOT"}
           </span>
@@ -226,18 +223,16 @@ export function BookingForm({
       </div>
       )}
       {err && (
-        <div className="mt-4 rounded-lg px-3 py-2 font-mono text-[10px] tracking-[0.2em]"
-          style={{ borderColor: "oklch(0.55 0.24 25 / 0.4)", borderWidth: 1, color: "oklch(0.7 0.22 25)", background: "oklch(0.3 0.15 25 / 0.15)" }}>
+        <div className="mt-4 rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-[10px] tracking-[0.2em] text-white/80">
           {err}
         </div>
       )}
       <button type="submit" disabled={busy}
-        className="mt-5 w-full rounded-full px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-white transition-transform hover:scale-[1.01] disabled:opacity-50"
-        style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>
+        className="mt-5 w-full rounded-full border border-white bg-white px-5 py-3 font-mono text-[11px] tracking-[0.32em] text-black transition-transform hover:scale-[1.01] disabled:opacity-50">
         {busy
           ? "SUBMITTING…"
           : step === "details"
-            ? (isHost ? "SUBMIT REQUEST →" : "CONTINUE TO PAYMENT →")
+            ? "CONTINUE TO PAYMENT →"
             : "SUBMIT PAYMENT →"}
       </button>
     </motion.form>
