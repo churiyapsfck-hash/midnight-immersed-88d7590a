@@ -17,41 +17,42 @@ export function ReloadIntro({ children }: { children: React.ReactNode }) {
             key="intro"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
             className="fixed inset-0 z-[80] flex items-center justify-center bg-black"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="flex flex-col items-center gap-6"
+              style={{ willChange: "opacity" }}
             >
               <img
                 src={assetUrl(eyeAsset)}
                 alt=""
                 className="h-28 w-28 object-contain md:h-36 md:w-36"
-                style={{ filter: "invert(1) drop-shadow(0 0 30px oklch(0.5 0.24 25 / 0.6))" }}
+                style={{ filter: "invert(1)" }}
+                loading="eager"
+                decoding="async"
               />
               <div className="font-[Anton] text-5xl tracking-tight text-white md:text-6xl">
                 ILLUMINATI <span style={{ color: "oklch(0.55 0.24 25)" }}>3.0</span>
               </div>
             </motion.div>
-            <motion.div
+            <div
+              aria-hidden
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(circle at 50% 50%, oklch(0.4 0.24 25 / 0.35), transparent 55%)",
+                  "radial-gradient(circle at 50% 50%, oklch(0.4 0.24 25 / 0.28), transparent 60%)",
               }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.9, 0.3] }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
             />
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: showIntro ? 0 : 1 }} transition={{ duration: 0.7 }}>
+      <div style={{ opacity: showIntro ? 0 : 1, transition: "opacity 0.5s ease-out" }}>
         {children}
-      </motion.div>
+      </div>
     </>
   );
 }

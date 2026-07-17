@@ -11,6 +11,7 @@ const UPI_PAYEE = "Z3N";
 const PRICES = {
   standard: { single: 1400, couple: 2400 },
   vip: { single: 2200, couple: 3400 },
+  host: { single: 0, couple: 0 },
 } as const;
 
 export function BookingForm({
@@ -18,11 +19,12 @@ export function BookingForm({
   userId,
   profile,
 }: {
-  passType: "standard" | "vip";
+  passType: "standard" | "vip" | "host";
   userId: string;
   profile: Profile;
 }) {
   const navigate = useNavigate();
+  const isHost = passType === "host";
   const [step, setStep] = useState<"details" | "pay">("details");
   const [bookingId, setBookingId] = useState<string>("");
   const [category, setCategory] = useState<"single" | "couple">("single");
@@ -82,6 +84,10 @@ export function BookingForm({
       });
       if (insErr) throw insErr;
       setBookingId(id);
+      if (isHost) {
+        navigate({ to: "/booking/thankyou" });
+        return;
+      }
       setStep("pay");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Could not save your details.");
@@ -129,18 +135,22 @@ export function BookingForm({
       style={{ boxShadow: "0 30px 80px -30px oklch(0.4 0.24 25 / 0.55), inset 0 1px 0 rgba(255,255,255,0.05)" }}
     >
       <div className="font-mono text-[10px] tracking-[0.4em]" style={{ color: "oklch(0.7 0.22 25)" }}>
-        — {step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}
+        — {isHost ? "HOSTS ONLY · APPROVAL REQUIRED" : step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}
       </div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
         {step === "details" ? (
-          <>Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span></>
+          isHost ? (
+            <>Request <span style={{ color: "oklch(0.55 0.24 25)" }}>host access.</span></>
+          ) : (
+            <>Book your <span style={{ color: "oklch(0.55 0.24 25)" }}>pass.</span></>
+          )
         ) : (
           <>Pay & <span style={{ color: "oklch(0.55 0.24 25)" }}>confirm.</span></>
         )}
       </h2>
       {step === "details" ? (
       <div className="mt-6 space-y-3">
-        <div className="grid grid-cols-2 gap-2">
+        {!isHost && <div className="grid grid-cols-2 gap-2">
           {(["single", "couple"] as const).map((c) => (
             <button
               key={c}
@@ -154,7 +164,12 @@ export function BookingForm({
               {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,400" : "2,400"}`}
             </button>
           ))}
-        </div>
+        </div>}
+        {isHost && (
+          <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-serif text-[12px] italic text-white/60">
+            Hosts don't pay. Our team reviews every request — not everyone will be approved. You'll be notified once your access is confirmed.
+          </div>
+        )}
         <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" required
           className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 font-serif text-white placeholder:text-white/25 focus:outline-none" />
         <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
@@ -222,7 +237,7 @@ export function BookingForm({
         {busy
           ? "SUBMITTING…"
           : step === "details"
-            ? "CONTINUE TO PAYMENT →"
+            ? (isHost ? "SUBMIT REQUEST →" : "CONTINUE TO PAYMENT →")
             : "SUBMIT PAYMENT →"}
       </button>
     </motion.form>

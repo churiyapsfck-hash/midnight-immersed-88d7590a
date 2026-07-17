@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 type Pass = {
-  id: "standard" | "vip";
+  id: "standard" | "vip" | "host";
   name: string;
   code: string;
   tagline: string;
@@ -47,10 +47,26 @@ const PASSES: Pass[] = [
     ],
     cta: "Reserve VIP",
   },
+  {
+    id: "host",
+    name: "HOST",
+    code: "INVITATION · 03 · HOSTS ONLY",
+    tagline: "For the hands behind the night.",
+    pricing: [
+      { label: "Host", price: "₹ 6.7" },
+    ],
+    perks: [
+      "Hosts only — request access",
+      "Not everyone will be approved",
+      "Manual verification by our team",
+    ],
+    cta: "Request Host Access",
+  },
 ];
 
 function PassCard({ p, i }: { p: Pass; i: number }) {
   const isVip = p.id === "vip";
+  const isHost = p.id === "host";
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -71,13 +87,15 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
     my.set(0);
   };
 
-  const surface = isVip
-    ? "linear-gradient(140deg, #4a0308 0%, #b1141f 22%, #f26770 42%, #7a0006 62%, #2a0002 85%, #b1141f 100%)"
-    : "linear-gradient(140deg, #b8bcc4 0%, #f4f5f7 20%, #7c8089 42%, #eef0f3 62%, #4a4d54 82%, #d8dade 100%)";
+  const surface = isHost
+    ? "linear-gradient(140deg, #0a0a0c 0%, #1c1c22 20%, #2a2a30 42%, #0f0f12 62%, #1a1a1f 82%, #050506 100%)"
+    : isVip
+      ? "linear-gradient(140deg, #4a0308 0%, #b1141f 22%, #f26770 42%, #7a0006 62%, #2a0002 85%, #b1141f 100%)"
+      : "linear-gradient(140deg, #b8bcc4 0%, #f4f5f7 20%, #7c8089 42%, #eef0f3 62%, #4a4d54 82%, #d8dade 100%)";
 
-  const accent = isVip ? "#f26770" : "#f4f5f7";
-  const ink = isVip ? "#fff5f5" : "#0a0a0c";
-  const sub = isVip ? "rgba(255,240,240,0.75)" : "rgba(15,15,20,0.7)";
+  const accent = isHost ? "#c9a96e" : isVip ? "#f26770" : "#f4f5f7";
+  const ink = isHost ? "#f4ead6" : isVip ? "#fff5f5" : "#0a0a0c";
+  const sub = isHost ? "rgba(244,234,214,0.7)" : isVip ? "rgba(255,240,240,0.75)" : "rgba(15,15,20,0.7)";
 
   return (
     <div style={{ perspective: 1200 }}>
@@ -164,12 +182,14 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
       </ul>
 
       <Link
-        to={isVip ? "/vip" : "/standard"}
+        to={isHost ? "/host" : isVip ? "/vip" : "/standard"}
         className="relative mt-6 block w-full rounded-full py-3 text-center font-mono text-[10px] tracking-[0.4em] transition-transform hover:scale-[1.02]"
         style={{
-          background: isVip
-            ? "linear-gradient(180deg, #1a0002, #3a0006)"
-            : "linear-gradient(180deg, #0a0a0c, #1c1c22)",
+          background: isHost
+            ? "linear-gradient(180deg, #2a2418, #4a3f22)"
+            : isVip
+              ? "linear-gradient(180deg, #1a0002, #3a0006)"
+              : "linear-gradient(180deg, #0a0a0c, #1c1c22)",
           color: "#fff",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px -8px rgba(0,0,0,0.7)",
         }}
@@ -182,7 +202,7 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
 }
 
 export function Tickets() {
-  const [active, setActive] = useState<"standard" | "vip">("vip");
+  const [active, setActive] = useState<"standard" | "vip" | "host">("vip");
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
