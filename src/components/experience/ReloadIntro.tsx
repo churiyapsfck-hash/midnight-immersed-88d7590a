@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import eyeAsset from "@/assets/illuminati-eye-dark.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 export function ReloadIntro({ children }: { children: React.ReactNode }) {
   const [showIntro, setShowIntro] = useState(true);
@@ -26,7 +27,7 @@ export function ReloadIntro({ children }: { children: React.ReactNode }) {
               className="flex flex-col items-center gap-6"
             >
               <img
-                src={eyeAsset.url}
+                src={assetUrl(eyeAsset)}
                 alt=""
                 className="h-28 w-28 object-contain md:h-36 md:w-36"
                 style={{ filter: "invert(1) drop-shadow(0 0 30px oklch(0.5 0.24 25 / 0.6))" }}
