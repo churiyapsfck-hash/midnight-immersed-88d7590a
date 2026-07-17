@@ -73,18 +73,18 @@ export function Hero() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.9, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-4 flex flex-col items-center gap-1 md:mt-6"
+            className="mx-auto mt-10 flex flex-col items-center gap-1 md:mt-16"
           >
-            <div className="font-[Anton] text-2xl tracking-[0.28em] text-black md:text-4xl">
+            <div className="font-[Anton] text-3xl tracking-[0.28em] text-black md:text-6xl">
               MARQUEE CLUB AND KITCHEN
             </div>
             <div
-              className="mt-1 font-mono text-sm tracking-[0.5em] md:text-base"
+              className="mt-2 font-mono text-base tracking-[0.5em] md:mt-3 md:text-xl"
               style={{ color: "oklch(0.5 0.24 25)" }}
             >
               AUG 3
             </div>
-            <div className="mt-6 flex flex-col items-center gap-1">
+            <div className="mt-10 flex flex-col items-center gap-1 md:mt-14">
               <div className="font-mono text-[11px] tracking-[0.5em] text-black/45">
                 powered by
               </div>
@@ -94,7 +94,7 @@ export function Hero() {
                 rel="noopener noreferrer"
                 className="font-[Anton] leading-none tracking-[0.18em] transition-opacity hover:opacity-80"
                 style={{
-                  fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
+                  fontSize: "clamp(3.8rem, 10vw, 7.5rem)",
                   color: "transparent",
                   background:
                     "linear-gradient(180deg, #2a2a2e 0%, #0a0a0c 50%, #1c1c1e 100%)",
