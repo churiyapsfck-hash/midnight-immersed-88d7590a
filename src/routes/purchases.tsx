@@ -40,6 +40,8 @@ function PurchasesPage() {
   useEffect(() => {
     let channel: ReturnType<typeof supabase.channel> | null = null;
     let userId: string | null = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let lastRun = 0;
 
     const fetchRows = async (uid: string) => {
       const { data } = await supabase
@@ -48,6 +50,18 @@ function PurchasesPage() {
         .eq("user_id", uid)
         .order("created_at", { ascending: false });
       setState({ kind: "ready", rows: (data ?? []) as Booking[] });
+    };
+
+    const scheduleFetch = () => {
+      if (!userId) return;
+      if (timer) return;
+      const sinceLast = Date.now() - lastRun;
+      const wait = Math.max(400, 800 - sinceLast);
+      timer = setTimeout(() => {
+        timer = null;
+        lastRun = Date.now();
+        if (userId) fetchRows(userId);
+      }, wait);
     };
 
     (async () => {
@@ -65,12 +79,13 @@ function PurchasesPage() {
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "bookings", filter: `user_id=eq.${userId}` },
-          () => userId && fetchRows(userId),
+          () => scheduleFetch(),
         )
         .subscribe();
     })();
 
     return () => {
+      if (timer) clearTimeout(timer);
       if (channel) supabase.removeChannel(channel);
     };
   }, []);
