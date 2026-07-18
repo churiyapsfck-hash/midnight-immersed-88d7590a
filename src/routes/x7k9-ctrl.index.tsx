@@ -57,6 +57,8 @@ function AdminPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [zoom, setZoom] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [live, setLive] = useState(false);
+  const [flashId, setFlashId] = useState<string | null>(null);
 
   const load = useCallback(async (accessToken: string, status: string, query: string) => {
     try {
@@ -95,12 +97,13 @@ function AdminPage() {
     if (!token) return;
     let timer: ReturnType<typeof setTimeout> | null = null;
     let lastRun = 0;
+    let liveTimer: ReturnType<typeof setTimeout> | null = null;
     const schedule = () => {
       if (timer) return; // already queued in this window
       const now = Date.now();
       const sinceLast = now - lastRun;
-      // Throttle: min 800ms between runs. Debounce: wait 400ms for burst to settle.
-      const wait = Math.max(400, 800 - sinceLast);
+      // Throttle: min 500ms between runs. Debounce: wait 200ms for burst to settle.
+      const wait = Math.max(200, 500 - sinceLast);
       timer = setTimeout(() => {
         timer = null;
         lastRun = Date.now();
@@ -112,11 +115,25 @@ function AdminPage() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "bookings" },
-        () => schedule(),
+        (payload) => {
+          setLive(true);
+          if (liveTimer) clearTimeout(liveTimer);
+          liveTimer = setTimeout(() => setLive(false), 1200);
+          const changedId =
+            (payload.new as { id?: string } | null)?.id ??
+            (payload.old as { id?: string } | null)?.id ??
+            null;
+          if (changedId) {
+            setFlashId(changedId);
+            setTimeout(() => setFlashId((c) => (c === changedId ? null : c)), 1400);
+          }
+          schedule();
+        },
       )
       .subscribe();
     return () => {
       if (timer) clearTimeout(timer);
+      if (liveTimer) clearTimeout(liveTimer);
       supabase.removeChannel(channel);
     };
   }, [token, filter, q, load]);
@@ -125,11 +142,15 @@ function AdminPage() {
     if (!token) return;
     setBusy(id);
     setErr(null);
+    // Optimistic update — no wait for the round-trip.
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
     try {
       await setBookingStatus({ data: { accessToken: token, bookingId: id, status } });
-      await load(token, filter, q);
+      // Realtime subscription will refresh silently; no blocking reload.
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Failed");
+      // Revert on error by forcing a reload.
+      await load(token, filter, q);
     } finally {
       setBusy(null);
     }
@@ -175,7 +196,25 @@ function AdminPage() {
               Verify payments. Mint passes. Watch the gate.
             </p>
           </div>
-          <div className="hidden gap-2 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
+            <span
+              className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[9px] tracking-[0.32em] transition-colors"
+              style={{
+                borderColor: live ? BLOOD : "rgba(255,255,255,0.12)",
+                color: live ? BLOOD_GLOW : "rgba(255,255,255,0.4)",
+              }}
+              title="Live database stream"
+            >
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full"
+                style={{
+                  backgroundColor: live ? BLOOD_GLOW : "oklch(0.55 0.18 145)",
+                  boxShadow: live ? `0 0 10px ${BLOOD_GLOW}` : "0 0 6px oklch(0.55 0.18 145)",
+                  animation: "pulse 1.4s ease-in-out infinite",
+                }}
+              />
+              {live ? "SYNCING" : "LIVE"}
+            </span>
             <Link to="/x7k9-ctrl/roster" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
               STAFF →
             </Link>
@@ -255,6 +294,7 @@ function AdminPage() {
                   key={r.id}
                   row={r}
                   busy={busy === r.id}
+                  flash={flashId === r.id}
                   onZoom={() => r.screenshot_url && setZoom(r.screenshot_url)}
                   onVerify={() => act(r.id, "verified")}
                   onDecline={() => act(r.id, "declined")}
@@ -298,9 +338,9 @@ function StatCard({ label, value, accent }: { label: string; value: number; acce
 }
 
 function BookingCard({
-  row, busy, onZoom, onVerify, onDecline, onReset,
+  row, busy, flash, onZoom, onVerify, onDecline, onReset,
 }: {
-  row: Row; busy: boolean;
+  row: Row; busy: boolean; flash?: boolean;
   onZoom: () => void; onVerify: () => void; onDecline: () => void; onReset: () => void;
 }) {
   const statusStyle = (() => {
@@ -335,7 +375,13 @@ function BookingCard({
   })();
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 backdrop-blur transition-colors hover:border-[oklch(0.5_0.24_25)]/60">
+    <div
+      className="group relative overflow-hidden rounded-2xl border bg-black/50 backdrop-blur transition-all duration-500 hover:border-[oklch(0.5_0.24_25)]/60"
+      style={{
+        borderColor: flash ? BLOOD : "rgba(255,255,255,0.1)",
+        boxShadow: flash ? `0 0 32px ${BLOOD_DIM}` : undefined,
+      }}
+    >
       <div className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: statusStyle.c, boxShadow: `0 0 12px ${statusStyle.c}` }} />
       <div className="grid gap-4 p-5 md:grid-cols-[auto_1fr_auto] md:items-center">
         {/* Screenshot thumb */}
