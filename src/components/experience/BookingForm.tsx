@@ -216,6 +216,17 @@ export function BookingForm({
           <div className="mt-3 font-serif text-[12px] italic text-white/50">
             On mobile, tap <b className="not-italic">PAY DIRECTLY IN PHONEPE</b> — this bypasses the ₹2,000 scanner limit. On desktop, scan the QR from your phone's PhonePe. Amount is locked. Paste your UTR below after paying.
           </div>
+          <div className="mt-3 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-left font-serif text-[12px] italic text-white/70">
+            Pay from a <b className="not-italic text-white">bank-linked UPI app</b> (GPay / PhonePe / Paytm). <b className="not-italic text-white">FamX, Slice, Jupiter and other prepaid wallets are blocked by UPI</b> — they will fail. If your payment doesn't go through, tap the WhatsApp button below.
+          </div>
+          <a
+            href={`https://wa.me/916300703253?text=${encodeURIComponent(`Hey, my UPI payment failed for ILLUMINATI 3.0.\n\nName: ${fullName}\nPhone: ${phone}\nPass: ${passType.toUpperCase()} · ${category.toUpperCase()}\nAmount: ₹${displayAmount(amount)}\nBooking ID: ${bookingId}`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-block w-full rounded-full border border-white/25 bg-transparent px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/80 hover:border-white/60"
+          >
+            PAYMENT FAILING? WHATSAPP US →
+          </a>
         </div>
         <input value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="UTR / Transaction number" required maxLength={64}
           className="w-full rounded-xl border border-white/15 bg-black px-4 py-3 font-mono text-sm tracking-[0.15em] text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none" />
