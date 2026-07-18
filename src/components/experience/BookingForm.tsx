@@ -220,9 +220,9 @@ export function BookingForm({
             Pay from a <b className="not-italic text-white">bank-linked UPI app</b> (GPay / PhonePe / Paytm). <b className="not-italic text-white">FamX, Slice, Jupiter and other prepaid wallets are blocked by UPI</b> — they will fail. If your payment doesn't go through, tap the WhatsApp button below.
           </div>
           <a
-            href={`https://wa.me/916300703253?text=${encodeURIComponent(`Hey, my UPI payment failed for ILLUMINATI 3.0.\n\nName: ${fullName}\nPhone: ${phone}\nPass: ${passType.toUpperCase()} · ${category.toUpperCase()}\nAmount: ₹${displayAmount(amount)}\nBooking ID: ${bookingId}`)}`}
+            href={`https://api.whatsapp.com/send?phone=916300703253&text=${encodeURIComponent(`Hey, my UPI payment failed for ILLUMINATI 3.0.\n\nName: ${fullName}\nPhone: ${phone}\nPass: ${passType.toUpperCase()} · ${category.toUpperCase()}\nAmount: ₹${displayAmount(amount)}\nBooking ID: ${bookingId}`)}`}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="mt-2 inline-block w-full rounded-full border border-white/25 bg-transparent px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/80 hover:border-white/60"
           >
             PAYMENT FAILING? WHATSAPP US →
