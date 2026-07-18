@@ -15,7 +15,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 };
 
 const UPI_ID = "6300703253@ybl";
-const UPI_PAYEE = "Z3N";
+const UPI_PAYEE = "Divyansh Goyal";
 const PRICES = {
   standard: { single: 1400, couple: 2400 },
   vip: { single: 2200, couple: 3400 },
