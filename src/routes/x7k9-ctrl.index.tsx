@@ -90,6 +90,22 @@ function AdminPage() {
     return () => clearTimeout(t);
   }, [filter, q, token, load]);
 
+  // Realtime: auto-refresh whenever bookings change
+  useEffect(() => {
+    if (!token) return;
+    const channel = supabase
+      .channel("admin-bookings-stream")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "bookings" },
+        () => load(token, filter, q),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [token, filter, q, load]);
+
   const act = async (id: string, status: "verified" | "declined" | "pending") => {
     if (!token) return;
     setBusy(id);
