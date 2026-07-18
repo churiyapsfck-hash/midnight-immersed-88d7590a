@@ -19,7 +19,6 @@ const UPI_PAYEE = "Divyansh Goyal";
 const PRICES = {
   standard: { single: 1400, couple: 2400 },
   vip: { single: 2200, couple: 3400 },
-  host: { single: 6.7, couple: 6.7 },
 } as const;
 
 export function BookingForm({
@@ -27,12 +26,11 @@ export function BookingForm({
   userId,
   profile,
 }: {
-  passType: "standard" | "vip" | "host";
+  passType: "standard" | "vip";
   userId: string;
   profile: Profile;
 }) {
   const navigate = useNavigate();
-  const isHost = passType === "host";
   const [step, setStep] = useState<"details" | "pay">("details");
   const [bookingId, setBookingId] = useState<string>("");
   const [category, setCategory] = useState<"single" | "couple">("single");
@@ -141,22 +139,18 @@ export function BookingForm({
       style={{ boxShadow: "0 30px 80px -30px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04)" }}
     >
       <div className="font-mono text-[10px] tracking-[0.4em] text-white/50">
-        — {step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}{isHost ? " · HOSTS ONLY" : ""}
+        — {step === "details" ? "STEP 1 · YOUR DETAILS" : "STEP 2 · PAYMENT"} · {passType.toUpperCase()}
       </div>
       <h2 className="mt-3 font-[Anton] text-4xl leading-[0.9] tracking-tight text-white">
         {step === "details" ? (
-          isHost ? (
-            <>Request <span className="text-white/50">host access.</span></>
-          ) : (
-            <>Book your <span className="text-white/50">pass.</span></>
-          )
+          <>Book your <span className="text-white/50">pass.</span></>
         ) : (
           <>Pay & <span className="text-white/50">confirm.</span></>
         )}
       </h2>
       {step === "details" ? (
       <div className="mt-6 space-y-3">
-        {!isHost && <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {(["single", "couple"] as const).map((c) => (
             <button
               key={c}
@@ -169,12 +163,7 @@ export function BookingForm({
               {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,400" : "2,400"}`}
             </button>
           ))}
-        </div>}
-        {isHost && (
-          <div className="rounded-xl border border-white/10 bg-black px-4 py-3 font-serif text-[12px] italic text-white/60">
-            Hosts only — ₹6.70 to submit your request. Our team reviews every application; not everyone will be approved. You'll be notified once your access is confirmed.
-          </div>
-        )}
+        </div>
         <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" required
           className="w-full rounded-xl border border-white/15 bg-black px-4 py-3 font-serif text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none" />
         <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone number" required
