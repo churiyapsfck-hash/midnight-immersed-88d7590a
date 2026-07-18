@@ -38,19 +38,41 @@ function PurchasesPage() {
   >({ kind: "loading" });
 
   useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let userId: string | null = null;
+
+    const fetchRows = async (uid: string) => {
+      const { data } = await supabase
+        .from("bookings")
+        .select("id, pass_type, category, full_name, phone, utr, status, created_at, screenshot_path, purchase_id")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false });
+      setState({ kind: "ready", rows: (data ?? []) as Booking[] });
+    };
+
     (async () => {
       const { data: sess } = await supabase.auth.getSession();
       if (!sess.session) {
         setState({ kind: "unauth" });
         return;
       }
-      const { data } = await supabase
-        .from("bookings")
-        .select("id, pass_type, category, full_name, phone, utr, status, created_at, screenshot_path, purchase_id")
-        .eq("user_id", sess.session.user.id)
-        .order("created_at", { ascending: false });
-      setState({ kind: "ready", rows: (data ?? []) as Booking[] });
+      userId = sess.session.user.id;
+      await fetchRows(userId);
+
+      // Realtime: refresh when this user's bookings change
+      channel = supabase
+        .channel(`purchases-${userId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "bookings", filter: `user_id=eq.${userId}` },
+          () => userId && fetchRows(userId),
+        )
+        .subscribe();
     })();
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
   }, []);
 
   return (
