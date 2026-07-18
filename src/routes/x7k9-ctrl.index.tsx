@@ -338,9 +338,9 @@ function StatCard({ label, value, accent }: { label: string; value: number; acce
 }
 
 function BookingCard({
-  row, busy, onZoom, onVerify, onDecline, onReset,
+  row, busy, flash, onZoom, onVerify, onDecline, onReset,
 }: {
-  row: Row; busy: boolean;
+  row: Row; busy: boolean; flash?: boolean;
   onZoom: () => void; onVerify: () => void; onDecline: () => void; onReset: () => void;
 }) {
   const statusStyle = (() => {
@@ -375,7 +375,13 @@ function BookingCard({
   })();
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 backdrop-blur transition-colors hover:border-[oklch(0.5_0.24_25)]/60">
+    <div
+      className="group relative overflow-hidden rounded-2xl border bg-black/50 backdrop-blur transition-all duration-500 hover:border-[oklch(0.5_0.24_25)]/60"
+      style={{
+        borderColor: flash ? BLOOD : "rgba(255,255,255,0.1)",
+        boxShadow: flash ? `0 0 32px ${BLOOD_DIM}` : undefined,
+      }}
+    >
       <div className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: statusStyle.c, boxShadow: `0 0 12px ${statusStyle.c}` }} />
       <div className="grid gap-4 p-5 md:grid-cols-[auto_1fr_auto] md:items-center">
         {/* Screenshot thumb */}
