@@ -209,12 +209,12 @@ export function BookingForm({
           </div>
           <a
             href={upiLink}
-            className="mt-2 inline-block font-mono text-[10px] tracking-[0.3em] text-white/70 underline decoration-white/30 underline-offset-4 md:hidden"
+            className="mt-3 inline-block w-full rounded-full border border-white bg-white px-4 py-2.5 font-mono text-[11px] tracking-[0.32em] text-black"
           >
-            OPEN IN UPI APP →
+            PAY DIRECTLY IN PHONEPE →
           </a>
           <div className="mt-3 font-serif text-[12px] italic text-white/50">
-            Amount is locked to ₹{displayAmount(amount)} — don't edit it. Paste your UTR below after paying.
+            On mobile, tap <b className="not-italic">PAY DIRECTLY IN PHONEPE</b> — this bypasses the ₹2,000 scanner limit. On desktop, scan the QR from your phone's PhonePe. Amount is locked. Paste your UTR below after paying.
           </div>
         </div>
         <input value={utr} onChange={(e) => setUtr(e.target.value)} placeholder="UTR / Transaction number" required maxLength={64}
