@@ -93,15 +93,30 @@ function AdminPage() {
   // Realtime: auto-refresh whenever bookings change
   useEffect(() => {
     if (!token) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let lastRun = 0;
+    const schedule = () => {
+      if (timer) return; // already queued in this window
+      const now = Date.now();
+      const sinceLast = now - lastRun;
+      // Throttle: min 800ms between runs. Debounce: wait 400ms for burst to settle.
+      const wait = Math.max(400, 800 - sinceLast);
+      timer = setTimeout(() => {
+        timer = null;
+        lastRun = Date.now();
+        load(token, filter, q);
+      }, wait);
+    };
     const channel = supabase
       .channel("admin-bookings-stream")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "bookings" },
-        () => load(token, filter, q),
+        () => schedule(),
       )
       .subscribe();
     return () => {
+      if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
   }, [token, filter, q, load]);
