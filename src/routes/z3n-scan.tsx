@@ -133,13 +133,25 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
 
   useEffect(() => {
     let cancelled = false;
+    let stream: MediaStream | null = null;
     (async () => {
       try {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          throw new Error("Camera API unavailable. Open this page in a real browser tab (not the preview iframe) over HTTPS.");
+        }
+        // Request rear camera explicitly — triggers permission prompt with a clear gesture
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+          audio: false,
+        });
+        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         const { BrowserMultiFormatReader } = await import("@zxing/browser");
         const reader = new BrowserMultiFormatReader();
         if (cancelled || !videoRef.current) return;
-        const controls = await reader.decodeFromVideoDevice(
-          undefined,
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(() => {});
+        const controls = await reader.decodeFromStream(
+          stream,
           videoRef.current,
           async (res) => {
             if (!res || busyRef.current) return;
@@ -172,12 +184,22 @@ function ScannerTab({ accessToken }: { accessToken: string }) {
         );
         controlsRef.current = controls;
       } catch (e) {
-        setErr(e instanceof Error ? e.message : "Camera unavailable. Use Search tab.");
+        const msg = e instanceof Error ? e.message : String(e);
+        if (/denied|NotAllowed/i.test(msg)) {
+          setErr("Camera permission denied. Tap the lock icon in your browser → Site settings → allow Camera, then reload.");
+        } else if (/NotFound|no camera/i.test(msg)) {
+          setErr("No camera found on this device.");
+        } else if (/iframe|unavailable|secure/i.test(msg)) {
+          setErr(msg);
+        } else {
+          setErr(`Camera error: ${msg}. Try the Search tab.`);
+        }
       }
     })();
     return () => {
       cancelled = true;
       controlsRef.current?.stop();
+      stream?.getTracks().forEach((t) => t.stop());
     };
   }, [accessToken]);
 
