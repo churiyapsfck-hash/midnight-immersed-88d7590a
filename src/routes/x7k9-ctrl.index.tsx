@@ -412,6 +412,7 @@ function BookingCard({
             <div>PHONE · <span className="text-white/90">{row.phone}</span></div>
             <div>PASS · <span style={{ color: row.pass_type === "vip" ? BLOOD_GLOW : "white" }}>{row.pass_type.toUpperCase()} · {row.category.toUpperCase()}</span></div>
             <div>UTR · <span className="text-white/90 break-all">{row.utr}</span></div>
+            <div>SUBMITTED · <span className="text-white/90">{new Date(row.created_at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</span></div>
             {row.purchase_id && <div>ID · <span className="text-white/90">{row.purchase_id}</span></div>}
             {row.coupon_code && (
               <div>
