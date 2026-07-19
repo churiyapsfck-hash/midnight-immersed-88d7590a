@@ -30,7 +30,7 @@ export const listBookings = createServerFn({ method: "POST" })
     const { admin } = await requireAdmin(data.accessToken);
     let query = admin
       .from("bookings")
-      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at")
+      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at, coupon_code, discount_percent, final_amount")
       .order("created_at", { ascending: false })
       .limit(200);
 
