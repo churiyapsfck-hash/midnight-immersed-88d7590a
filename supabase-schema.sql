@@ -71,6 +71,25 @@ alter table public.bookings
 
 create index if not exists bookings_ticket_token_idx on public.bookings (ticket_token);
 
+-- =========== COUPONS ===========
+create table if not exists public.coupons (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null,
+  percent_off smallint not null check (percent_off > 0 and percent_off <= 100),
+  pass_type text not null default 'all' check (pass_type in ('standard','vip','all')),
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+grant select on public.coupons to authenticated;
+grant all on public.coupons to service_role;
+alter table public.coupons enable row level security;
+-- No client-side read/write policies — all access goes through server functions.
+
+alter table public.bookings
+  add column if not exists coupon_code text,
+  add column if not exists discount_percent smallint,
+  add column if not exists final_amount numeric(10,2);
+
 -- Auto-mint a ticket_token when a booking becomes 'verified'.
 create or replace function public.mint_ticket_token()
 returns trigger language plpgsql as $$

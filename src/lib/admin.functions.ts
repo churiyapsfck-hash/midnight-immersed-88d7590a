@@ -30,7 +30,7 @@ export const listBookings = createServerFn({ method: "POST" })
     const { admin } = await requireAdmin(data.accessToken);
     let query = admin
       .from("bookings")
-      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at")
+      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at, coupon_code, discount_percent, final_amount")
       .order("created_at", { ascending: false })
       .limit(200);
 
@@ -215,6 +215,81 @@ export const revokeGateRole = createServerFn({ method: "POST" })
       .delete()
       .eq("user_id", data.userId)
       .eq("role", "gate");
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+// ------------ coupons admin ------------
+
+export const listCoupons = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string }) =>
+    z.object({ accessToken: z.string().min(10) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const { data: rows, error } = await admin
+      .from("coupons")
+      .select("id, code, percent_off, pass_type, active, created_at")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return { rows: rows ?? [] };
+  });
+
+export const createCoupon = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; code: string; percentOff: number; passType: "standard" | "vip" | "all" }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      code: z.string().trim().min(2).max(64).regex(/^[A-Za-z0-9_-]+$/, "Letters, numbers, - and _ only."),
+      percentOff: z.number().int().min(1).max(100),
+      passType: z.enum(["standard", "vip", "all"]),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const code = data.code.trim().toUpperCase();
+    const { data: row, error } = await admin
+      .from("coupons")
+      .insert({ code, percent_off: data.percentOff, pass_type: data.passType, active: true })
+      .select("id, code, percent_off, pass_type, active, created_at")
+      .single();
+    if (error) {
+      if (error.code === "23505") throw new Error("A coupon with that code already exists.");
+      throw new Error(error.message);
+    }
+    return row;
+  });
+
+export const toggleCoupon = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; couponId: string; active: boolean }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      couponId: z.string().uuid(),
+      active: z.boolean(),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const { error } = await admin
+      .from("coupons")
+      .update({ active: data.active })
+      .eq("id", data.couponId);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+export const deleteCoupon = createServerFn({ method: "POST" })
+  .inputValidator((data: { accessToken: string; couponId: string }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      couponId: z.string().uuid(),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await requireAdmin(data.accessToken);
+    const { error } = await admin
+      .from("coupons")
+      .delete()
+      .eq("id", data.couponId);
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });

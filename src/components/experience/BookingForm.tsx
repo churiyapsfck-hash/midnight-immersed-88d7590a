@@ -5,6 +5,7 @@ import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/hooks/useAuth";
 import { validateIndianPhone } from "@/lib/user.functions";
+import { validateCoupon } from "@/lib/coupon.functions";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (error instanceof Error) return error.message;
@@ -42,8 +43,15 @@ export function BookingForm({
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<{ code: string; percent_off: number } | null>(null);
+  const [couponBusy, setCouponBusy] = useState(false);
+  const [couponMsg, setCouponMsg] = useState<string | null>(null);
 
-  const amount = PRICES[passType][category];
+  const baseAmount = PRICES[passType][category];
+  const amount = coupon
+    ? Math.max(1, Math.round((baseAmount * (100 - coupon.percent_off)) / 100))
+    : baseAmount;
   const upiLink = useMemo(() => {
     const params = new URLSearchParams({
       pa: UPI_ID,
@@ -117,7 +125,13 @@ export function BookingForm({
       if (up.error) throw up.error;
       const { error: updErr } = await supabase
         .from("bookings")
-        .update({ utr: utr.trim(), screenshot_path: path })
+        .update({
+          utr: utr.trim(),
+          screenshot_path: path,
+          coupon_code: coupon?.code ?? null,
+          discount_percent: coupon?.percent_off ?? null,
+          final_amount: amount,
+        })
         .eq("id", bookingId)
         .eq("user_id", userId);
       if (updErr) throw updErr;
@@ -127,6 +141,37 @@ export function BookingForm({
     } finally {
       setBusy(false);
     }
+  };
+
+  const applyCoupon = async () => {
+    setCouponMsg(null);
+    const raw = couponInput.trim();
+    if (!raw) {
+      setCoupon(null);
+      return;
+    }
+    setCouponBusy(true);
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) throw new Error("Sign in to apply a coupon.");
+      const res = await validateCoupon({
+        data: { accessToken: token, code: raw, passType },
+      });
+      setCoupon({ code: res.code, percent_off: res.percent_off });
+      setCouponMsg(`${res.code} applied · ${res.percent_off}% off`);
+    } catch (e) {
+      setCoupon(null);
+      setCouponMsg(getErrorMessage(e, "Invalid coupon."));
+    } finally {
+      setCouponBusy(false);
+    }
+  };
+
+  const clearCoupon = () => {
+    setCoupon(null);
+    setCouponInput("");
+    setCouponMsg(null);
   };
 
   return (
@@ -174,12 +219,68 @@ export function BookingForm({
         <div className="rounded-xl border border-white/10 bg-black px-4 py-3 font-mono text-[10px] tracking-[0.3em] text-white/60">
           <div className="flex items-center justify-between">
             <span>{category.toUpperCase()} · {passType.toUpperCase()}</span>
-            <span className="text-white">₹{displayAmount(amount)}</span>
+            <span className="text-white">
+              {coupon ? (
+                <>
+                  <span className="mr-2 text-white/40 line-through">₹{displayAmount(baseAmount)}</span>
+                  ₹{displayAmount(amount)}
+                </>
+              ) : (
+                <>₹{displayAmount(amount)}</>
+              )}
+            </span>
           </div>
           <div className="mt-1 font-serif text-[12px] italic normal-case tracking-normal text-white/50">
             {fullName} · {phone}
           </div>
+          {coupon && (
+            <div className="mt-1 font-mono text-[9px] tracking-[0.32em] text-white/70">
+              COUPON · {coupon.code} · −{coupon.percent_off}%
+            </div>
+          )}
         </div>
+
+        {/* Coupon input */}
+        <div className="rounded-xl border border-white/10 bg-black p-3">
+          <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">HAVE A COUPON?</div>
+          <div className="mt-2 flex gap-2">
+            <input
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+              placeholder="ENTER CODE"
+              disabled={!!coupon || couponBusy}
+              className="min-w-0 flex-1 rounded-lg border border-white/15 bg-black px-3 py-2 font-mono text-xs tracking-[0.2em] text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none disabled:opacity-50"
+            />
+            {coupon ? (
+              <button
+                type="button"
+                onClick={clearCoupon}
+                className="rounded-lg border border-white/20 px-3 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-white/40 hover:text-white"
+              >
+                REMOVE
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={applyCoupon}
+                disabled={couponBusy || !couponInput.trim()}
+                className="rounded-lg border border-white bg-white px-3 py-2 font-mono text-[10px] tracking-[0.32em] text-black disabled:opacity-40"
+              >
+                {couponBusy ? "…" : "APPLY"}
+              </button>
+            )}
+          </div>
+          {couponMsg && (
+            <div
+              className={`mt-2 font-mono text-[9px] tracking-[0.28em] ${
+                coupon ? "text-white/80" : "text-white/50"
+              }`}
+            >
+              {couponMsg}
+            </div>
+          )}
+        </div>
+
         <div className="rounded-xl border border-white/10 bg-black p-4 text-center">
           <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">
             SCAN TO PAY · ₹{displayAmount(amount)}
