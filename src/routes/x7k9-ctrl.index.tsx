@@ -358,19 +358,14 @@ function BookingCard({
     const isDeclined = row.status === "declined";
     if (!isVerified && !isDeclined) return null;
     const passLine = `${row.pass_type.toUpperCase()} · ${row.category.toUpperCase()}`;
-    const idLine = row.user_code ? `Pass ID: ${row.user_code}` : "";
-    const tokenLine = isVerified && row.ticket_token ? `Ticket: ${row.ticket_token}` : "";
-    const utrLine = row.utr ? `UTR: ${row.utr}` : "";
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const passesUrl = `${origin}/purchases`;
-    const qrUrl =
-      isVerified && row.ticket_token
-        ? `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=10&data=${encodeURIComponent(row.ticket_token)}`
-        : "";
+    const passUrl = isVerified && row.ticket_token ? `${origin}/p/${row.ticket_token}` : "";
+    const archiveUrl = `${origin}/purchases`;
+    const firstName = row.full_name.split(" ")[0] || row.full_name;
     const body = isVerified
-      ? `Hey ${row.full_name} 👋\n\nYour ILLUMINATI 3.0 pass has been *APPROVED*. ✅\n\nPass: ${passLine}\n${idLine}\n${tokenLine}\n${utrLine}\n\nYour entry QR: ${qrUrl}\n\nView & download your pass here: ${passesUrl}\n\nShow the QR at the gate. See you on the floor.`
-      : `Hey ${row.full_name} 👋\n\nUnfortunately your ILLUMINATI 3.0 booking couldn't be verified and has been *DECLINED*.\n\nPass: ${passLine}\n${idLine}\n${utrLine}\n\nCheck status here: ${passesUrl}\n\nIf you think this is a mistake, reply with your payment proof and we'll take another look.`;
-    const clean = body.replace(/\n{3,}/g, "\n\n").replace(/^\s*\n/gm, "\n");
+      ? `Hey ${firstName} 👋\n\nYour ILLUMINATI 3.0 *${passLine}* pass is *APPROVED* ✅\n\nOpen your pass (QR + download): ${passUrl}\n\nAll your passes: ${archiveUrl}\n\nJust show the QR at the gate. See you on the floor.`
+      : `Hey ${firstName} 👋\n\nYour ILLUMINATI 3.0 *${passLine}* booking couldn't be verified and has been *DECLINED*.\n\nStatus: ${archiveUrl}\n\nIf this is a mistake, reply with your payment proof and we'll re-check.`;
+    const clean = body.replace(/\n{3,}/g, "\n\n");
     return `https://wa.me/${phone}?text=${encodeURIComponent(clean)}`;
   })();
 
