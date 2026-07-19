@@ -36,6 +36,9 @@ type Row = {
   created_at: string;
   user_code: string | null;
   screenshot_url: string | null;
+  coupon_code: string | null;
+  discount_percent: number | null;
+  final_amount: number | null;
 };
 
 type Stats = {
@@ -217,6 +220,9 @@ function AdminPage() {
             </span>
             <Link to="/x7k9-ctrl/roster" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
               STAFF →
+            </Link>
+            <Link to="/x7k9-ctrl/coupons" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
+              COUPONS →
             </Link>
             <Link to="/z3n-scan" className="rounded-full px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white" style={{ backgroundColor: BLOOD }}>
               GATE →
@@ -407,6 +413,12 @@ function BookingCard({
             <div>PASS · <span style={{ color: row.pass_type === "vip" ? BLOOD_GLOW : "white" }}>{row.pass_type.toUpperCase()} · {row.category.toUpperCase()}</span></div>
             <div>UTR · <span className="text-white/90 break-all">{row.utr}</span></div>
             {row.purchase_id && <div>ID · <span className="text-white/90">{row.purchase_id}</span></div>}
+            {row.coupon_code && (
+              <div>
+                COUPON · <span style={{ color: BLOOD_GLOW }}>{row.coupon_code} · −{row.discount_percent}%</span>
+                {row.final_amount != null && <span className="text-white/90"> · ₹{Number(row.final_amount).toLocaleString("en-IN")}</span>}
+              </div>
+            )}
             {row.ticket_token && <div>TOKEN · <span className="text-white/70 break-all">{row.ticket_token.slice(0, 12)}…</span></div>}
             {row.checked_in_at && <div>ENTERED · <span className="text-white/90">{new Date(row.checked_in_at).toLocaleString()}</span></div>}
           </div>
