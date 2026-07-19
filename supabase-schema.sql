@@ -80,6 +80,8 @@ create table if not exists public.coupons (
   active boolean not null default true,
   created_at timestamptz not null default now()
 );
+alter table public.coupons
+  add column if not exists max_uses integer;
 grant select on public.coupons to authenticated;
 grant all on public.coupons to service_role;
 alter table public.coupons enable row level security;
