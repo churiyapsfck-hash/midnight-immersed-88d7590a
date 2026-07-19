@@ -2,9 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 const QA = [
-  { q: "How do I get on the list?", a: "Referrals only. Existing key holders may vouch once per volume. All applications are reviewed by hand — expect silence or a black envelope." },
   { q: "Where is it?", a: "The address is delivered by encrypted courier 6 hours before doors. Transport is arranged for Crimson keys." },
-  { q: "Dress protocol?", a: "Black. Chrome. Blood. No logos, no cameras. Guests visibly outside the aesthetic will be redirected." },
   { q: "Refunds?", a: "None. Tickets are machined metal objects — they retain value as artifacts even unused." },
   { q: "Age?", a: "21+. Photo ID + key required at the black door. No exceptions, no negotiations." },
 ];
