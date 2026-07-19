@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as X7k9CtrlIndexRouteImport } from './routes/x7k9-ctrl.index'
 import { Route as X7k9CtrlRosterRouteImport } from './routes/x7k9-ctrl.roster'
+import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as BookingThankyouRouteImport } from './routes/booking.thankyou'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
@@ -60,6 +61,11 @@ const X7k9CtrlRosterRoute = X7k9CtrlRosterRouteImport.update({
   path: '/x7k9-ctrl/roster',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PTokenRoute = PTokenRouteImport.update({
+  id: '/p/$token',
+  path: '/p/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingThankyouRoute = BookingThankyouRouteImport.update({
   id: '/booking/thankyou',
   path: '/booking/thankyou',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/p/$token': typeof PTokenRoute
   '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
   '/x7k9-ctrl/': typeof X7k9CtrlIndexRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/p/$token': typeof PTokenRoute
   '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
   '/x7k9-ctrl': typeof X7k9CtrlIndexRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/z3n-scan': typeof Z3nScanRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/booking/thankyou': typeof BookingThankyouRoute
+  '/p/$token': typeof PTokenRoute
   '/x7k9-ctrl/roster': typeof X7k9CtrlRosterRoute
   '/x7k9-ctrl/': typeof X7k9CtrlIndexRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/p/$token'
     | '/x7k9-ctrl/roster'
     | '/x7k9-ctrl/'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/p/$token'
     | '/x7k9-ctrl/roster'
     | '/x7k9-ctrl'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/z3n-scan'
     | '/auth/callback'
     | '/booking/thankyou'
+    | '/p/$token'
     | '/x7k9-ctrl/roster'
     | '/x7k9-ctrl/'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   Z3nScanRoute: typeof Z3nScanRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BookingThankyouRoute: typeof BookingThankyouRoute
+  PTokenRoute: typeof PTokenRoute
   X7k9CtrlRosterRoute: typeof X7k9CtrlRosterRoute
   X7k9CtrlIndexRoute: typeof X7k9CtrlIndexRoute
 }
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof X7k9CtrlRosterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/p/$token': {
+      id: '/p/$token'
+      path: '/p/$token'
+      fullPath: '/p/$token'
+      preLoaderRoute: typeof PTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/booking/thankyou': {
       id: '/booking/thankyou'
       path: '/booking/thankyou'
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   Z3nScanRoute: Z3nScanRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BookingThankyouRoute: BookingThankyouRoute,
+  PTokenRoute: PTokenRoute,
   X7k9CtrlRosterRoute: X7k9CtrlRosterRoute,
   X7k9CtrlIndexRoute: X7k9CtrlIndexRoute,
 }
