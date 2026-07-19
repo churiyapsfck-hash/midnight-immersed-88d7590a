@@ -56,7 +56,7 @@ function MachinedTitle() {
 }
 
 export function Hero() {
-  const target = new Date("2026-08-03T00:00:00+05:30");
+  const target = new Date("2026-08-02T00:00:00+05:30");
 
   const marquee = (
     <div className="font-[Anton] text-5xl tracking-[0.28em] text-black md:text-4xl">
@@ -68,7 +68,7 @@ export function Hero() {
       className="font-mono text-xl tracking-[0.5em] md:text-sm"
       style={{ color: "oklch(0.5 0.24 25)" }}
     >
-      AUG 3
+      AUG 2
     </div>
   );
   const ironoakBlock = (
