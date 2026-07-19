@@ -30,6 +30,8 @@ type Coupon = {
   pass_type: "standard" | "vip" | "all";
   active: boolean;
   created_at: string;
+  max_uses: number | null;
+  used_count: number;
 };
 
 const BLOOD = "oklch(0.5 0.24 25)";
@@ -45,6 +47,7 @@ function CouponsPage() {
   const [code, setCode] = useState("");
   const [percent, setPercent] = useState("20");
   const [passType, setPassType] = useState<"standard" | "vip" | "all">("all");
+  const [maxUses, setMaxUses] = useState("");
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async (accessToken: string) => {
@@ -76,15 +79,24 @@ function CouponsPage() {
       setErr("Percent must be 1–100.");
       return;
     }
+    let mu: number | null = null;
+    if (maxUses.trim() !== "") {
+      mu = parseInt(maxUses, 10);
+      if (!Number.isFinite(mu) || mu < 1) {
+        setErr("Max uses must be a positive number, or leave blank for unlimited.");
+        return;
+      }
+    }
     setBusy(true);
     setErr(null);
     try {
       await createCoupon({
-        data: { accessToken: token, code: code.trim(), percentOff: pct, passType },
+        data: { accessToken: token, code: code.trim(), percentOff: pct, passType, maxUses: mu },
       });
       setCode("");
       setPercent("20");
       setPassType("all");
+      setMaxUses("");
       await load(token);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Failed to create coupon.");
@@ -165,7 +177,7 @@ function CouponsPage() {
               <div className="font-mono text-[10px] tracking-[0.4em] text-white/50">
                 — NEW COUPON
               </div>
-              <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto_auto_auto]">
+              <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto_auto_auto_auto]">
                 <input
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
@@ -182,6 +194,14 @@ function CouponsPage() {
                   onChange={(e) => setPercent(e.target.value)}
                   required
                   className="w-24 rounded-lg border border-white/15 bg-black px-4 py-2.5 text-center font-mono text-sm text-white focus:border-[oklch(0.55_0.24_25)] focus:outline-none"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={maxUses}
+                  onChange={(e) => setMaxUses(e.target.value)}
+                  placeholder="∞ USES"
+                  className="w-28 rounded-lg border border-white/15 bg-black px-4 py-2.5 text-center font-mono text-sm text-white placeholder:text-white/25 focus:border-[oklch(0.55_0.24_25)] focus:outline-none"
                 />
                 <select
                   value={passType}
@@ -202,7 +222,7 @@ function CouponsPage() {
                 </button>
               </div>
               <p className="mt-2 font-serif text-[11px] italic text-white/40">
-                Percent-off gets applied on the base price. Restrict to a pass type or leave open.
+                Percent-off applied on base price. Set max uses (blank = unlimited) and pass restriction.
               </p>
             </form>
 
@@ -240,7 +260,7 @@ function CouponsPage() {
                       </span>
                     </div>
                     <div className="mt-2 font-mono text-[10px] tracking-[0.24em] text-white/60">
-                      −{c.percent_off}% · {c.pass_type === "all" ? "ANY PASS" : `${c.pass_type.toUpperCase()} ONLY`}
+                      −{c.percent_off}% · {c.pass_type === "all" ? "ANY PASS" : `${c.pass_type.toUpperCase()} ONLY`} · {c.used_count}/{c.max_uses ?? "∞"} USED
                     </div>
                   </div>
                   <div className="flex gap-2">

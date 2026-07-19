@@ -229,19 +229,31 @@ export const listCoupons = createServerFn({ method: "POST" })
     const { admin } = await requireAdmin(data.accessToken);
     const { data: rows, error } = await admin
       .from("coupons")
-      .select("id, code, percent_off, pass_type, active, created_at")
+      .select("id, code, percent_off, pass_type, active, created_at, max_uses")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return { rows: rows ?? [] };
+    // Attach current used count per coupon (pending/verified/active bookings).
+    const withUsed = await Promise.all(
+      (rows ?? []).map(async (c) => {
+        const { count } = await admin
+          .from("bookings")
+          .select("id", { count: "exact", head: true })
+          .eq("coupon_code", c.code as string)
+          .in("status", ["pending", "verified", "active"]);
+        return { ...c, used_count: count ?? 0 };
+      }),
+    );
+    return { rows: withUsed };
   });
 
 export const createCoupon = createServerFn({ method: "POST" })
-  .inputValidator((data: { accessToken: string; code: string; percentOff: number; passType: "standard" | "vip" | "all" }) =>
+  .inputValidator((data: { accessToken: string; code: string; percentOff: number; passType: "standard" | "vip" | "all"; maxUses: number | null }) =>
     z.object({
       accessToken: z.string().min(10),
       code: z.string().trim().min(2).max(64).regex(/^[A-Za-z0-9_-]+$/, "Letters, numbers, - and _ only."),
       percentOff: z.number().int().min(1).max(100),
       passType: z.enum(["standard", "vip", "all"]),
+      maxUses: z.number().int().min(1).max(100000).nullable(),
     }).parse(data),
   )
   .handler(async ({ data }) => {
@@ -249,14 +261,14 @@ export const createCoupon = createServerFn({ method: "POST" })
     const code = data.code.trim().toUpperCase();
     const { data: row, error } = await admin
       .from("coupons")
-      .insert({ code, percent_off: data.percentOff, pass_type: data.passType, active: true })
-      .select("id, code, percent_off, pass_type, active, created_at")
+      .insert({ code, percent_off: data.percentOff, pass_type: data.passType, active: true, max_uses: data.maxUses })
+      .select("id, code, percent_off, pass_type, active, created_at, max_uses")
       .single();
     if (error) {
       if (error.code === "23505") throw new Error("A coupon with that code already exists.");
       throw new Error(error.message);
     }
-    return row;
+    return { ...row, used_count: 0 };
   });
 
 export const toggleCoupon = createServerFn({ method: "POST" })

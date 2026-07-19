@@ -20,7 +20,7 @@ export const validateCoupon = createServerFn({ method: "POST" })
     const code = data.code.trim().toUpperCase();
     const { data: row, error } = await admin
       .from("coupons")
-      .select("code, percent_off, pass_type, active")
+      .select("code, percent_off, pass_type, active, max_uses")
       .eq("code", code)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -28,6 +28,16 @@ export const validateCoupon = createServerFn({ method: "POST" })
     if (!row.active) throw new Error("This coupon is no longer active.");
     if (row.pass_type !== "all" && row.pass_type !== data.passType) {
       throw new Error(`This coupon only works on ${String(row.pass_type).toUpperCase()} passes.`);
+    }
+    if (row.max_uses != null) {
+      const { count } = await admin
+        .from("bookings")
+        .select("id", { count: "exact", head: true })
+        .eq("coupon_code", row.code as string)
+        .in("status", ["pending", "verified", "active"]);
+      if ((count ?? 0) >= (row.max_uses as number)) {
+        throw new Error("This coupon has reached its claim limit.");
+      }
     }
     return {
       code: row.code as string,
