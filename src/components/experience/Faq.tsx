@@ -4,7 +4,7 @@ import { useState } from "react";
 const QA = [
   { q: "Where is it?", a: "The address is delivered by encrypted courier 6 hours before doors. Transport is arranged for Crimson keys." },
   { q: "Refunds?", a: "None. Tickets are machined metal objects — they retain value as artifacts even unused." },
-  { q: "Age?", a: "21+. Photo ID + key required at the black door. No exceptions, no negotiations." },
+  { q: "Gate check-in?", a: "After approval you get a WhatsApp link with your pass and QR. At the door, show the QR — our staff scans it in under 2 seconds and you're in. No app, no login, no queues." },
 ];
 
 function Row({ q, a, i }: { q: string; a: string; i: number }) {
