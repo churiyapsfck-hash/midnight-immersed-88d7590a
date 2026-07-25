@@ -17,7 +17,7 @@ const PASSES: Pass[] = [
     id: "standard",
     name: "STANDARD",
     code: "INVITATION · 01",
-    tagline: "The complete night. Nothing missing.",
+    tagline: "The complete DAY. Nothing missing.",
     pricing: [
       { label: "Single", price: "₹ 1,400" },
       { label: "Couple", price: "₹ 2,400" },
@@ -25,7 +25,7 @@ const PASSES: Pass[] = [
     perks: [
       "Unlimited food",
       "Unlimited drinks",
-      "Live DJ all night",
+      "Live DJ all DAY",
     ],
     cta: "Reserve Standard",
   },
