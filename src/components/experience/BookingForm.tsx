@@ -19,7 +19,7 @@ const UPI_ID = "6300703253@ybl";
 const UPI_PAYEE = "Divyansh Goyal";
 const PRICES = {
   standard: { single: 1400, couple: 2400 },
-  vip: { single: 2200, couple: 3400 },
+  vip: { single: 2200, couple: 3800 },
 } as const;
 
 export function BookingForm({
@@ -205,7 +205,7 @@ export function BookingForm({
                 category === c ? "border-white bg-white text-black" : "border-white/15 text-white/60 hover:border-white/40"
               }`}
             >
-              {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,400" : "2,400"}`}
+              {c === "single" ? `Single · ₹${passType === "vip" ? "2,200" : "1,400"}` : `Couple · ₹${passType === "vip" ? "3,800" : "2,400"}`}
             </button>
           ))}
         </div>

@@ -22,7 +22,7 @@ const PASSES = [
     tagline: "Beyond the velvet rope.",
     pricing: [
       { category: "Single", price: "₹ 2,200" },
-      { category: "Couple", price: "₹ 3,400" },
+      { category: "Couple", price: "₹ 3,800" },
     ],
     perks: [
       "Separate top-floor lounge",

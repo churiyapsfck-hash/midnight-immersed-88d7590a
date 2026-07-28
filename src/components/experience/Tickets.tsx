@@ -36,7 +36,7 @@ const PASSES: Pass[] = [
     tagline: "Beyond the velvet rope.",
     pricing: [
       { label: "Single", price: "₹ 2,200" },
-      { label: "Couple", price: "₹ 3,400" },
+      { label: "Couple", price: "₹ 3,800" },
     ],
     perks: [
       "Separate top-floor lounge",
