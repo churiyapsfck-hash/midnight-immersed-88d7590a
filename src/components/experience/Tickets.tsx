@@ -128,7 +128,9 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
 
       <header className="relative flex items-center justify-between font-mono text-[9px] tracking-[0.32em]" style={{ color: sub }}>
         <span>{p.code}</span>
-        <span style={{ color: accent }}>◆</span>
+        <span className="rounded-full bg-black/40 px-2.5 py-0.5 text-[8px] font-semibold text-red-400 tracking-[0.25em] border border-red-500/30">
+          SOLD OUT
+        </span>
       </header>
 
       <h3
@@ -147,9 +149,9 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
 
       <div className="relative space-y-1.5">
         {p.pricing.map((row) => (
-          <div key={row.label} className="flex items-baseline justify-between">
-            <span className="font-serif text-[13px]" style={{ color: sub }}>{row.label}</span>
-            <span className="font-[Anton] text-lg" style={{ color: ink }}>{row.price}</span>
+          <div key={row.label} className="flex items-baseline justify-between opacity-60">
+            <span className="font-serif text-[13px] line-through" style={{ color: sub }}>{row.label}</span>
+            <span className="font-[Anton] text-lg line-through" style={{ color: ink }}>{row.price}</span>
           </div>
         ))}
       </div>
@@ -163,19 +165,19 @@ function PassCard({ p, i }: { p: Pass; i: number }) {
         ))}
       </ul>
 
-      <Link
-        to={isVip ? "/vip" : "/standard"}
-        className="relative mt-6 block w-full rounded-full py-3 text-center font-mono text-[10px] tracking-[0.4em] transition-transform hover:scale-[1.02]"
+      <div
+        className="relative mt-6 block w-full rounded-full py-3 text-center font-mono text-[10px] tracking-[0.4em] cursor-not-allowed select-none"
         style={{
           background: isVip
-              ? "linear-gradient(180deg, #1a0002, #3a0006)"
-              : "linear-gradient(180deg, #0a0a0c, #1c1c22)",
-          color: "#fff",
+              ? "linear-gradient(180deg, #1a0002, #2a0004)"
+              : "linear-gradient(180deg, #0a0a0c, #141418)",
+          color: isVip ? "#f26770" : "#aaaaaa",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px -8px rgba(0,0,0,0.7)",
+          border: isVip ? "1px solid rgba(242,103,112,0.3)" : "1px solid rgba(255,255,255,0.15)",
         }}
       >
-        {p.cta.toUpperCase()} →
-      </Link>
+        OUT OF STOCK
+      </div>
     </motion.article>
     </div>
   );
@@ -204,7 +206,13 @@ export function Tickets() {
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <div className="font-mono text-[10px] tracking-[0.4em] text-white/40">— 01 / THE INVITATION</div>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[10px] tracking-[0.4em] text-white/40">— 01 / THE INVITATION</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/40 bg-red-950/60 px-3 py-1 font-mono text-[9px] tracking-[0.3em] text-red-400 backdrop-blur-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                OUT OF STOCK
+              </span>
+            </div>
             <h2 className="mt-4 font-[Anton] text-6xl leading-[0.9] tracking-tight md:text-8xl">
               <span className="text-chrome">Two invitations.</span>
               <br />
@@ -212,7 +220,7 @@ export function Tickets() {
             </h2>
           </div>
           <p className="max-w-sm font-serif text-[15px] italic leading-relaxed text-white/55">
-            Hand-numbered. Non-transferable. No refunds. No exceptions.
+            Bookings are officially closed. All passes for ILLUMINATI 3.0 are completely out of stock.
           </p>
         </div>
 
