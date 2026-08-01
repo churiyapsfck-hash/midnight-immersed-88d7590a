@@ -6,6 +6,7 @@ import {
   listBookings,
   setBookingStatus,
   getBookingStats,
+  createManualBooking,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/x7k9-ctrl/")({
@@ -62,6 +63,43 @@ function AdminPage() {
   const [err, setErr] = useState<string | null>(null);
   const [live, setLive] = useState(false);
   const [flashId, setFlashId] = useState<string | null>(null);
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [manualName, setManualName] = useState("");
+  const [manualPhone, setManualPhone] = useState("");
+  const [manualPassType, setManualPassType] = useState<"standard" | "vip">("vip");
+  const [manualCategory, setManualCategory] = useState<"single" | "couple">("single");
+  const [manualUtr, setManualUtr] = useState("");
+  const [manualBusy, setManualBusy] = useState(false);
+  const [manualErr, setManualErr] = useState<string | null>(null);
+
+  const handleCreateManual = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token || !manualName.trim() || !manualPhone.trim()) return;
+    setManualBusy(true);
+    setManualErr(null);
+    try {
+      await createManualBooking({
+        data: {
+          accessToken: token,
+          fullName: manualName.trim(),
+          phone: manualPhone.trim(),
+          passType: manualPassType,
+          category: manualCategory,
+          utr: manualUtr.trim() || undefined,
+        },
+      });
+      setManualName("");
+      setManualPhone("");
+      setManualUtr("");
+      setShowAddModal(false);
+      await load(token, filter, q);
+    } catch (err) {
+      setManualErr(err instanceof Error ? err.message : "Failed to create pass");
+    } finally {
+      setManualBusy(false);
+    }
+  };
 
   const load = useCallback(async (accessToken: string, status: string, query: string) => {
     try {
@@ -291,6 +329,13 @@ function AdminPage() {
               {live ? "SYNCING" : "LIVE"}
             </span>
             <button
+              onClick={() => setShowAddModal(true)}
+              className="rounded-full border border-red-500/40 bg-red-950/40 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-red-400 hover:bg-red-900/60 hover:text-white"
+              title="Manually issue a verified pass to a guest"
+            >
+              + ADD PASS
+            </button>
+            <button
               onClick={exportVerifiedToCSV}
               className="rounded-full border border-emerald-500/40 bg-emerald-950/40 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-emerald-400 hover:bg-emerald-900/60 hover:text-white"
               title="Download Excel / CSV file"
@@ -400,8 +445,114 @@ function AdminPage() {
           <img src={zoom} alt="Payment proof" className="max-h-[90vh] max-w-full rounded-xl border border-[oklch(0.55_0.24_25)]/40 object-contain" style={{ boxShadow: `0 0 60px ${BLOOD_DIM}` }} />
         </button>
       )}
+
+      {/* Add Manual Pass Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+          <form
+            onSubmit={handleCreateManual}
+            className="w-full max-w-md rounded-2xl border border-white/15 bg-black p-6 space-y-4"
+            style={{ boxShadow: `0 0 40px ${BLOOD_DIM}` }}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h2 className="font-[Anton] text-2xl tracking-tight text-white">ISSUE VERIFIED PASS</h2>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="font-mono text-xs text-white/50 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] tracking-[0.3em] text-white/50 mb-1">FULL NAME</label>
+              <input
+                value={manualName}
+                onChange={(e) => setManualName(e.target.value)}
+                placeholder="Guest Full Name"
+                required
+                className="w-full rounded-xl border border-white/15 bg-black/80 px-4 py-2.5 font-serif text-sm text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] tracking-[0.3em] text-white/50 mb-1">PHONE NUMBER</label>
+              <input
+                value={manualPhone}
+                onChange={(e) => setManualPhone(e.target.value)}
+                placeholder="10-digit phone number"
+                type="tel"
+                required
+                className="w-full rounded-xl border border-white/15 bg-black/80 px-4 py-2.5 font-mono text-sm text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block font-mono text-[10px] tracking-[0.3em] text-white/50 mb-1">PASS TYPE</label>
+                <select
+                  value={manualPassType}
+                  onChange={(e) => setManualPassType(e.target.value as "standard" | "vip")}
+                  className="w-full rounded-xl border border-white/15 bg-black px-3 py-2.5 font-mono text-xs text-white focus:border-white/40 focus:outline-none"
+                >
+                  <option value="vip">VIP</option>
+                  <option value="standard">STANDARD</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-mono text-[10px] tracking-[0.3em] text-white/50 mb-1">CATEGORY</label>
+                <select
+                  value={manualCategory}
+                  onChange={(e) => setManualCategory(e.target.value as "single" | "couple")}
+                  className="w-full rounded-xl border border-white/15 bg-black px-3 py-2.5 font-mono text-xs text-white focus:border-white/40 focus:outline-none"
+                >
+                  <option value="single">SINGLE</option>
+                  <option value="couple">COUPLE</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-[10px] tracking-[0.3em] text-white/50 mb-1">NOTE / UTR (OPTIONAL)</label>
+              <input
+                value={manualUtr}
+                onChange={(e) => setManualUtr(e.target.value)}
+                placeholder="e.g. VIP GUEST / CASH / COMP"
+                className="w-full rounded-xl border border-white/15 bg-black/80 px-4 py-2.5 font-mono text-xs text-white placeholder:text-white/25 focus:border-white/40 focus:outline-none"
+              />
+            </div>
+
+            {manualErr && (
+              <div className="rounded-lg border border-red-500/30 bg-red-950/40 p-2 font-mono text-[10px] text-red-400">
+                {manualErr}
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 rounded-xl border border-white/15 py-2.5 font-mono text-[10px] tracking-[0.3em] text-white/60 hover:text-white"
+              >
+                CANCEL
+              </button>
+              <button
+                type="submit"
+                disabled={manualBusy}
+                className="flex-1 rounded-xl bg-red-600 py-2.5 font-mono text-[10px] tracking-[0.3em] text-white hover:bg-red-500 disabled:opacity-50"
+                style={{ backgroundColor: BLOOD }}
+              >
+                {manualBusy ? "MINTING…" : "MINT VERIFIED PASS →"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </main>
   );
+}
 }
 
 function StatCard({ label, value, accent }: { label: string; value: number; accent?: boolean }) {

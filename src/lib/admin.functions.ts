@@ -305,3 +305,41 @@ export const deleteCoupon = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });
+
+export const createManualBooking = createServerFn({ method: "POST" })
+  .inputValidator((data: {
+    accessToken: string;
+    fullName: string;
+    phone: string;
+    passType: "standard" | "vip";
+    category: "single" | "couple";
+    utr?: string;
+  }) =>
+    z.object({
+      accessToken: z.string().min(10),
+      fullName: z.string().trim().min(2).max(100),
+      phone: z.string().trim().min(10).max(15),
+      passType: z.enum(["standard", "vip"]),
+      category: z.enum(["single", "couple"]),
+      utr: z.string().trim().max(64).optional(),
+    }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { admin, userId } = await requireAdmin(data.accessToken);
+    const { data: row, error } = await admin
+      .from("bookings")
+      .insert({
+        user_id: userId,
+        full_name: data.fullName,
+        phone: data.phone,
+        pass_type: data.passType,
+        category: data.category,
+        utr: data.utr || "MANUAL_INVITE",
+        status: "verified",
+      })
+      .select("id, user_id, pass_type, category, full_name, phone, utr, screenshot_path, purchase_id, status, ticket_token, checked_in_at, created_at, coupon_code, discount_percent, final_amount")
+      .single();
+
+    if (error) throw new Error(error.message);
+    return { row };
+  });
