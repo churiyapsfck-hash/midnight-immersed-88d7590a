@@ -159,6 +159,78 @@ function AdminPage() {
     }
   };
 
+  const exportVerifiedToCSV = () => {
+    const targetRows = filter === "all"
+      ? rows
+      : rows.filter((r) => {
+          if (filter === "verified") return r.status === "verified" || r.status === "active";
+          if (filter === "checked_in") return r.checked_in_at != null;
+          if (filter === "pending") return r.status === "pending";
+          if (filter === "declined") return r.status === "declined";
+          return true;
+        });
+
+    if (!targetRows.length) {
+      alert("No matching members found to export.");
+      return;
+    }
+
+    const headers = [
+      "Full Name",
+      "Phone",
+      "User Code",
+      "Pass Type",
+      "Category",
+      "UTR / Ref",
+      "Purchase ID",
+      "Status",
+      "Checked In",
+      "Coupon Code",
+      "Discount %",
+      "Final Amount (INR)",
+      "Ticket Token",
+      "Submitted At"
+    ];
+
+    const escape = (val: string | number | null | undefined) => {
+      if (val == null) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const csvLines = [
+      headers.join(","),
+      ...targetRows.map((r) =>
+        [
+          escape(r.full_name),
+          escape(r.phone),
+          escape(r.user_code),
+          escape(r.pass_type?.toUpperCase()),
+          escape(r.category?.toUpperCase()),
+          escape(r.utr),
+          escape(r.purchase_id),
+          escape(r.checked_in_at ? "CHECKED IN" : r.status?.toUpperCase()),
+          escape(r.checked_in_at ? new Date(r.checked_in_at).toLocaleString("en-IN") : "NO"),
+          escape(r.coupon_code),
+          escape(r.discount_percent),
+          escape(r.final_amount),
+          escape(r.ticket_token),
+          escape(new Date(r.created_at).toLocaleString("en-IN")),
+        ].join(",")
+      ),
+    ];
+
+    const blob = new Blob([csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `illuminati_members_${filter}_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const filters = useMemo(() => [
     { key: "pending", label: "PENDING", n: stats?.pending },
     { key: "verified", label: "VERIFIED", n: stats?.verified },
@@ -218,6 +290,13 @@ function AdminPage() {
               />
               {live ? "SYNCING" : "LIVE"}
             </span>
+            <button
+              onClick={exportVerifiedToCSV}
+              className="rounded-full border border-emerald-500/40 bg-emerald-950/40 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-emerald-400 hover:bg-emerald-900/60 hover:text-white"
+              title="Download Excel / CSV file"
+            >
+              EXPORT EXCEL ↓
+            </button>
             <Link to="/x7k9-ctrl/roster" className="rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] tracking-[0.32em] text-white/70 hover:border-[oklch(0.55_0.24_25)] hover:text-white">
               STAFF →
             </Link>
