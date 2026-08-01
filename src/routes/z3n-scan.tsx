@@ -34,6 +34,7 @@ type Preview = {
 function GatePage() {
   const [ready, setReady] = useState<"loading" | "unauth" | "forbidden" | "ok">("loading");
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [tab, setTab] = useState<"scan" | "search">("scan");
 
   useEffect(() => {
@@ -44,6 +45,7 @@ function GatePage() {
         return;
       }
       setAccessToken(data.session.access_token);
+      setUserEmail(data.session.user?.email ?? null);
       const r = await getMyRoles({ data: { accessToken: data.session.access_token } });
       const staff = r.roles.some((x) => x === "gate" || x === "admin");
       setReady(staff ? "ok" : "forbidden");
@@ -56,8 +58,8 @@ function GatePage() {
   if (ready === "unauth") {
     return (
       <FullPage>
-        <div className="rounded-2xl border border-white/10 bg-black/50 p-8">
-          <p className="font-serif text-lg italic text-white/60">Sign in required.</p>
+        <div className="rounded-2xl border border-white/10 bg-black/50 p-8 text-center">
+          <p className="font-serif text-lg italic text-white/60">Gate Scanner Sign-in Required.</p>
           <Link to="/login" className="mt-4 inline-block rounded-full px-5 py-2 font-mono text-[11px] tracking-[0.32em] text-white" style={{ backgroundColor: "oklch(0.55 0.24 25)" }}>SIGN IN →</Link>
         </div>
       </FullPage>
@@ -66,9 +68,27 @@ function GatePage() {
   if (ready === "forbidden") {
     return (
       <FullPage>
-        <div className="rounded-2xl border border-white/10 bg-black/50 p-8">
-          <p className="font-serif text-lg italic text-white/60">You don't have gate access.</p>
-          <Link to="/" className="mt-4 inline-block font-mono text-[11px] tracking-[0.32em] text-white/50 hover:text-white">← BACK</Link>
+        <div className="rounded-2xl border border-white/10 bg-black/50 p-8 text-center">
+          <p className="font-serif text-xl italic text-white/90">You don't have gate access.</p>
+          {userEmail && (
+            <p className="mt-2 font-mono text-xs tracking-[0.1em] text-white/50">
+              Signed in as: <span className="text-white/90">{userEmail}</span>
+            </p>
+          )}
+          <p className="mt-3 font-serif text-sm italic text-white/50">
+            Ask your Admin to grant gate access to this email address in the Staff Roster (<code className="font-mono text-xs text-white/80">/x7k9-ctrl/roster</code>).
+          </p>
+          <div className="mt-6 flex flex-col gap-2 md:flex-row md:justify-center">
+            <button
+              onClick={() => supabase.auth.signOut().then(() => window.location.assign("/login"))}
+              className="rounded-full border border-white/20 px-5 py-2 font-mono text-[10px] tracking-[0.32em] text-white/80 hover:border-white/40"
+            >
+              SWITCH ACCOUNT / SIGN OUT
+            </button>
+            <Link to="/" className="inline-block rounded-full border border-white/10 px-5 py-2 font-mono text-[10px] tracking-[0.32em] text-white/50 hover:text-white">
+              ← BACK HOME
+            </Link>
+          </div>
         </div>
       </FullPage>
     );
