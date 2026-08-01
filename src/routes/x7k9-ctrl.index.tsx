@@ -553,7 +553,6 @@ function AdminPage() {
     </main>
   );
 }
-}
 
 function StatCard({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
   return (
